@@ -1,5 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 
 const user = {
@@ -66,8 +66,10 @@ const NavBar = ({children}) => {
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
-                <BellIcon aria-hidden="true" className="size-6" />
+                <ShoppingCartIcon aria-hidden="true" className="size-6" />
               </button>
+              <span class="inline-flex items-center rounded-md bg-red-50 px-1 mb-6 z-10 -ml-2 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">3</span>
+
 
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-3">
@@ -140,8 +142,10 @@ const NavBar = ({children}) => {
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
+              <ShoppingCartIcon aria-hidden="true" className="size-6" />
             </button>
+            <span class="inline-flex items-center rounded-md bg-red-50 px-1 mb-6 z-10 -ml-2 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">3</span>
+
           </div>
           <div className="mt-3 space-y-1 px-2">
             {userNavigation.map((item) => (
@@ -161,7 +165,7 @@ const NavBar = ({children}) => {
 
     <header className="bg-white shadow-sm">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">E-Commerce</h1>
       </div>
     </header>
     <main>
