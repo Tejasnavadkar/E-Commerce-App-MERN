@@ -1,5 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useNavigate } from 'react-router-dom'
 
 
 const user = {
@@ -27,6 +28,9 @@ function classNames(...classes) {
 
 
 const NavBar = ({children}) => {
+
+ const navigate =  useNavigate()
+
   return (
     <div className="min-h-full">
     <Disclosure as="nav" className="bg-gray-800">
@@ -61,6 +65,7 @@ const NavBar = ({children}) => {
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
               <button
+              onClick={()=>navigate('/cart')}
                 type="button"
                 className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
               >
@@ -137,6 +142,7 @@ const NavBar = ({children}) => {
               <div className="text-sm font-medium text-gray-400">{user.email}</div>
             </div>
             <button
+            onClick={()=>navigate('/cart')}
               type="button"
               className="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
             >

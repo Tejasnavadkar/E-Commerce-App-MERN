@@ -13,7 +13,7 @@ import {
     MenuItems,
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon,ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
@@ -80,80 +80,269 @@ function classNames(...classes) {
 const ProductList = () => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
+    // const products = [
+    //     {
+    //         id: 1,
+    //         name: 'Basic Tee',
+    //         href: '#',
+    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //         imageAlt: "Front of men's Basic Tee in black.",
+    //         price: '$35',
+    //         color: 'Black',
+    //     },
+    //     {
+    //         id: 2,
+    //         name: 'Basic Tee',
+    //         href: '#',
+    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //         imageAlt: "Front of men's Basic Tee in black.",
+    //         price: '$35',
+    //         color: 'Black',
+    //     },
+    //     {
+    //         id: 3,
+    //         name: 'Basic Tee',
+    //         href: '#',
+    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //         imageAlt: "Front of men's Basic Tee in black.",
+    //         price: '$35',
+    //         color: 'Black',
+    //     },
+    //     // {
+    //     //     id: 4,
+    //     //     name: 'Basic Tee',
+    //     //     href: '#',
+    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //     //     imageAlt: "Front of men's Basic Tee in black.",
+    //     //     price: '$35',
+    //     //     color: 'Black',
+    //     // },
+    //     // {
+    //     //     id: 5,
+    //     //     name: 'Basic Tee',
+    //     //     href: '#',
+    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //     //     imageAlt: "Front of men's Basic Tee in black.",
+    //     //     price: '$35',
+    //     //     color: 'Black',
+    //     // },
+    //     // {
+    //     //     id: 6,
+    //     //     name: 'Basic Tee',
+    //     //     href: '#',
+    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //     //     imageAlt: "Front of men's Basic Tee in black.",
+    //     //     price: '$35',
+    //     //     color: 'Black',
+    //     // },
+    //     // {
+    //     //     id: 7,
+    //     //     name: 'Basic Tee',
+    //     //     href: '#',
+    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //     //     imageAlt: "Front of men's Basic Tee in black.",
+    //     //     price: '$35',
+    //     //     color: 'Black',
+    //     // },
+    //     // {
+    //     //     id: 8,
+    //     //     name: 'Basic Tee',
+    //     //     href: '#',
+    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    //     //     imageAlt: "Front of men's Basic Tee in black.",
+    //     //     price: '$35',
+    //     //     color: 'Black',
+    //     // },
+    //     // More products...
+    // ]
     const products = [
+
         {
-            id: 1,
-            name: 'Basic Tee',
-            href: '#',
-            imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-            imageAlt: "Front of men's Basic Tee in black.",
-            price: '$35',
-            color: 'Black',
+            "id": 121,
+            "title": "iPhone 5s",
+            "description": "The iPhone 5s is a classic smartphone known for its compact design and advanced features during its release. While it's an older model, it still provides a reliable user experience.",
+            "category": "smartphones",
+            "price": 199.99,
+            "discountPercentage": 11.85,
+            "rating": 3.92,
+            "stock": 65,
+            "tags": [
+                "smartphones",
+                "apple"
+            ],
+            "brand": "Apple",
+            "sku": "AZ1L68SM",
+            "weight": 4,
+            "dimensions": {
+                "width": 8.49,
+                "height": 25.34,
+                "depth": 18.12
+            },
+            "warrantyInformation": "1 week warranty",
+            "shippingInformation": "Ships in 1 week",
+            "availabilityStatus": "In Stock",
+            "reviews": [
+                {
+                    "rating": 4,
+                    "comment": "Highly impressed!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Wyatt Perry",
+                    "reviewerEmail": "wyatt.perry@x.dummyjson.com"
+                },
+                {
+                    "rating": 5,
+                    "comment": "Awesome product!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Olivia Anderson",
+                    "reviewerEmail": "olivia.anderson@x.dummyjson.com"
+                },
+                {
+                    "rating": 4,
+                    "comment": "Highly recommended!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Mateo Nguyen",
+                    "reviewerEmail": "mateo.nguyen@x.dummyjson.com"
+                }
+            ],
+            "returnPolicy": "No return policy",
+            "minimumOrderQuantity": 2,
+            "meta": {
+                "createdAt": "2024-05-23T08:56:21.625Z",
+                "updatedAt": "2024-05-23T08:56:21.625Z",
+                "barcode": "2903942810911",
+                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+            },
+            "images": [
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/1.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/2.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/3.png"
+            ],
+            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/thumbnail.png"
         },
         {
-            id: 2,
-            name: 'Basic Tee',
-            href: '#',
-            imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-            imageAlt: "Front of men's Basic Tee in black.",
-            price: '$35',
-            color: 'Black',
+            "id": 122,
+            "title": "iPhone 6",
+            "description": "The iPhone 6 is a stylish and capable smartphone with a larger display and improved performance. It introduced new features and design elements, making it a popular choice in its time.",
+            "category": "smartphones",
+            "price": 299.99,
+            "discountPercentage": 4.54,
+            "rating": 3.76,
+            "stock": 99,
+            "tags": [
+                "smartphones",
+                "apple"
+            ],
+            "brand": "Apple",
+            "sku": "ZPXH3X9J",
+            "weight": 8,
+            "dimensions": {
+                "width": 16.21,
+                "height": 22.94,
+                "depth": 5.63
+            },
+            "warrantyInformation": "3 year warranty",
+            "shippingInformation": "Ships overnight",
+            "availabilityStatus": "In Stock",
+            "reviews": [
+                {
+                    "rating": 5,
+                    "comment": "Would buy again!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Nicholas Bailey",
+                    "reviewerEmail": "nicholas.bailey@x.dummyjson.com"
+                },
+                {
+                    "rating": 5,
+                    "comment": "Great product!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Clara Berry",
+                    "reviewerEmail": "clara.berry@x.dummyjson.com"
+                },
+                {
+                    "rating": 3,
+                    "comment": "Not as described!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Gavin Stanley",
+                    "reviewerEmail": "gavin.stanley@x.dummyjson.com"
+                }
+            ],
+            "returnPolicy": "60 days return policy",
+            "minimumOrderQuantity": 3,
+            "meta": {
+                "createdAt": "2024-05-23T08:56:21.625Z",
+                "updatedAt": "2024-05-23T08:56:21.625Z",
+                "barcode": "2517230562429",
+                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+            },
+            "images": [
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/1.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/2.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/3.png"
+            ],
+            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/thumbnail.png"
         },
         {
-            id: 3,
-            name: 'Basic Tee',
-            href: '#',
-            imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-            imageAlt: "Front of men's Basic Tee in black.",
-            price: '$35',
-            color: 'Black',
-        },
-        // {
-        //     id: 4,
-        //     name: 'Basic Tee',
-        //     href: '#',
-        //     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        //     imageAlt: "Front of men's Basic Tee in black.",
-        //     price: '$35',
-        //     color: 'Black',
-        // },
-        // {
-        //     id: 5,
-        //     name: 'Basic Tee',
-        //     href: '#',
-        //     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        //     imageAlt: "Front of men's Basic Tee in black.",
-        //     price: '$35',
-        //     color: 'Black',
-        // },
-        // {
-        //     id: 6,
-        //     name: 'Basic Tee',
-        //     href: '#',
-        //     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        //     imageAlt: "Front of men's Basic Tee in black.",
-        //     price: '$35',
-        //     color: 'Black',
-        // },
-        // {
-        //     id: 7,
-        //     name: 'Basic Tee',
-        //     href: '#',
-        //     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        //     imageAlt: "Front of men's Basic Tee in black.",
-        //     price: '$35',
-        //     color: 'Black',
-        // },
-        // {
-        //     id: 8,
-        //     name: 'Basic Tee',
-        //     href: '#',
-        //     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        //     imageAlt: "Front of men's Basic Tee in black.",
-        //     price: '$35',
-        //     color: 'Black',
-        // },
-        // More products...
+            "id": 123,
+            "title": "iPhone 13 Pro",
+            "description": "The iPhone 13 Pro is a cutting-edge smartphone with a powerful camera system, high-performance chip, and stunning display. It offers advanced features for users who demand top-notch technology.",
+            "category": "smartphones",
+            "price": 1099.99,
+            "discountPercentage": 18.3,
+            "rating": 3.42,
+            "stock": 26,
+            "tags": [
+                "smartphones",
+                "apple"
+            ],
+            "brand": "Apple",
+            "sku": "YGQKHPGK",
+            "weight": 8,
+            "dimensions": {
+                "width": 22.39,
+                "height": 9.77,
+                "depth": 19.6
+            },
+            "warrantyInformation": "1 year warranty",
+            "shippingInformation": "Ships in 2 weeks",
+            "availabilityStatus": "In Stock",
+            "reviews": [
+                {
+                    "rating": 5,
+                    "comment": "Highly impressed!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Aria Roberts",
+                    "reviewerEmail": "aria.roberts@x.dummyjson.com"
+                },
+                {
+                    "rating": 4,
+                    "comment": "Great product!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Ryan Graham",
+                    "reviewerEmail": "ryan.graham@x.dummyjson.com"
+                },
+                {
+                    "rating": 2,
+                    "comment": "Poor quality!",
+                    "date": "2024-05-23T08:56:21.625Z",
+                    "reviewerName": "Mason Wright",
+                    "reviewerEmail": "mason.wright@x.dummyjson.com"
+                }
+            ],
+            "returnPolicy": "7 days return policy",
+            "minimumOrderQuantity": 1,
+            "meta": {
+                "createdAt": "2024-05-23T08:56:21.625Z",
+                "updatedAt": "2024-05-23T08:56:21.625Z",
+                "barcode": "2986724589988",
+                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+            },
+            "images": [
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/1.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/2.png",
+                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/3.png"
+            ],
+            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/thumbnail.png"
+        }
     ]
 
     return (
@@ -397,25 +586,38 @@ const ProductList = () => {
                                         {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
                                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                                             {products.map((product) => (
-                                                <div key={product.id} className="group relative">
+                                               <div key={product.id} className='border-1 border-gray-500 p-2'>
+                                                 <div  className="">
                                                     <img
-                                                        alt={product.imageAlt}
-                                                        src={product.imageSrc}
-                                                        className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                                                        alt={product.thumbnail}
+                                                        src={product.thumbnail}
+                                                        className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
                                                     />
                                                     <div className="mt-4 flex justify-between">
                                                         <div>
                                                             <h3 className="text-sm text-gray-700">
                                                                 <a href={product.href}>
                                                                     <span aria-hidden="true" className="absolute inset-0" />
-                                                                    {product.name}
+                                                                    {product.title}
                                                                 </a>
                                                             </h3>
-                                                            <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                                            <div className='flex items-center gap-1'>
+                                                                <span><StarIcon className='h-5 w-5' /></span>
+                                                                <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
+                                                            </div>
                                                         </div>
-                                                        <p className="text-sm font-medium text-gray-900">{product.price}</p>
+                                                        <div>
+                                                            <span>
+                                                                <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
+                                                            </span>
+                                                            <span>
+                                                                <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
+                                                            </span>
+
+                                                        </div>
                                                     </div>
                                                 </div>
+                                               </div>
                                             ))}
                                         </div>
                                     </div>
@@ -425,7 +627,7 @@ const ProductList = () => {
                     </section>
 
                     {/* Pagination component */}
-                    
+
                     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                         <div className="flex flex-1 justify-between sm:hidden">
                             <a
