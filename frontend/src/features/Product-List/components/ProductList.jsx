@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogBackdrop,
@@ -14,63 +14,112 @@ import {
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchProducts, productSelector,fetchProductsByFilterAsync, sortProductsAsync } from '../ProductSlice'
 
 const sortOptions = [
-    { name: 'Most Popular', href: '#', current: true },
-    { name: 'Best Rating', href: '#', current: false },
-    { name: 'Newest', href: '#', current: false },
-    { name: 'Price: Low to High', href: '#', current: false },
-    { name: 'Price: High to Low', href: '#', current: false },
+   
+    { name: 'Best Rating', value:'rating',order:'desc', current: false },
+    { name: 'Price: Low to High', value:'price',order:'asc', current: false },
+    { name: 'Price: High to Low',value:'price', order:'desc', current: false },
+
 ]
-// const subCategories = [
-//     { name: 'Totes', href: '#' },
-//     { name: 'Backpacks', href: '#' },
-//     { name: 'Travel Bags', href: '#' },
-//     { name: 'Hip Bags', href: '#' },
-//     { name: 'Laptop Sleeves', href: '#' },
-// ]
+
 const filters = [
-    {
-        id: 'color',
-        name: 'Color',
-        options: [
-            { value: 'white', label: 'White', checked: false },
-            { value: 'beige', label: 'Beige', checked: false },
-            { value: 'blue', label: 'Blue', checked: true },
-            { value: 'brown', label: 'Brown', checked: false },
-            { value: 'green', label: 'Green', checked: false },
-            { value: 'purple', label: 'Purple', checked: false },
-        ],
-    },
     {
         id: 'category',
         name: 'Category',
         options: [
-            { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-            { value: 'sale', label: 'Sale', checked: false },
-            { value: 'travel', label: 'Travel', checked: true },
-            { value: 'organization', label: 'Organization', checked: false },
-            { value: 'accessories', label: 'Accessories', checked: false },
+            { value: 'beauty', label: 'beauty', checked: false },
+            { value: 'fragrances', label: 'fragrances', checked: false },
+            { value: 'furniture', label: 'furniture', checked: false },
+            { value: 'groceries', label: 'groceries', checked: false },
+            {
+                value: 'home-decoration',
+                label: 'home decoration',
+                checked: false
+            },
+            {
+                value: 'kitchen-accessories',
+                label: 'kitchen accessories',
+                checked: false
+            },
+            { value: 'laptops', label: 'laptops', checked: false },
+            { value: 'mens-shirts', label: 'mens shirts', checked: false },
+            { value: 'mens-shoes', label: 'mens shoes', checked: false },
+            { value: 'mens-watches', label: 'mens watches', checked: false },
+            {
+                value: 'mobile-accessories',
+                label: 'mobile accessories',
+                checked: false
+            }
         ],
     },
     {
-        id: 'size',
-        name: 'Size',
+        id: 'brand',
+        name: 'Brand',
         options: [
-            { value: '2l', label: '2L', checked: false },
-            { value: '6l', label: '6L', checked: false },
-            { value: '12l', label: '12L', checked: false },
-            { value: '18l', label: '18L', checked: false },
-            { value: '20l', label: '20L', checked: false },
-            { value: '40l', label: '40L', checked: true },
+            { value: 'Essence', label: 'Essence', checked: false },
+            { value: 'Glamour Beauty', label: 'Glamour Beauty', checked: false },
+            { value: 'Velvet Touch', label: 'Velvet Touch', checked: false },
+            { value: 'Chic Cosmetics', label: 'Chic Cosmetics', checked: false },
+            { value: 'Nail Couture', label: 'Nail Couture', checked: false },
+            { value: 'Calvin Klein', label: 'Calvin Klein', checked: false },
+            { value: 'Chanel', label: 'Chanel', checked: false },
+            { value: 'Dior', label: 'Dior', checked: false },
+            {
+                value: 'Dolce & Gabbana',
+                label: 'Dolce & Gabbana',
+                checked: false
+            },
+            { value: 'Gucci', label: 'Gucci', checked: false },
+            {
+                value: 'Annibale Colombo',
+                label: 'Annibale Colombo',
+                checked: false
+            },
+            { value: 'Furniture Co.', label: 'Furniture Co.', checked: false },
+            { value: 'Knoll', label: 'Knoll', checked: false },
+            { value: 'Bath Trends', label: 'Bath Trends', checked: false },
+            { value: 'Apple', label: 'Apple', checked: false },
+            { value: 'Asus', label: 'Asus', checked: false },
+            { value: 'Huawei', label: 'Huawei', checked: false },
+            { value: 'Lenovo', label: 'Lenovo', checked: false },
+            { value: 'Dell', label: 'Dell', checked: false },
+            { value: 'Fashion Trends', label: 'Fashion Trends', checked: false },
+            { value: 'Gigabyte', label: 'Gigabyte', checked: false },
+            { value: 'Classic Wear', label: 'Classic Wear', checked: false },
+            { value: 'Casual Comfort', label: 'Casual Comfort', checked: false },
+            { value: 'Urban Chic', label: 'Urban Chic', checked: false },
+            { value: 'Nike', label: 'Nike', checked: false },
+            { value: 'Puma', label: 'Puma', checked: false },
+            { value: 'Off White', label: 'Off White', checked: false },
+            {
+                value: 'Fashion Timepieces',
+                label: 'Fashion Timepieces',
+                checked: false
+            },
+            { value: 'Longines', label: 'Longines', checked: false },
+            { value: 'Rolex', label: 'Rolex', checked: false },
+            { value: 'Amazon', label: 'Amazon', checked: false }
         ],
     },
+    
+    // {
+    //     id: 'size',
+    //     name: 'Size',
+    //     options: [
+    //         { value: '2l', label: '2L', checked: false },
+    //         { value: '6l', label: '6L', checked: false },
+    //         { value: '12l', label: '12L', checked: false },
+    //         { value: '18l', label: '18L', checked: false },
+    //         { value: '20l', label: '20L', checked: false },
+    //         { value: '40l', label: '40L', checked: true },
+    //     ],
+    // },
 ]
-// const items = [
-//     { id: 1, title: 'Back End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
-//     { id: 2, title: 'Front End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
-//     { id: 3, title: 'User Interface Designer', department: 'Design', type: 'Full-time', location: 'Remote' },
-//   ]
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ') // The .filter(Boolean) part removes any falsy values (false, 0, null, undefined, "", NaN) It keeps only truthy values
@@ -78,272 +127,62 @@ function classNames(...classes) {
 
 
 const ProductList = () => {
+
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [filter,setfilter] = useState({})
+    const { products, isLoading, error } = useSelector(productSelector)
+    // const products = useSelector(state=>state.Products.products)
+   
 
-    // const products = [
-    //     {
-    //         id: 1,
-    //         name: 'Basic Tee',
-    //         href: '#',
-    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //         imageAlt: "Front of men's Basic Tee in black.",
-    //         price: '$35',
-    //         color: 'Black',
-    //     },
-    //     {
-    //         id: 2,
-    //         name: 'Basic Tee',
-    //         href: '#',
-    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //         imageAlt: "Front of men's Basic Tee in black.",
-    //         price: '$35',
-    //         color: 'Black',
-    //     },
-    //     {
-    //         id: 3,
-    //         name: 'Basic Tee',
-    //         href: '#',
-    //         thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //         imageAlt: "Front of men's Basic Tee in black.",
-    //         price: '$35',
-    //         color: 'Black',
-    //     },
-    //     // {
-    //     //     id: 4,
-    //     //     name: 'Basic Tee',
-    //     //     href: '#',
-    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //     //     imageAlt: "Front of men's Basic Tee in black.",
-    //     //     price: '$35',
-    //     //     color: 'Black',
-    //     // },
-    //     // {
-    //     //     id: 5,
-    //     //     name: 'Basic Tee',
-    //     //     href: '#',
-    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //     //     imageAlt: "Front of men's Basic Tee in black.",
-    //     //     price: '$35',
-    //     //     color: 'Black',
-    //     // },
-    //     // {
-    //     //     id: 6,
-    //     //     name: 'Basic Tee',
-    //     //     href: '#',
-    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //     //     imageAlt: "Front of men's Basic Tee in black.",
-    //     //     price: '$35',
-    //     //     color: 'Black',
-    //     // },
-    //     // {
-    //     //     id: 7,
-    //     //     name: 'Basic Tee',
-    //     //     href: '#',
-    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //     //     imageAlt: "Front of men's Basic Tee in black.",
-    //     //     price: '$35',
-    //     //     color: 'Black',
-    //     // },
-    //     // {
-    //     //     id: 8,
-    //     //     name: 'Basic Tee',
-    //     //     href: '#',
-    //     //     thumbnail: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //     //     imageAlt: "Front of men's Basic Tee in black.",
-    //     //     price: '$35',
-    //     //     color: 'Black',
-    //     // },
-    //     // More products...
-    // ]
-    const products = [
+    const handleFilter = (e,section,option) =>{
 
-        {
-            "id": 121,
-            "title": "iPhone 5s",
-            "description": "The iPhone 5s is a classic smartphone known for its compact design and advanced features during its release. While it's an older model, it still provides a reliable user experience.",
-            "category": "smartphones",
-            "price": 199.99,
-            "discountPercentage": 11.85,
-            "rating": 3.92,
-            "stock": 65,
-            "tags": [
-                "smartphones",
-                "apple"
-            ],
-            "brand": "Apple",
-            "sku": "AZ1L68SM",
-            "weight": 4,
-            "dimensions": {
-                "width": 8.49,
-                "height": 25.34,
-                "depth": 18.12
-            },
-            "warrantyInformation": "1 week warranty",
-            "shippingInformation": "Ships in 1 week",
-            "availabilityStatus": "In Stock",
-            "reviews": [
-                {
-                    "rating": 4,
-                    "comment": "Highly impressed!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Wyatt Perry",
-                    "reviewerEmail": "wyatt.perry@x.dummyjson.com"
-                },
-                {
-                    "rating": 5,
-                    "comment": "Awesome product!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Olivia Anderson",
-                    "reviewerEmail": "olivia.anderson@x.dummyjson.com"
-                },
-                {
-                    "rating": 4,
-                    "comment": "Highly recommended!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Mateo Nguyen",
-                    "reviewerEmail": "mateo.nguyen@x.dummyjson.com"
-                }
-            ],
-            "returnPolicy": "No return policy",
-            "minimumOrderQuantity": 2,
-            "meta": {
-                "createdAt": "2024-05-23T08:56:21.625Z",
-                "updatedAt": "2024-05-23T08:56:21.625Z",
-                "barcode": "2903942810911",
-                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-            },
-            "images": [
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/1.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/2.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/3.png"
-            ],
-            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%205s/thumbnail.png"
-        },
-        {
-            "id": 122,
-            "title": "iPhone 6",
-            "description": "The iPhone 6 is a stylish and capable smartphone with a larger display and improved performance. It introduced new features and design elements, making it a popular choice in its time.",
-            "category": "smartphones",
-            "price": 299.99,
-            "discountPercentage": 4.54,
-            "rating": 3.76,
-            "stock": 99,
-            "tags": [
-                "smartphones",
-                "apple"
-            ],
-            "brand": "Apple",
-            "sku": "ZPXH3X9J",
-            "weight": 8,
-            "dimensions": {
-                "width": 16.21,
-                "height": 22.94,
-                "depth": 5.63
-            },
-            "warrantyInformation": "3 year warranty",
-            "shippingInformation": "Ships overnight",
-            "availabilityStatus": "In Stock",
-            "reviews": [
-                {
-                    "rating": 5,
-                    "comment": "Would buy again!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Nicholas Bailey",
-                    "reviewerEmail": "nicholas.bailey@x.dummyjson.com"
-                },
-                {
-                    "rating": 5,
-                    "comment": "Great product!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Clara Berry",
-                    "reviewerEmail": "clara.berry@x.dummyjson.com"
-                },
-                {
-                    "rating": 3,
-                    "comment": "Not as described!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Gavin Stanley",
-                    "reviewerEmail": "gavin.stanley@x.dummyjson.com"
-                }
-            ],
-            "returnPolicy": "60 days return policy",
-            "minimumOrderQuantity": 3,
-            "meta": {
-                "createdAt": "2024-05-23T08:56:21.625Z",
-                "updatedAt": "2024-05-23T08:56:21.625Z",
-                "barcode": "2517230562429",
-                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-            },
-            "images": [
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/1.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/2.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/3.png"
-            ],
-            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%206/thumbnail.png"
-        },
-        {
-            "id": 123,
-            "title": "iPhone 13 Pro",
-            "description": "The iPhone 13 Pro is a cutting-edge smartphone with a powerful camera system, high-performance chip, and stunning display. It offers advanced features for users who demand top-notch technology.",
-            "category": "smartphones",
-            "price": 1099.99,
-            "discountPercentage": 18.3,
-            "rating": 3.42,
-            "stock": 26,
-            "tags": [
-                "smartphones",
-                "apple"
-            ],
-            "brand": "Apple",
-            "sku": "YGQKHPGK",
-            "weight": 8,
-            "dimensions": {
-                "width": 22.39,
-                "height": 9.77,
-                "depth": 19.6
-            },
-            "warrantyInformation": "1 year warranty",
-            "shippingInformation": "Ships in 2 weeks",
-            "availabilityStatus": "In Stock",
-            "reviews": [
-                {
-                    "rating": 5,
-                    "comment": "Highly impressed!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Aria Roberts",
-                    "reviewerEmail": "aria.roberts@x.dummyjson.com"
-                },
-                {
-                    "rating": 4,
-                    "comment": "Great product!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Ryan Graham",
-                    "reviewerEmail": "ryan.graham@x.dummyjson.com"
-                },
-                {
-                    "rating": 2,
-                    "comment": "Poor quality!",
-                    "date": "2024-05-23T08:56:21.625Z",
-                    "reviewerName": "Mason Wright",
-                    "reviewerEmail": "mason.wright@x.dummyjson.com"
-                }
-            ],
-            "returnPolicy": "7 days return policy",
-            "minimumOrderQuantity": 1,
-            "meta": {
-                "createdAt": "2024-05-23T08:56:21.625Z",
-                "updatedAt": "2024-05-23T08:56:21.625Z",
-                "barcode": "2986724589988",
-                "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-            },
-            "images": [
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/1.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/2.png",
-                "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/3.png"
-            ],
-            "thumbnail": "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2013%20Pro/thumbnail.png"
+        // const isChecked = e.target.checked;
+        // const currentSectionFilters = filter[section.id] || []; // Get current filters for the section
+    
+        // const updatedSectionFilters = isChecked
+        //     ? [...currentSectionFilters, option.value] // Add the value if checked
+        //     : currentSectionFilters.filter((value) => value !== option.value); // Remove the value if unchecked
+    
+        // const newFilter = { ...filter, [section.id]: updatedSectionFilters }; // Update the filter state
+        // setfilter(newFilter);
+        // dispatch(fetchProductsByFilterAsync(newFilter));
+        // console.log('newfilter--',newFilter)
+
+        const newFilter = {...filter,[section.id]:option.value}
+        setfilter(newFilter)
+        dispatch(fetchProductsByFilterAsync(newFilter))
+    }
+    
+    
+    const handleSort = (sortItem) =>{
+        console.log(sortItem)
+
+        const payload = {
+            sort:sortItem.value,
+            order:sortItem.order
         }
-    ]
+         dispatch(sortProductsAsync(payload))
+    }
+
+    useEffect(() => {
+        dispatch(fetchProducts())
+    }, [dispatch])
+    
+
+
+    // if (isLoading) {
+    //     return <div className='h-screen w-full flex justify-center items-center text-2xl'>
+    //         Loading..
+    //     </div>
+    // }
+
+    // if (error) {
+    //     return <div className='h-screen w-full flex justify-center items-center text-red-500 text-2xl'>
+    //         {error}
+    //     </div>
+    // }
 
     return (
 
@@ -408,6 +247,8 @@ const ProductList = () => {
                                                                     id={`filter-mobile-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     type="checkbox"
+                                                                    // checked={filter[section.id] === option.value} // Dynamically set checked state
+                                                                    onChange={(e)=>handleFilter(e,section,option)}
                                                                     className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                                                 />
                                                                 <svg
@@ -436,7 +277,7 @@ const ProductList = () => {
                                                             htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                                             className="min-w-0 flex-1 text-gray-500"
                                                         >
-                                                            {option.label}
+                                                            {option?.label}
                                                         </label>
                                                     </div>
                                                 ))}
@@ -472,15 +313,15 @@ const ProductList = () => {
                                     <div className="py-1">
                                         {sortOptions.map((option) => (
                                             <MenuItem key={option.name}>
-                                                <a
-                                                    href={option.href}
+                                                <span
+                                                    onClick={()=>handleSort(option)}
                                                     className={classNames(
                                                         option.current ? 'font-medium text-gray-900' : 'text-gray-500',
                                                         'block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden',
                                                     )}
                                                 >
                                                     {option.name}
-                                                </a>
+                                                </span>
                                             </MenuItem>
                                         ))}
                                     </div>
@@ -510,15 +351,6 @@ const ProductList = () => {
                         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                             {/* Filters */}
                             <form className="hidden lg:block">
-                                {/* <h3 className="sr-only">Categories</h3>
-                                <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                                    {subCategories.map((category) => (
-                                        <li key={category.name}>
-                                            <a href={category.href}>{category.name}</a>
-                                        </li>
-                                    ))}
-                                </ul> */}
-
                                 {filters.map((section) => (
                                     <Disclosure key={section.id} as="div" className="border-b border-gray-200 py-6">
                                         <h3 className="-my-3 flow-root">
@@ -538,10 +370,13 @@ const ProductList = () => {
                                                             <div className="group grid size-4 grid-cols-1">
                                                                 <input
                                                                     defaultValue={option.value}
-                                                                    defaultChecked={option.checked}
+                                                                    // defaultChecked={option.checked}
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     type="checkbox"
+                                                                    // checked={filter[section.id] === option.value} // Dynamically set checked state
+                                                                    // checked={filter[section.id]?.includes(option.value) || false} // Check if the value is in the array
+                                                                    onChange={(e)=>handleFilter(e,section,option)}
                                                                     className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                                                 />
                                                                 <svg
@@ -586,38 +421,38 @@ const ProductList = () => {
                                         {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
                                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                                             {products.map((product) => (
-                                               <div key={product.id} className='border-1 border-gray-500 p-2'>
-                                                 <div  className="">
-                                                    <img
-                                                        alt={product.thumbnail}
-                                                        src={product.thumbnail}
-                                                        className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
-                                                    />
-                                                    <div className="mt-4 flex justify-between">
-                                                        <div>
-                                                            <h3 className="text-sm text-gray-700">
-                                                                <a href={product.href}>
-                                                                    <span aria-hidden="true" className="absolute inset-0" />
-                                                                    {product.title}
-                                                                </a>
-                                                            </h3>
-                                                            <div className='flex items-center gap-1'>
-                                                                <span><StarIcon className='h-5 w-5' /></span>
-                                                                <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
+                                                <div onClick={() => navigate('/product-details')} key={product.id} className=' group relative border-1 border-gray-500 p-2'>
+                                                    <div className="">
+                                                        <img
+                                                            alt={product.thumbnail}
+                                                            src={product.thumbnail}
+                                                            className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
+                                                        />
+                                                        <div className="mt-4 flex justify-between">
+                                                            <div>
+                                                                <h3 className="text-sm text-gray-700">
+                                                                    <a href={product.href}>
+                                                                        <span aria-hidden="true" className="absolute inset-0" />
+                                                                        {product.title}
+                                                                    </a>
+                                                                </h3>
+                                                                <div className='flex items-center gap-1'>
+                                                                    <span><StarIcon className='h-5 w-5' /></span>
+                                                                    <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div>
-                                                            <span>
-                                                                <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
-                                                            </span>
-                                                            <span>
-                                                                <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
-                                                            </span>
+                                                            <div>
+                                                                <span>
+                                                                    <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
+                                                                </span>
+                                                                <span>
+                                                                    <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
+                                                                </span>
 
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                               </div>
                                             ))}
                                         </div>
                                     </div>
