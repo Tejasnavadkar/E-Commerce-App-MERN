@@ -14,8 +14,7 @@ export const FetchAllProducts = async () => {
     }
 }
 
-export const FetchAllProductsByFilters = async (filter) => {
-
+export const FetchAllProductsByFilters = async ({filter,sort,pagination}) => {
     // let queryString = '';
 
     // for (let key in filter) {
@@ -38,11 +37,33 @@ export const FetchAllProductsByFilters = async (filter) => {
     //     console.log('Error while fetching products in ProductList_Api:', error);
     // }
 
-    let queryString = ''
-    for(let key in filter){
-        queryString += `${key}=${filter[key]}&`
+       let queryString = ''
+    // todo 
+    // filter = {"category": ["smartphone","laptops"]}
+    // sort = {_sort:"price",_order="desc"}
+    // TODO: on server we will support multiple values in filter
+    // pagination : _page=1&_limit=10
+  
+    for (let key in filter) {
+        if(filter[key].length > 0){
+            const categories = filter[key]
+            const lastCategory = categories[categories.length - 1]
+           queryString += `${key}=${lastCategory || ''}&`
+        }
+        // queryString += `${key}=${filter[key]}&`
     }
+
+    for(let key in sort){
+        queryString +=`${key}=${sort[key]}&`
+    }
+    // pagination object iteration
+    
+    for(let key in pagination){
+        queryString += `${key}=${pagination[key]}&`
+    }
+
     try {
+        console.log('queryString--',queryString)
         const response = await fetch(`http://localhost:8000/products?${queryString}`)
         const data = await response.json()
         return data
@@ -56,7 +77,7 @@ export const FetchAllProductsByFilters = async (filter) => {
 
 export const sortProducts = async (payload) => {
     try {
-       console.log(`http://localhost:8000/products?_sort=${payload.sort}&_order=${payload.order}`)
+    //    console.log(`http://localhost:8000/products?_sort=${payload.sort}&_order=${payload.order}`)
         const response = await fetch(`http://localhost:8000/products?_sort=${payload.sort}&_order=${payload.order}`)
         const data = await response.json()
         return data

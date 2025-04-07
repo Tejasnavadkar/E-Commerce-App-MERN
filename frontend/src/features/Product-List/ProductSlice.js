@@ -10,9 +10,9 @@ export const fetchProducts = createAsyncThunk('Productlist/fetchProducts', async
   }
 })
 
-export const fetchProductsByFilterAsync = createAsyncThunk('productlist/fetchProductsByFilterAsync', async (filter, { rejectWithValue }) => {
+export const fetchProductsByFilterAsync = createAsyncThunk('productlist/fetchProductsByFilterAsync', async ({filter,sort,pagination}, { rejectWithValue }) => {
   try {
-    return await FetchAllProductsByFilters(filter)
+    return await FetchAllProductsByFilters({filter,sort,pagination})
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -29,6 +29,8 @@ export const sortProductsAsync = createAsyncThunk('productlist/sortProductAsync'
 
 const initialState = {
   products: [],
+  pages:0,
+  items:0,
   isLoading: false,
   error: null
 
@@ -57,8 +59,17 @@ const ProductSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(fetchProductsByFilterAsync.fulfilled, (state, action) => {
-      state.products = action.payload
+      if(action.payload.data){
+        state.products = action.payload.data
+        state.pages = action.payload.pages
+        state.items = action.payload.items
       state.isLoading = false
+      }else{
+        state.products = action.payload
+        state.pages = action.payload.pages
+        state.isLoading = false
+      }
+     
     })
     builder.addCase(fetchProductsByFilterAsync.rejected, (state, action) => {
       state.isLoading = false
