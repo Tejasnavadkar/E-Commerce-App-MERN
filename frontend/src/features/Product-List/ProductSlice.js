@@ -1,10 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchAllProducts, FetchAllProductsByFilters, sortProducts } from "./ProductList_Api";
+import { FetchAllBrands, FetchAllCategories, FetchAllProducts, FetchAllProductsByFilters, sortProducts } from "./ProductList_Api";
 
 
 export const fetchProducts = createAsyncThunk('Productlist/fetchProducts', async (_, { rejectWithValue }) => {
   try {
     return await FetchAllProducts()
+  } catch (error) {
+    return rejectWithValue(error.message || error)
+  }
+})
+
+export const FetchAllCategoriesAsync = createAsyncThunk('Productlist/fetchCategories', async (_, { rejectWithValue }) => {
+  try {
+    return await FetchAllCategories()
+  } catch (error) {
+    return rejectWithValue(error.message || error)
+  }
+})
+
+export const FetchAllBrandsAsync = createAsyncThunk('Productlist/fetchBrands', async (_, { rejectWithValue }) => {
+  try {
+    return await FetchAllBrands()
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -28,7 +44,9 @@ export const sortProductsAsync = createAsyncThunk('productlist/sortProductAsync'
 
 
 const initialState = {
-  products: [],
+  allProducts: [],
+  categories:[],
+  brands:[],
   pages:0,
   items:0,
   isLoading: false,
@@ -47,10 +65,34 @@ const ProductSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      state.products = action.payload
+      state.allProducts = action.payload
       state.isLoading = false
     })
     builder.addCase(fetchProducts.rejected, (state, action) => {
+      state.isLoading = false
+      state.error = action.error
+    })
+
+    builder.addCase(FetchAllCategoriesAsync.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(FetchAllCategoriesAsync.fulfilled, (state, action) => {
+      state.categories = action.payload
+      state.isLoading = false
+    })
+    builder.addCase(FetchAllCategoriesAsync.rejected, (state, action) => {
+      state.isLoading = false
+      state.error = action.error
+    })
+
+    builder.addCase(FetchAllBrandsAsync.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(FetchAllBrandsAsync.fulfilled, (state, action) => {
+      state.brands = action.payload
+      state.isLoading = false
+    })
+    builder.addCase(FetchAllBrandsAsync.rejected, (state, action) => {
       state.isLoading = false
       state.error = action.error
     })
@@ -60,12 +102,12 @@ const ProductSlice = createSlice({
     })
     builder.addCase(fetchProductsByFilterAsync.fulfilled, (state, action) => {
       if(action.payload.data){
-        state.products = action.payload.data
+        state.allProducts = action.payload.data
         state.pages = action.payload.pages
         state.items = action.payload.items
       state.isLoading = false
       }else{
-        state.products = action.payload
+        state.allProducts = action.payload
         state.pages = action.payload.pages
         state.isLoading = false
       }
@@ -81,7 +123,7 @@ const ProductSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(sortProductsAsync.fulfilled, (state, action) => {
-      state.products = action.payload
+      state.allProducts = action.payload
       state.isLoading = false
     })
     builder.addCase(sortProductsAsync.rejected, (state, action) => {
@@ -92,6 +134,8 @@ const ProductSlice = createSlice({
 })
 
 export const productSelector = (state) => state.Products
+export const categoriesSelector = (state) => state.Products.categories
+export const brandsSelector = (state) => state.Products.brands
 
 // export const {} = ProductSlice.actions
 export default ProductSlice.reducer

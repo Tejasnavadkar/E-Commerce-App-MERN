@@ -14,6 +14,34 @@ export const FetchAllProducts = async () => {
     }
 }
 
+export const FetchAllCategories = async () => {
+    try {
+
+        const response = await fetch('http://localhost:8000/categories')
+        const data = await response.json()
+        return data
+
+    } catch (error) {
+
+        //    throw Error('error while fetching products in ProductList_Api-',error) 
+        console.log('error while fetching products in ProductList_Api-', error)
+    }
+}
+
+export const FetchAllBrands = async () => {
+    try {
+
+        const response = await fetch('http://localhost:8000/brands')
+        const data = await response.json()
+        return data
+
+    } catch (error) {
+
+        //    throw Error('error while fetching products in ProductList_Api-',error) 
+        console.log('error while fetching products in ProductList_Api-', error)
+    }
+}
+
 export const FetchAllProductsByFilters = async ({filter,sort,pagination}) => {
     // let queryString = '';
 

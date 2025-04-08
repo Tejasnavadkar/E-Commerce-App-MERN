@@ -16,7 +16,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchProducts, productSelector, fetchProductsByFilterAsync, sortProductsAsync } from '../ProductSlice'
+import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector,FetchAllCategoriesAsync,FetchAllBrandsAsync } from '../ProductSlice'
 import { PAGE_PER_LIMIT } from '../../../app/Constants'
 
 const sortOptions = [
@@ -27,99 +27,7 @@ const sortOptions = [
 
 ]
 
-const filters = [
-    {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'beauty', label: 'beauty', checked: false },
-            { value: 'fragrances', label: 'fragrances', checked: false },
-            { value: 'furniture', label: 'furniture', checked: false },
-            { value: 'groceries', label: 'groceries', checked: false },
-            {
-                value: 'home-decoration',
-                label: 'home decoration',
-                checked: false
-            },
-            {
-                value: 'kitchen-accessories',
-                label: 'kitchen accessories',
-                checked: false
-            },
-            { value: 'laptops', label: 'laptops', checked: false },
-            { value: 'mens-shirts', label: 'mens shirts', checked: false },
-            { value: 'mens-shoes', label: 'mens shoes', checked: false },
-            { value: 'mens-watches', label: 'mens watches', checked: false },
-            {
-                value: 'mobile-accessories',
-                label: 'mobile accessories',
-                checked: false
-            }
-        ],
-    },
-    {
-        id: 'brand',
-        name: 'Brand',
-        options: [
-            { value: 'Essence', label: 'Essence', checked: false },
-            { value: 'Glamour Beauty', label: 'Glamour Beauty', checked: false },
-            { value: 'Velvet Touch', label: 'Velvet Touch', checked: false },
-            { value: 'Chic Cosmetics', label: 'Chic Cosmetics', checked: false },
-            { value: 'Nail Couture', label: 'Nail Couture', checked: false },
-            { value: 'Calvin Klein', label: 'Calvin Klein', checked: false },
-            { value: 'Chanel', label: 'Chanel', checked: false },
-            { value: 'Dior', label: 'Dior', checked: false },
-            {
-                value: 'Dolce & Gabbana',
-                label: 'Dolce & Gabbana',
-                checked: false
-            },
-            { value: 'Gucci', label: 'Gucci', checked: false },
-            {
-                value: 'Annibale Colombo',
-                label: 'Annibale Colombo',
-                checked: false
-            },
-            { value: 'Furniture Co.', label: 'Furniture Co.', checked: false },
-            { value: 'Knoll', label: 'Knoll', checked: false },
-            { value: 'Bath Trends', label: 'Bath Trends', checked: false },
-            { value: 'Apple', label: 'Apple', checked: false },
-            { value: 'Asus', label: 'Asus', checked: false },
-            { value: 'Huawei', label: 'Huawei', checked: false },
-            { value: 'Lenovo', label: 'Lenovo', checked: false },
-            { value: 'Dell', label: 'Dell', checked: false },
-            { value: 'Fashion Trends', label: 'Fashion Trends', checked: false },
-            { value: 'Gigabyte', label: 'Gigabyte', checked: false },
-            { value: 'Classic Wear', label: 'Classic Wear', checked: false },
-            { value: 'Casual Comfort', label: 'Casual Comfort', checked: false },
-            { value: 'Urban Chic', label: 'Urban Chic', checked: false },
-            { value: 'Nike', label: 'Nike', checked: false },
-            { value: 'Puma', label: 'Puma', checked: false },
-            { value: 'Off White', label: 'Off White', checked: false },
-            {
-                value: 'Fashion Timepieces',
-                label: 'Fashion Timepieces',
-                checked: false
-            },
-            { value: 'Longines', label: 'Longines', checked: false },
-            { value: 'Rolex', label: 'Rolex', checked: false },
-            { value: 'Amazon', label: 'Amazon', checked: false }
-        ],
-    },
 
-    // {
-    //     id: 'size',
-    //     name: 'Size',
-    //     options: [
-    //         { value: '2l', label: '2L', checked: false },
-    //         { value: '6l', label: '6L', checked: false },
-    //         { value: '12l', label: '12L', checked: false },
-    //         { value: '18l', label: '18L', checked: false },
-    //         { value: '20l', label: '20L', checked: false },
-    //         { value: '40l', label: '40L', checked: true },
-    //     ],
-    // },
-]
 
 
 function classNames(...classes) {
@@ -131,13 +39,27 @@ const ProductList = () => {
 
    
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-    const dispatch = useDispatch()
     const [filter, setfilter] = useState({})
     const [sort,setSort] = useState({})
     const [activePage,setActivePage] = useState(1)
 
-    const { products, isLoading, error,pages,items } = useSelector(productSelector)
-    // const products = useSelector(state=>state.Products.products)
+    const { allProducts, isLoading, error,pages,items} = useSelector(productSelector)
+    const categories = useSelector(categoriesSelector)
+    const brands = useSelector(brandsSelector)
+    const dispatch = useDispatch()
+   
+    const filters = [
+        {
+            id: 'category',
+            name: 'Category',
+            options: categories
+        },
+        {
+            id: 'brand',
+            name: 'Brand',
+            options:brands
+        },
+    ]
 
 
     const handleFilter = (e, section, option) => {
@@ -196,6 +118,12 @@ const ProductList = () => {
         setActivePage(1) // when filter change or sort change move to first page 
     },[items,sort])
 
+    useEffect(()=>{
+        // console.log('useEffect for category')
+        dispatch(FetchAllCategoriesAsync())
+        dispatch(FetchAllBrandsAsync())
+    },[dispatch])
+
 
 
     // if (isLoading) {  // this sffetcs Discloure components state it close the Discloure section
@@ -214,7 +142,7 @@ const ProductList = () => {
 
         <div className="bg-white">
             <div>
-                <MobileFilter mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} handleFilter={handleFilter}/>
+                <MobileFilter filters={filters} mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} handleFilter={handleFilter}/>
 
                 <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
@@ -278,10 +206,11 @@ const ProductList = () => {
                             {/* Filters */}
                             <DesktopFilter 
                             handleFilter={handleFilter}
+                            filters={filters}
                             />
 
                             {/* Product grid */}
-                            <ProductGrid products={products} />
+                            <ProductGrid products={allProducts} />
                            
                         </div>
                     </section>
@@ -300,7 +229,7 @@ export default ProductList
 
 // child components
 
-const MobileFilter = ({mobileFiltersOpen, setMobileFiltersOpen,handleFilter}) => {
+const MobileFilter = ({mobileFiltersOpen, setMobileFiltersOpen,handleFilter,filters}) => {
     
     return (
         <>
@@ -409,7 +338,7 @@ const MobileFilter = ({mobileFiltersOpen, setMobileFiltersOpen,handleFilter}) =>
     )
 }
 
-const DesktopFilter = ({handleFilter}) => {
+const DesktopFilter = ({handleFilter,filters}) => {
     return (
         <>
             <form className="hidden lg:block">
@@ -483,13 +412,13 @@ const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProduc
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div className="flex flex-1 justify-between sm:hidden">
                     <button
-                        onClick={()=>setActivePage(prev => prev > 1 && activePage-1)}
+                         onClick={()=>setActivePage(prev => prev > 1 ? activePage-1 : prev)}
                         className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Previous
                     </button>
                     <button
-                        // onClick={()=>setActivePage(activePage < 1 && activePage-1)}
+                         onClick={()=>setActivePage(prev=> prev < pages ? prev + 1 : prev)}
                         className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Next
