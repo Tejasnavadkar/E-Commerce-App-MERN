@@ -7,6 +7,7 @@ import Home from './pages/HomePage'
 import CartPage from './pages/CartPage'
 import CheckOutPage from './pages/CheckOutPage'
 import ProductDetailsPage from './pages/ProductDetailsPage'
+import Protected from './features/Auth/components/Protected'
 
 
 function App() {
@@ -17,11 +18,33 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path='/signup' element={<SignupPage />} />
-            <Route path='/' element={<Home />} />
+            
+            <Route path='/' element={
+              <Protected>
+                <Home />
+              </Protected>
+            }
+            />
             <Route path='/login' element={<LoginPage />} />
-            <Route path='/cart' element={<CartPage/>}/>
-            <Route path='/checkout' element={<CheckOutPage/>}/>
-            <Route path='/product-details' element={<ProductDetailsPage/>}/>
+
+            <Route path='/cart' element={ 
+              <Protected>
+                <CartPage />
+              </Protected>} />
+              
+            <Route path='/checkout' element={
+              <Protected>
+                <CheckOutPage />
+              </Protected>
+              
+              } />
+            <Route path='/product-details/:id' element={ 
+              <Protected>
+                 <ProductDetailsPage/>
+              </Protected>
+             
+            }
+               />
           </Routes>
         </BrowserRouter>
       </div>

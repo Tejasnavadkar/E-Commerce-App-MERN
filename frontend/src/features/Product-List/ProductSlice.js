@@ -1,10 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchAllBrands, FetchAllCategories, FetchAllProducts, FetchAllProductsByFilters, sortProducts } from "./ProductList_Api";
+import { FetchAllBrands, FetchAllCategories, FetchAllProducts, FetchAllProductsByFilters, FetchProductById, sortProducts } from "./ProductList_Api";
 
 
 export const fetchProducts = createAsyncThunk('Productlist/fetchProducts', async (_, { rejectWithValue }) => {
   try {
     return await FetchAllProducts()
+  } catch (error) {
+    return rejectWithValue(error.message || error)
+  }
+})
+
+export const fetchProductsById = createAsyncThunk('Productlist/fetchProductsById', async ({id}, { rejectWithValue }) => {
+  try {
+    return await FetchProductById({id})
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -43,10 +51,13 @@ export const sortProductsAsync = createAsyncThunk('productlist/sortProductAsync'
 })
 
 
+
+
 const initialState = {
   allProducts: [],
   categories:[],
   brands:[],
+  selectedProductById:[],
   pages:0,
   items:0,
   isLoading: false,
@@ -130,12 +141,25 @@ const ProductSlice = createSlice({
       state.isLoading = false
       state.error = action.error
     })
+
+    builder.addCase(fetchProductsById.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(fetchProductsById.fulfilled, (state, action) => {
+      state.selectedProductById = action.payload
+      state.isLoading = false
+    })
+    builder.addCase(fetchProductsById.rejected, (state, action) => {
+      state.isLoading = false
+      state.error = action.error
+    })
   }
 })
 
 export const productSelector = (state) => state.Products
 export const categoriesSelector = (state) => state.Products.categories
 export const brandsSelector = (state) => state.Products.brands
+export const ProductByIdSelector = (state) => state.Products.selectedProductById
 
 // export const {} = ProductSlice.actions
 export default ProductSlice.reducer

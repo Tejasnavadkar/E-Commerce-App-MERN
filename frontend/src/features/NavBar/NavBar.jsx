@@ -17,9 +17,9 @@ const navigation = [
   { name: 'Reports', href: '#', current: false },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Your Profile', link: '#' },
+  { name: 'Settings', link: '#' },
+  { name: 'Sign out', link: '/login' },
 ]
 
 function classNames(...classes) {
@@ -73,7 +73,7 @@ const NavBar = ({children}) => {
                 <span className="sr-only">View notifications</span>
                 <ShoppingCartIcon aria-hidden="true" className="size-6" />
               </button>
-              <span class="inline-flex items-center rounded-md bg-red-50 px-1 mb-6 z-10 -ml-2 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">3</span>
+              <span className="inline-flex items-center rounded-md bg-red-50 px-1 mb-6 z-10 -ml-2 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">3</span>
 
 
               {/* Profile dropdown */}
@@ -91,12 +91,12 @@ const NavBar = ({children}) => {
                 >
                   {userNavigation.map((item) => (
                     <MenuItem key={item.name}>
-                      <a
+                      <Link to={item.link}
                         href={item.href}
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </MenuItem>
                   ))}
                 </MenuItems>

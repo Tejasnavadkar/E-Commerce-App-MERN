@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { userSelector } from '../../Auth/AuthSlice'
+import { cartSelector } from '../CartSlice'
 
 const products = [
     {
@@ -28,7 +30,7 @@ const products = [
 ]
 
 const Cart = () => {
-
+// const products = userSelector(cartSelector)
     const navigate = useNavigate()
 
 

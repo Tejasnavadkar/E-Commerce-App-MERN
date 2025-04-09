@@ -14,6 +14,20 @@ export const FetchAllProducts = async () => {
     }
 }
 
+export const FetchProductById = async ({id}) => {
+    try {
+
+        const response = await fetch(`http://localhost:8000/products/${id}`)
+        const data = await response.json()
+        return data
+
+    } catch (error) {
+
+        //    throw Error('error while fetching products in ProductList_Api-',error) 
+        console.log('error while fetching products by id in ProductList_Api-', error)
+    }
+}
+
 export const FetchAllCategories = async () => {
     try {
 
@@ -91,7 +105,7 @@ export const FetchAllProductsByFilters = async ({filter,sort,pagination}) => {
     }
 
     try {
-        console.log('queryString--',queryString)
+        // console.log('queryString--',queryString)
         const response = await fetch(`http://localhost:8000/products?${queryString}`)
         const data = await response.json()
         return data
