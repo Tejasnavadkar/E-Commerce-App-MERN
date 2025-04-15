@@ -126,7 +126,7 @@ const ProductList = () => {
 
 
 
-    // if (isLoading) {  // this sffetcs Discloure components state it close the Discloure section
+    // if (isLoading) {  // this affetcs Discloure components state it close the Discloure section
     //     return <div className='h-screen w-full flex justify-center items-center text-2xl'>
     //         Loading..
     //     </div>

@@ -1,28 +1,49 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addToCart, fetchAllCarts } from "./Cart_Api";
+import { addToCart, deleteCartItemById, fetchCartsByUserId, updateCartById } from "./Cart_Api";
 
 // import axios from "axios";
 
 
 
 export const addToCartAsync = createAsyncThunk(
-    'auth/createUser',
+    'cart/addToCart',
     async (item,{rejectWithValue}) => {
         try {
-         const data = await addToCart(item) //  coz of this create user api call tree reloades
+         const data = await addToCart(item) // this api reload page  coz of this create user api call tree reloades
             return data
+        // return item
         } catch (error) {
             return rejectWithValue(error.message || 'Failed to create user');
         }
     }
 );
 
-export const fetchCarts = createAsyncThunk('CartSlice/fetchCarts', async (_, { rejectWithValue }) => {
+export const updateCartQuantityAsync = createAsyncThunk('Cart/updateQuantity',async (update,{rejectWithValue})=>{
+    try {
+        console.log('update',update)
+       const data = await updateCartById(update)
+       return data
+    } catch (error) {
+        return rejectWithValue(error.message || error)
+    }
+})
+
+export const fetchCartsById = createAsyncThunk('Cart/fetchAllCarts', async (userId, { rejectWithValue }) => {
   try {
-    return await fetchAllCarts()
+    return await fetchCartsByUserId(userId)
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
+})
+
+export const deleteCartItemAsync = createAsyncThunk('Cart/deleteCartItem',async (itemId,{rejectWithValue})=>{
+    try {
+        // console.log('update',update)
+       const data = await deleteCartItemById(itemId)
+       return data
+    } catch (error) {
+        return rejectWithValue(error.message || error)
+    }
 })
 
 
@@ -54,14 +75,44 @@ const cartSlice = createSlice({
         })
 
         //fetch all carts
-        builder.addCase(fetchCarts.pending,(state)=>{
+        builder.addCase(fetchCartsById.pending,(state)=>{
             state.isLoading = true
         })
-        builder.addCase(fetchCarts.fulfilled,(state,action)=>{
+        builder.addCase(fetchCartsById.fulfilled,(state,action)=>{
             state.isLoading = false
-            state.cartItems.push(action.payload)
+            state.cartItems = action.payload
         })
-        builder.addCase(fetchCarts.rejected,(state,action)=>{
+        builder.addCase(fetchCartsById.rejected,(state,action)=>{
+            state.isLoading = false
+            state.error = action.payload
+        })
+
+        //update cart quantity
+
+        builder.addCase(updateCartQuantityAsync.pending,(state)=>{
+            state.isLoading = true
+        })
+        builder.addCase(updateCartQuantityAsync.fulfilled,(state,action)=>{
+            state.isLoading = false
+            const index = state.cartItems.findIndex((item)=> item.id === action.payload.id)  // here we just find that cart id and replace with our updated cart
+            state.cartItems[index] = action.payload
+        })
+        builder.addCase(updateCartQuantityAsync.rejected,(state,action)=>{
+            state.isLoading = false
+            state.error = action.payload
+        })
+
+        //delete cart item
+
+        builder.addCase(deleteCartItemAsync.pending,(state)=>{
+            state.isLoading = true
+        })
+        builder.addCase(deleteCartItemAsync.fulfilled,(state,action)=>{
+            state.isLoading = false
+           const index =  state.cartItems.findIndex((item)=>item.id == action.payload.id)
+           state.cartItems.splice(index,1)  // here use splice not slice bcoz slice not make change original array splice change the original array
+        })
+        builder.addCase(deleteCartItemAsync.rejected,(state,action)=>{
             state.isLoading = false
             state.error = action.payload
         })

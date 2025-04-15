@@ -1,6 +1,10 @@
 import React from 'react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link} from 'react-router-dom'
+import Cart from '../features/Cart/components/Cart'
+import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateUserAsync, userSelector } from '../features/Auth/AuthSlice'
 
 const addreses = [
     {
@@ -26,39 +30,29 @@ const addreses = [
 
 ]
 
-const products = [
-    {
-        id: 1,
-        name: 'Throwback Hip Bag',
-        href: '#',
-        color: 'Salmon',
-        price: '$90.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-        imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-        id: 2,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-
-    // More products...
-]
 
 const CheckOutPage = () => {
-    const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+    const {handleSubmit,register,formState:{errors}} = useForm()
+    const loggedInUser = useSelector(userSelector)
+console.log('user',loggedInUser)
+
+    const handleFormSubmit = (data) =>{
+        const userData = {...data,id:loggedInUser.data.id}  //add user id
+        console.log('userData',userData)
+        // dispatch action //here we basically update the current loggedin user with this info like address city etc
+        dispatch(updateUserAsync(userData))
+    }
+
+
+
+
     return (
         <div className='grid grid-cols-5 space-x-2.5 mx-auto w-[90%] sm:max-w-7xl'>
             <div className='col-span-5 md:col-span-3 bg-white mt-10 px-4 py-4'>
                 <div>
-                    <form>
+                    <form onSubmit={handleSubmit(handleFormSubmit)} >
                         <div className="border-b border-gray-900/10 pb-12">
                             <h2 className="text-base/7 font-semibold text-gray-900">Personal Information</h2>
                             <p className="mt-1 text-sm/6 text-gray-600">Use a permanent address where you can receive mail.</p>
@@ -66,33 +60,20 @@ const CheckOutPage = () => {
                             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="sm:col-span-3">
                                     <label htmlFor="first-name" className="block text-sm/6 font-medium text-gray-900">
-                                        First name
+                                        Full Name
                                     </label>
                                     <div className="mt-2">
                                         <input
-                                            id="first-name"
-                                            name="first-name"
+                                            id="Full-Name"
+                                            {...register('name',{required:'name is required'})}
                                             type="text"
                                             autoComplete="given-name"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.name && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                        {errors.name && <span className='text-xs text-red-600'>{errors.name.message}</span> }
                                     </div>
                                 </div>
 
-                                <div className="sm:col-span-3">
-                                    <label htmlFor="last-name" className="block text-sm/6 font-medium text-gray-900">
-                                        Last name
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            id="last-name"
-                                            name="last-name"
-                                            type="text"
-                                            autoComplete="family-name"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                                        />
-                                    </div>
-                                </div>
 
                                 <div className="sm:col-span-4">
                                     <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
@@ -101,34 +82,32 @@ const CheckOutPage = () => {
                                     <div className="mt-2">
                                         <input
                                             id="email"
-                                            name="email"
+                                            {...register('email',{required:'email is required'})}
                                             type="email"
                                             autoComplete="email"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.email && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                         {errors.email && <span className='text-xs text-red-600'>{errors.email.message}</span> }
                                     </div>
                                 </div>
 
                                 <div className="sm:col-span-3">
                                     <label htmlFor="country" className="block text-sm/6 font-medium text-gray-900">
-                                        Country
+                                        Phone
                                     </label>
                                     <div className="mt-2 grid grid-cols-1">
-                                        <select
-                                            id="country"
-                                            name="country"
-                                            autoComplete="country-name"
-                                            className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                                        >
-                                            <option>United States</option>
-                                            <option>Canada</option>
-                                            <option>Mexico</option>
-                                        </select>
-                                        <ChevronDownIcon
+                                    <input
+                                            id="phone"
+                                            {...register('phone',{required:'phone is required'})}
+                                            type="tel"
+                                            className={`block w-full rounded-md ${errors.street && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                        />
+                                        {/* <ChevronDownIcon
                                             aria-hidden="true"
                                             className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                                        />
+                                        /> */}
                                     </div>
+                                    {errors.phone && <span className='text-xs text-red-600'>{errors.phone.message}</span> }
                                 </div>
 
                                 <div className="col-span-full">
@@ -138,11 +117,12 @@ const CheckOutPage = () => {
                                     <div className="mt-2">
                                         <input
                                             id="street-address"
-                                            name="street-address"
+                                            {...register('street',{required:'street is required'})}
                                             type="text"
                                             autoComplete="street-address"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.street && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                         {errors.street && <span className='text-xs text-red-600'>{errors.street.message}</span> }
                                     </div>
                                 </div>
 
@@ -153,11 +133,12 @@ const CheckOutPage = () => {
                                     <div className="mt-2">
                                         <input
                                             id="city"
-                                            name="city"
+                                            {...register('city',{required:'city is required'})}
                                             type="text"
                                             autoComplete="address-level2"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.city && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                         {errors.city && <span className='text-xs text-red-600'>{errors.city.message}</span> }
                                     </div>
                                 </div>
 
@@ -168,11 +149,12 @@ const CheckOutPage = () => {
                                     <div className="mt-2">
                                         <input
                                             id="region"
-                                            name="region"
+                                            {...register('state',{required:'state is required'})}
                                             type="text"
                                             autoComplete="address-level1"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.state && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                         {errors.state && <span className='text-xs text-red-600'>{errors.state.message}</span> }
                                     </div>
                                 </div>
 
@@ -182,12 +164,11 @@ const CheckOutPage = () => {
                                     </label>
                                     <div className="mt-2">
                                         <input
-                                            id="postal-code"
-                                            name="postal-code"
+                                            {...register('pinCode',{required:'PinCode is required'})}
                                             type="text"
-                                            autoComplete="postal-code"
-                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                            className={`block w-full rounded-md ${errors.pinCode && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
+                                         {errors.pinCode && <span className='text-xs text-red-600'>{errors.pinCode.message}</span> }
                                     </div>
                                 </div>
                             </div>
@@ -286,7 +267,7 @@ const CheckOutPage = () => {
 
             <div className='col-span-5 md:col-span-2'>
                 {/* Cart  */}
-                <div className='pt-10'>
+                {/* <div className='pt-10'>
                     <div className="flex h-full mx-auto  flex-col bg-white shadow-xl">
                         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                             <div className="flex items-start justify-between">
@@ -365,7 +346,8 @@ const CheckOutPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
+                <Cart/>
             </div>
         </div>
     )

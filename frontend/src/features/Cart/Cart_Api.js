@@ -23,10 +23,10 @@ export const addToCart = async (item) => {
     }
  };
 
- export const fetchAllCarts = async () =>{
+ export const fetchCartsByUserId = async (userId) =>{
     try {
 
-        const response = await fetch('http://localhost:8000/cart')
+        const response = await fetch(`http://localhost:8000/cart?user=${userId}`)
         const data = await response.json()
         return data
 
@@ -36,4 +36,39 @@ export const addToCart = async (item) => {
         console.log('error while fetching carts in Cart_Api-', error)
     }
 
+ }
+
+ export const updateCartById = async (update) =>{
+
+    try {
+        
+   const response = await fetch(`http://localhost:8000/cart/${parseInt(update.id)}`,{
+        method:'PATCH',
+        body:JSON.stringify(update),
+        headers:{'content-type':'application/json'}
+    })
+    const data = await response.json()
+    return data
+
+    } catch (error) {
+        throw new Error('err in updateCart api:',error)        
+    }
+ }
+
+ export const deleteCartItemById = async (itemId) =>{
+
+    try {
+        console.log('delet id ',itemId)
+    await fetch(`http://localhost:8000/cart/${itemId}`,{
+        method:'DELETE',
+        headers:{'content-type':'application/json'}
+    })
+    return {
+        id:itemId,
+        msg:'cart item deleted successfully'
+    }
+
+    } catch (error) {
+        throw new Error('err in updateCart api:',error)        
+    }
  }

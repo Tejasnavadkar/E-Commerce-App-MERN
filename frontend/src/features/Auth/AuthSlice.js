@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { checkUser, createUser } from "./Auth_Api";
+import { checkUser, createUser, updateUser } from "./Auth_Api";
 // import axios from "axios";
 
 
@@ -36,6 +36,16 @@ export const checkUserAsync = createAsyncThunk(
         }
     }
 );
+
+export const updateUserAsync = createAsyncThunk('auth/updateUser',async (update,{rejectWithValue}) =>{
+   
+    try {
+        const data = await updateUser(update)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.message || error)
+    }
+})
 
 //   const authSlice = createSlice({
 //     name: 'authSlice',
@@ -100,13 +110,30 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.logedInUser = null;
         })
+
+        // update user in checkout page
+
+        builder.addCase(updateUserAsync.pending,(state)=>{
+            state.isLoading = true;
+            state.error = null;
+        })
+        builder.addCase(updateUserAsync.fulfilled,(state,action)=>{
+            state.logedInUser = action.payload;
+            state.isLoading = false;
+            state.error = null;
+        })
+        builder.addCase(updateUserAsync.rejected,(state,action)=>{
+            state.error = action.payload;
+            state.isLoading = false;
+            state.logedInUser = null;
+        })
     }
 })
 
 // export const {} = authSlice.actions
 
 // import in useSelector
-export const userSelector = (state) => state.Auth.logedInUser
-export const errorSelector = (state) => state.Auth.error
+export const userSelector = (state) => state.Auth?.logedInUser
+export const errorSelector = (state) => state.Auth?.error
 
 export default authSlice.reducer

@@ -8,9 +8,20 @@ import CartPage from './pages/CartPage'
 import CheckOutPage from './pages/CheckOutPage'
 import ProductDetailsPage from './pages/ProductDetailsPage'
 import Protected from './features/Auth/components/Protected'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { userSelector } from './features/Auth/AuthSlice'
+import { fetchCartsById } from './features/Cart/CartSlice'
 
 
 function App() {
+
+ const dispatch = useDispatch()
+ const user = useSelector(userSelector)
+
+  useEffect(()=>{
+    dispatch(fetchCartsById(user?.id))
+  },[dispatch,user])
 
   return (
     <>
