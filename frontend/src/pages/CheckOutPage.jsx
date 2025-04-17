@@ -1,49 +1,106 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
-import { Link} from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Cart from '../features/Cart/components/Cart'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserAsync, userSelector } from '../features/Auth/AuthSlice'
+import { cartSelector, deleteCartItemAsync, resetCartAsync, updateCartQuantityAsync } from '../features/Cart/CartSlice'
+import { createOrderAsync, selectCurrentOrder } from '../features/Orders/Orders_Slice'
 
-const addreses = [
-    {
-        name: 'Leslie Alexander',
-        email: 'leslie.alexander@example.com',
-        imageUrl:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        street: 'main street',
-        city: 'pune',
-        pincode: '100124',
-        phone: '69534562'
-    },
-    {
-        name: 'Michael Foster',
-        email: 'michael.foster@example.com',
-        imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        street: 'fear street',
-        city: 'pune',
-        pincode: '100124',
-        phone: '69534561232'
-    },
+// const addreses = [
+//     {
+//         name: 'Leslie Alexander',
+//         email: 'leslie.alexander@example.com',
+//         imageUrl:
+//             'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//         street: 'main street',
+//         city: 'pune',
+//         pincode: '100124',
+//         phone: '69534562'
+//     },
+//     {
+//         name: 'Michael Foster',
+//         email: 'michael.foster@example.com',
+//         imageUrl:
+//             'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//         street: 'fear street',
+//         city: 'pune',
+//         pincode: '100124',
+//         phone: '69534561232'
+//     },
 
-]
+// ]
 
 
 const CheckOutPage = () => {
 
-  const dispatch = useDispatch()
-    const {handleSubmit,register,formState:{errors}} = useForm()
+    const [selectedAddress, setAddress] = useState(null)
+    const [selectedPaymentMethod, setPaymentMethod] = useState("cash")
+    const dispatch = useDispatch()
+    const { handleSubmit, register, reset, formState: { errors } } = useForm()
     const loggedInUser = useSelector(userSelector)
-console.log('user',loggedInUser)
+    const navigate = useNavigate()
+    const products = useSelector(cartSelector)
+    const currentOrder = useSelector(selectCurrentOrder)
+    const user = loggedInUser.data
 
-    const handleFormSubmit = (data) =>{
-        const userData = {...data,id:loggedInUser.data.id}  //add user id
-        console.log('userData',userData)
-        // dispatch action //here we basically update the current loggedin user with this info like address city etc
-        dispatch(updateUserAsync(userData))
+     console.log('loggedInuser',loggedInUser)
+    console.log('cartItem', products)
+    console.log('user', loggedInUser)
+    console.log('selectedAddress', selectedAddress)
+    console.log('selectedPayment', selectedPaymentMethod)
+
+
+    const subTotal = Math.round(products.reduce((acc, item) => item.price * item.quantity + acc, 0))
+    const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
+
+    const handleAddress = (index) => {  // we cant pass directly pass object from radio input
+        setAddress(loggedInUser.data.addreses[index])
     }
+
+    const handlePaymentMethod = (method) => {  // we cant pass directly pass object from radio input
+        console.log('Payment-method', method)
+        setPaymentMethod(method)
+    }
+
+    const handleFormSubmit = (data) => {
+        const userData = { ...loggedInUser.data, addreses: [...(loggedInUser.data.addreses || []), data] } //loggedInUser.addreses might be undefined when trying to spread it in the handleFormSubmit function so add a check
+        console.log('userData', userData)
+        dispatch(updateUserAsync(userData))  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
+        reset()
+    }
+
+    const handleQuantity = (e, item) => {
+        // console.log('item--',item)
+        // delete item.id
+        const newItem = { ...item, quantity: e.target.value }  // here we pass copy of updated item
+
+        dispatch(updateCartQuantityAsync(newItem))
+
+    }
+
+    const RemoveCartItem = (itemId) => {
+        dispatch(deleteCartItemAsync(itemId))
+    }
+
+    const HandleOrder = async () => {
+
+        if (selectedAddress && selectedPaymentMethod) {
+            const order = { user, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
+            dispatch(createOrderAsync(order))
+            // console.log('hii currentOrder',currentOrder)
+           
+
+        } else {
+            alert('select address and payment method')
+        }
+        //todo when order created succefully navigate to success page
+        // todo: also cleare all carts after order in db and redux state also
+        //todo: on server change stock number of items
+
+    }
+
 
 
 
@@ -65,12 +122,12 @@ console.log('user',loggedInUser)
                                     <div className="mt-2">
                                         <input
                                             id="Full-Name"
-                                            {...register('name',{required:'name is required'})}
+                                            {...register('name', { required: 'name is required' })}
                                             type="text"
                                             autoComplete="given-name"
-                                            className={`block w-full rounded-md ${errors.name && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.name ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                        {errors.name && <span className='text-xs text-red-600'>{errors.name.message}</span> }
+                                        {errors.name && <span className='text-xs text-red-600'>{errors.name.message}</span>}
                                     </div>
                                 </div>
 
@@ -82,12 +139,12 @@ console.log('user',loggedInUser)
                                     <div className="mt-2">
                                         <input
                                             id="email"
-                                            {...register('email',{required:'email is required'})}
+                                            {...register('email', { required: 'email is required' })}
                                             type="email"
                                             autoComplete="email"
-                                            className={`block w-full rounded-md ${errors.email && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.email ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                         {errors.email && <span className='text-xs text-red-600'>{errors.email.message}</span> }
+                                        {errors.email && <span className='text-xs text-red-600'>{errors.email.message}</span>}
                                     </div>
                                 </div>
 
@@ -96,18 +153,18 @@ console.log('user',loggedInUser)
                                         Phone
                                     </label>
                                     <div className="mt-2 grid grid-cols-1">
-                                    <input
+                                        <input
                                             id="phone"
-                                            {...register('phone',{required:'phone is required'})}
+                                            {...register('phone', { required: 'phone is required' })}
                                             type="tel"
-                                            className={`block w-full rounded-md ${errors.street && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.street  ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
                                         {/* <ChevronDownIcon
                                             aria-hidden="true"
                                             className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                                         /> */}
                                     </div>
-                                    {errors.phone && <span className='text-xs text-red-600'>{errors.phone.message}</span> }
+                                    {errors.phone && <span className='text-xs text-red-600'>{errors.phone.message}</span>}
                                 </div>
 
                                 <div className="col-span-full">
@@ -117,12 +174,12 @@ console.log('user',loggedInUser)
                                     <div className="mt-2">
                                         <input
                                             id="street-address"
-                                            {...register('street',{required:'street is required'})}
+                                            {...register('street', { required: 'street is required' })}
                                             type="text"
                                             autoComplete="street-address"
-                                            className={`block w-full rounded-md ${errors.street && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.street  ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                         {errors.street && <span className='text-xs text-red-600'>{errors.street.message}</span> }
+                                        {errors.street && <span className='text-xs text-red-600'>{errors.street.message}</span>}
                                     </div>
                                 </div>
 
@@ -133,12 +190,12 @@ console.log('user',loggedInUser)
                                     <div className="mt-2">
                                         <input
                                             id="city"
-                                            {...register('city',{required:'city is required'})}
+                                            {...register('city', { required: 'city is required' })}
                                             type="text"
                                             autoComplete="address-level2"
-                                            className={`block w-full rounded-md ${errors.city && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.city  ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                         {errors.city && <span className='text-xs text-red-600'>{errors.city.message}</span> }
+                                        {errors.city && <span className='text-xs text-red-600'>{errors.city.message}</span>}
                                     </div>
                                 </div>
 
@@ -149,12 +206,12 @@ console.log('user',loggedInUser)
                                     <div className="mt-2">
                                         <input
                                             id="region"
-                                            {...register('state',{required:'state is required'})}
+                                            {...register('state', { required: 'state is required' })}
                                             type="text"
                                             autoComplete="address-level1"
-                                            className={`block w-full rounded-md ${errors.state && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.state  ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                         {errors.state && <span className='text-xs text-red-600'>{errors.state.message}</span> }
+                                        {errors.state && <span className='text-xs text-red-600'>{errors.state.message}</span>}
                                     </div>
                                 </div>
 
@@ -164,11 +221,11 @@ console.log('user',loggedInUser)
                                     </label>
                                     <div className="mt-2">
                                         <input
-                                            {...register('pinCode',{required:'PinCode is required'})}
+                                            {...register('pinCode', { required: 'PinCode is required' })}
                                             type="text"
-                                            className={`block w-full rounded-md ${errors.pinCode && 'border border-red-600'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
+                                            className={`block w-full rounded-md ${errors.pinCode  ? 'border border-red-600' : 'border'} bg-white px-3 py-1.5 text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6`}
                                         />
-                                         {errors.pinCode && <span className='text-xs text-red-600'>{errors.pinCode.message}</span> }
+                                        {errors.pinCode && <span className='text-xs text-red-600'>{errors.pinCode.message}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -187,8 +244,6 @@ console.log('user',loggedInUser)
                         </div>
                     </form>
 
-
-
                     <div className="border-b border-gray-900/10 pb-12">
                         <div>
                             <h2 className="text-base/7 font-semibold text-gray-900">Address</h2>
@@ -197,11 +252,11 @@ console.log('user',loggedInUser)
                             </p>
                             <div>
                                 <ul role="list" className="divide-y divide-gray-100">
-                                    {addreses.map((address) => (
-                                        <li key={address.email} className="flex justify-between gap-x-6 py-5">
+                                    {loggedInUser?.data.addreses?.map((address, idx) => (
+                                        <li key={idx} className="flex justify-between gap-x-6 py-5">
 
                                             <div className="flex min-w-0 gap-x-4">
-                                                <input type="radio" name="address" id="" />
+                                                <input type="radio" name="address" onChange={() => handleAddress(idx)} id="" />
                                                 <div className="min-w-0 flex-auto">
                                                     <p className="text-sm/6 font-semibold text-gray-900">{address.name}</p>
                                                     <p className="text-sm/6 text-gray-900">
@@ -234,10 +289,11 @@ console.log('user',loggedInUser)
                                 <div className="mt-6 space-y-6">
                                     <div className="flex items-center gap-x-3">
                                         <input
-                                            defaultChecked
                                             id="cash"
                                             name="Payment-Method"
                                             type="radio"
+                                            checked={selectedPaymentMethod === 'cash'}
+                                            onChange={() => handlePaymentMethod('cash')}
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                         />
                                         <label htmlFor="push-everything" className="block text-sm/6 font-medium text-gray-900">
@@ -249,6 +305,8 @@ console.log('user',loggedInUser)
                                             id="card"
                                             name="Payment-Method"
                                             type="radio"
+                                            checked={selectedPaymentMethod === 'card'}
+                                            onChange={() => handlePaymentMethod('card')}
                                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden"
                                         />
                                         <label htmlFor="push-email" className="block text-sm/6 font-medium text-gray-900">
@@ -347,7 +405,96 @@ console.log('user',loggedInUser)
                         </div>
                     </div>
                 </div> */}
-                <Cart/>
+                {/* <Cart OrderButton={true} selectedAddress={selectedAddress} selectedPaymentMethod={selectedPaymentMethod} /> */}
+
+                <div className='pt-10'>
+                    {products.length === 0 && <Navigate to={'/'} replace={true} />}
+                    {currentOrder && <Navigate to={`/order-success/${currentOrder.id}`} replace={true} />}
+                    <div className="flex h-full w-[70%] mx-auto  flex-col bg-white shadow-xl">
+                        <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                            <div className="flex items-start justify-between">
+                                <h3 className="text-lg font-medium text-gray-900">Shopping cart</h3>
+                            </div>
+
+                            <div className="mt-8">
+                                <div className="flow-root">
+                                    <ul role="list" className="-my-6 divide-y divide-gray-200">
+                                        {products?.map((item) => (
+                                            <li key={item?.id} className="flex py-6">
+                                                <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                    <img alt={item?.imageAlt} src={item?.images[0]} className="size-full object-cover" />
+                                                </div>
+
+                                                <div className="ml-4 flex flex-1 flex-col">
+                                                    <div>
+                                                        <div className="flex justify-between text-base font-medium text-gray-900">
+                                                            <h3>
+                                                                <a href={item?.href}>{item?.title}</a>
+                                                            </h3>
+                                                            <p className="ml-4">${item?.price}</p>
+                                                        </div>
+                                                        <p className="mt-1 text-sm text-gray-500">{item?.color}</p>
+                                                    </div>
+                                                    <div className="flex flex-1 items-end justify-between text-sm">
+                                                        <div className="text-gray-500 flex gap-2">
+                                                            <span>Qty</span>
+                                                            <select name="" id="" onChange={(e) => handleQuantity(e, item)} value={item?.quantity} className='px-2'>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="flex">
+                                                            <button onClick={() => RemoveCartItem(item.id)} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                            <div className="flex justify-between text-base font-medium text-gray-900">
+                                <p>Subtotal</p>
+                                <p>${subTotal || 0}</p>
+                            </div>
+
+                            <div className="flex justify-between text-base font-medium text-gray-900">
+                                <p>Total items in cart</p>
+                                <p>{totalItems || 0} items</p>
+                            </div>
+
+                            <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                            <div className="mt-6">
+                                <button  // in checkout page show order button otherwise show Checkout button
+                                    onClick={HandleOrder}
+                                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700"
+                                >
+                                    Order
+                                </button>
+                            </div>
+                            <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                <p>
+                                    or{' '}
+                                    <button
+                                        type="button"
+                                        onClick={() => { navigate('/') }}
+                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                        Continue Shopping
+                                        <span aria-hidden="true"> &rarr;</span>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div >
             </div>
         </div>
     )

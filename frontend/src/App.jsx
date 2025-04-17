@@ -12,6 +12,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { userSelector } from './features/Auth/AuthSlice'
 import { fetchCartsById } from './features/Cart/CartSlice'
+import PageNotFound from './pages/PageNotFound'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 
 
 function App() {
@@ -54,8 +56,16 @@ function App() {
                  <ProductDetailsPage/>
               </Protected>
              
-            }
-               />
+            }/>
+            <Route path='/order-success/:id' element={ 
+              
+                 <OrderSuccessPage/>
+            
+             
+            }/>
+             <Route path='*' element={ 
+                 <PageNotFound/>
+            }/>
           </Routes>
         </BrowserRouter>
       </div>

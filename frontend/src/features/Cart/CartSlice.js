@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addToCart, deleteCartItemById, fetchCartsByUserId, updateCartById } from "./Cart_Api";
+import { addToCart, deleteCartItemById, fetchCartsByUserId, resetCartByUserId, updateCartById } from "./Cart_Api";
 
 // import axios from "axios";
 
@@ -40,6 +40,17 @@ export const deleteCartItemAsync = createAsyncThunk('Cart/deleteCartItem',async 
     try {
         // console.log('update',update)
        const data = await deleteCartItemById(itemId)
+       return data
+    } catch (error) {
+        return rejectWithValue(error.message || error)
+    }
+})
+
+export const resetCartAsync = createAsyncThunk('Cart/resetCart',async (userId,{rejectWithValue})=>{
+    try {
+     
+       const data = await resetCartByUserId(userId)  // creat state
+       console.log(data)
        return data
     } catch (error) {
         return rejectWithValue(error.message || error)
@@ -113,6 +124,20 @@ const cartSlice = createSlice({
            state.cartItems.splice(index,1)  // here use splice not slice bcoz slice not make change original array splice change the original array
         })
         builder.addCase(deleteCartItemAsync.rejected,(state,action)=>{
+            state.isLoading = false
+            state.error = action.payload
+        })
+
+        // reset cart
+
+        builder.addCase(resetCartAsync.pending,(state)=>{
+            state.isLoading = true
+        })
+        builder.addCase(resetCartAsync.fulfilled,(state)=>{
+            state.isLoading = false
+           state.cartItems = []  // here use splice not slice bcoz slice not make change original array splice change the original array
+        })
+        builder.addCase(resetCartAsync.rejected,(state,action)=>{
             state.isLoading = false
             state.error = action.payload
         })

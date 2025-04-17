@@ -17,7 +17,8 @@ const handleFormData = async (data) => {
   try {
       const result = dispatch(createUserAsync({
           email: data.email,
-          password: data.password
+          password: data.password,
+          address:[]
       }))
       
       // Handle successful signup here if needed

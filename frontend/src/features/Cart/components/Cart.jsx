@@ -30,26 +30,42 @@ import { useDispatch, useSelector } from 'react-redux'
 // ]
 
 const Cart = () => {
-    const products = useSelector(cartSelector)
-    console.log('cartItem',products)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const subTotal = Math.round(products.reduce((acc,item)=>item.price * item.quantity + acc ,0))
-    const totalItems = products.reduce((acc,item)=>parseInt(item.quantity) + acc,0)
-      
-  
-    const handleQuantity = (e,item) =>{
+    const products = useSelector(cartSelector)
+    console.log('cartItem', products)
+    
+    const subTotal = Math.round(products.reduce((acc, item) => item.price * item.quantity + acc, 0))
+    const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
+
+
+    const handleQuantity = (e, item) => {
         // console.log('item--',item)
         // delete item.id
-     const newItem = {...item,quantity:e.target.value}  // here we pass copy of updated item
+        const newItem = { ...item, quantity: e.target.value }  // here we pass copy of updated item
 
-     dispatch(updateCartQuantityAsync(newItem))
+        dispatch(updateCartQuantityAsync(newItem))
 
     }
 
-    const RemoveCartItem = (itemId) =>{
+    const RemoveCartItem = (itemId) => {
         dispatch(deleteCartItemAsync(itemId))
     }
+
+    // const HandleOrder = () => {
+        
+    //     if(selectedAddress && selectedPaymentMethod){
+    //         const order = {user,products,subTotal,totalItems,selectedAddress,selectedPaymentMethod,status:'pending'}  // we changed status after placed
+    //         dispatch(createOrderAsync(order))
+
+    //     }else{
+    //         alert('select address and payment method')
+    //     }
+    //     //todo when order created succefully navigate to success page
+    //     // todo: also cleare all carts after order in db and redux state also
+    //     //todo: on server change stock number of items
+
+    // }
 
 
     return (
@@ -83,7 +99,7 @@ const Cart = () => {
                                             <div className="flex flex-1 items-end justify-between text-sm">
                                                 <div className="text-gray-500 flex gap-2">
                                                     <span>Qty</span>
-                                                    <select name="" id="" onChange={(e)=>handleQuantity(e,item)} value={item?.quantity} className='px-2'>
+                                                    <select name="" id="" onChange={(e) => handleQuantity(e, item)} value={item?.quantity} className='px-2'>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
                                                         <option value="3">3</option>
@@ -91,7 +107,7 @@ const Cart = () => {
                                                 </div>
 
                                                 <div className="flex">
-                                                    <button onClick={()=>RemoveCartItem(item.id)} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                    <button onClick={() => RemoveCartItem(item.id)} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
                                                         Remove
                                                     </button>
                                                 </div>
@@ -117,29 +133,28 @@ const Cart = () => {
 
                     <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div className="mt-6">
-                        <Link to={'/checkout'}
-                            href="#"
-                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700"
+                    <Link to = { '/checkout' }
+                            className = "flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700"
                         >
                             Checkout
                         </Link>
-                    </div>
-                    <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                        <p>
-                            or{' '}
-                            <button
-                                type="button"
-                                onClick={() => { navigate('/') }}
-                                className="font-medium text-indigo-600 hover:text-indigo-500"
-                            >
-                                Continue Shopping
-                                <span aria-hidden="true"> &rarr;</span>
-                            </button>
-                        </p>
-                    </div>
+                </div>
+                <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                    <p>
+                        or{' '}
+                        <button
+                            type="button"
+                            onClick={() => { navigate('/') }}
+                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                        >
+                            Continue Shopping
+                            <span aria-hidden="true"> &rarr;</span>
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>
+        </div >
     )
 }
 
