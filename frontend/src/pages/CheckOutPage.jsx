@@ -4,7 +4,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Cart from '../features/Cart/components/Cart'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserAsync, userSelector } from '../features/Auth/AuthSlice'
+import {  userSelector } from '../features/Auth/AuthSlice'
+import { updateUserAsync } from '../features/User/UserSlice'
 import { cartSelector, deleteCartItemAsync, resetCartAsync, updateCartQuantityAsync } from '../features/Cart/CartSlice'
 import { createOrderAsync, selectCurrentOrder } from '../features/Orders/Orders_Slice'
 
@@ -45,7 +46,7 @@ const CheckOutPage = () => {
     const currentOrder = useSelector(selectCurrentOrder)
     const user = loggedInUser.data
 
-     console.log('loggedInuser',loggedInUser)
+    console.log('loggedInuser',loggedInUser)
     console.log('cartItem', products)
     console.log('user', loggedInUser)
     console.log('selectedAddress', selectedAddress)

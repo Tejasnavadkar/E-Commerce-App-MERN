@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link,useParams } from 'react-router-dom'
 import { userSelector } from '../features/Auth/AuthSlice'
 import { resetCartAsync } from '../features/Cart/CartSlice'
+import { ClearCurrentOrder } from '../features/Orders/Orders_Slice'
 
 const OrderSuccessPage = () => {
     const {id} = useParams()
@@ -13,8 +14,10 @@ const OrderSuccessPage = () => {
     console.log('user',user)
 
     useEffect(()=>{
-       loggedInUser?.data && dispatch(resetCartAsync(user.id)) // after order placed reset/remove the cart items in cart
-    },[])
+       user?.data && dispatch(resetCartAsync(user.data.id)) // after order placed reset/remove the cart items in cart
+    //    once order placed succefully then clear current order state in redux
+    dispatch(ClearCurrentOrder())
+    },[dispatch,loggedInUser,user])
 
     // if(!loggedInUser) return <div>Loading...</div>
   return (

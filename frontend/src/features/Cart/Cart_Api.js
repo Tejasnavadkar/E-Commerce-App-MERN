@@ -86,7 +86,8 @@ export const resetCartByUserId = async (userId) => {
     }
 }
 
-// another approach
+
+// another approach using for of and for in loop
 // export const resetCartByUserId = (userId) => {
 
 //     try {
@@ -95,7 +96,7 @@ export const resetCartByUserId = async (userId) => {
 //         const response = await fetchCartsByUserId(userId)
 //         const items = response.data
 
-//         for(let item in items){
+//         for(let item of items){    
 //             await deleteCartItemById(item.id)
 //         }
 //         resolve({status:'success'})

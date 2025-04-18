@@ -14,6 +14,10 @@ import { userSelector } from './features/Auth/AuthSlice'
 import { fetchCartsById } from './features/Cart/CartSlice'
 import PageNotFound from './pages/PageNotFound'
 import OrderSuccessPage from './pages/OrderSuccessPage'
+import UserProfile from './features/User/components/UserProfile'
+import UserOrders from './features/User/components/UserOrders'
+import UsersOrdersPage from './pages/UsersOrdersPage'
+import UserProfilePage from './pages/UserProfilePage'
 
 
 function App() {
@@ -22,7 +26,7 @@ function App() {
  const user = useSelector(userSelector)
 
   useEffect(()=>{
-    dispatch(fetchCartsById(user?.id))
+    dispatch(fetchCartsById(user?.data.id))
   },[dispatch,user])
 
   return (
@@ -30,8 +34,7 @@ function App() {
       <div>
         <BrowserRouter>
           <Routes>
-            <Route path='/signup' element={<SignupPage />} />
-            
+            <Route path='/signup' element={<SignupPage />} /> 
             <Route path='/' element={
               <Protected>
                 <Home />
@@ -58,10 +61,17 @@ function App() {
              
             }/>
             <Route path='/order-success/:id' element={ 
-              
                  <OrderSuccessPage/>
-            
-             
+            }/>
+             <Route path='/orders' element={ 
+              <Protected>
+                 <UsersOrdersPage/>
+              </Protected>
+            }/>
+              <Route path='/profile' element={ 
+              <Protected>
+                 <UserProfilePage/>
+              </Protected>
             }/>
              <Route path='*' element={ 
                  <PageNotFound/>

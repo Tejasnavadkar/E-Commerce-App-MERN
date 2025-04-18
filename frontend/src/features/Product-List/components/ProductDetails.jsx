@@ -88,7 +88,7 @@ const ProductDetails = () => {
     const {id} =  useParams()
     const dispatch = useDispatch()
     //  const state = useLocation()
-    //  console.log('state',state)
+     console.log('user',user)
 
     useEffect(()=>{
       dispatch(fetchProductsById({id}))
@@ -96,8 +96,9 @@ const ProductDetails = () => {
 
     const handleCart = (e) =>{
       e.preventDefault()
-      const newProduct = {...product,quantity:1,user:user?.id } // dispatch action
+      const newProduct = {...product,quantity:1,user:user?.data.id } // dispatch action
       delete newProduct['id']
+      console.log('newProduct',newProduct)
       dispatch(addToCartAsync(newProduct))
 
     }
