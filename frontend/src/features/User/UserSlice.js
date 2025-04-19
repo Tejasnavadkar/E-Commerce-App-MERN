@@ -6,9 +6,9 @@ import { FetchUserById, FetchUsersOrdersById, updateUser } from "./User_Api";
 export const FetchUserInfoByIdAsync = createAsyncThunk('userSlice/fetchUserInfo', async (userId, { rejectWithValue }) => {
 
     try {
-            console.log('user--id',userId)
+        console.log('user--id', userId)
         const data = await FetchUserById(userId)
-        console.log('data',data)
+        console.log('data', data)
         return data
     } catch (error) {
         return rejectWithValue(error.message || error)
@@ -98,6 +98,6 @@ const userSlice = createSlice({
 
 export const userOrdersSelector = (state) => state.User.userOrders
 export const userInfoSelector = (state) => state.User.userInfo  // its different that logged in user
-export const userSelector = (state) => state.Auth?.logedInUser
+// export const userSelector = (state) => state.Auth?.logedInUser
 
 export default userSlice.reducer

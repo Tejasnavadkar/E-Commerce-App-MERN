@@ -17,6 +17,7 @@ const UserProfile = () => {
 
     const { handleSubmit, register, reset, setValue, formState: { errors } } = useForm()
 
+    // to open form for edit with existing values
     const HandleEdit = (idx, item) => {  // this fn open form with existing value to edit the form
 
         setSelectedIndexedForm(idx)
@@ -36,6 +37,7 @@ const UserProfile = () => {
 
     }
 
+    // to remove address
     const HandleRemove = (idx) => {
         const newUser = { ...userInfo, addreses: [...userInfo.addreses] }
         newUser.addreses.splice(idx, 1)
@@ -43,19 +45,21 @@ const UserProfile = () => {
 
     }
 
+    // to edit the address
     const SubmitEditedAddress = (data) => {
         const newUser = { ...userInfo, addreses: [...userInfo.addreses] }
         newUser.addreses.splice(selectedIndexedForm, 1, data) // remove previous one[1-index] & add new one
         dispatch(updateUserAsync(newUser))
     }
 
+    // add new address to profile
     const AddNewAddress = (data) =>{
         const newUser = { ...userInfo, addreses: [...userInfo.addreses,data] }
         dispatch(updateUserAsync(newUser))
+        setAddAddressForm(false)
     }
 
     useEffect(() => {
-        // console.log('id in useEffect',loggedInUser.data.id)
         dispatch(FetchUserInfoByIdAsync(loggedInUser.data.id))
     }, [dispatch, loggedInUser])
     return (
@@ -69,6 +73,11 @@ const UserProfile = () => {
                         <h3 className="text-xl my-5 font-bold tracking-tight text-red-900">
                             email: {userInfo?.email}
                         </h3>
+                        {userInfo?.role === 'admin' && (
+                            <h3 className="text-xl my-5 font-bold tracking-tight text-red-900">
+                            role: {userInfo.role ? userInfo.role : null}
+                        </h3>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6 space-y-4 ">

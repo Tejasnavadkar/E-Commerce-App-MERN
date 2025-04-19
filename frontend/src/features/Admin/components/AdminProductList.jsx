@@ -16,9 +16,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector,FetchAllCategoriesAsync,FetchAllBrandsAsync } from '../ProductSlice'
+import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector, FetchAllCategoriesAsync, FetchAllBrandsAsync } from '../../Product-List/ProductSlice'
 import { PAGE_PER_LIMIT } from '../../../app/Constants'
-import { userSelector } from '../../Auth/AuthSlice'
 
 const sortOptions = [
 
@@ -36,19 +35,19 @@ function classNames(...classes) {
 }
 
 
-const ProductList = () => {
+const AdminProductList = () => {
 
-   
+
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filter, setfilter] = useState({})
-    const [sort,setSort] = useState({})
-    const [activePage,setActivePage] = useState(1)
+    const [sort, setSort] = useState({})
+    const [activePage, setActivePage] = useState(1)
 
-    const { allProducts,pages,items} = useSelector(productSelector)
+    const { allProducts, pages, items } = useSelector(productSelector)
     const categories = useSelector(categoriesSelector)
     const brands = useSelector(brandsSelector)
     const dispatch = useDispatch()
-   
+
     const filters = [
         {
             id: 'category',
@@ -58,35 +57,35 @@ const ProductList = () => {
         {
             id: 'brand',
             name: 'Brand',
-            options:brands
+            options: brands
         },
     ]
 
 
     const handleFilter = (e, section, option) => {
 
-        const isChecked = e.target.checked; 
-        const newFilter = {...filter}   // not need to spread bcoz key is same so it override prev value not retain prev value
-        console.log('newFilter--1',newFilter)
+        const isChecked = e.target.checked;
+        const newFilter = { ...filter }   // not need to spread bcoz key is same so it override prev value not retain prev value
+        console.log('newFilter--1', newFilter)
 
-        if(isChecked) { // agar filter uncheck kiya to firse reset ho jayega 
-            if(newFilter[section.id]){
+        if (isChecked) { // agar filter uncheck kiya to firse reset ho jayega 
+            if (newFilter[section.id]) {
                 newFilter[section.id].push(option.value)
-            }else{
+            } else {
                 newFilter[section.id] = [option.value]
             }
-             
-         }else{ // when uncheck remove from newFilter
-            const index = newFilter[section.id].findIndex((elem)=>elem === option.value)   // find index of element
-            console.log('index--',index)
-            
-                newFilter[section.id].splice(index,1)
-        
-         }
-        console.log('newFilter--2',newFilter)
+
+        } else { // when uncheck remove from newFilter
+            const index = newFilter[section.id].findIndex((elem) => elem === option.value)   // find index of element
+            console.log('index--', index)
+
+            newFilter[section.id].splice(index, 1)
+
+        }
+        console.log('newFilter--2', newFilter)
         setfilter(newFilter)
-        
-      
+
+
         // dispatch(fetchProductsByFilterAsync(newFilter))
     }
 
@@ -101,29 +100,29 @@ const ProductList = () => {
         setSort(payload)
     }
 
-    const handlePagination = (Page) =>{
+    const handlePagination = (Page) => {
         setActivePage(Page)
     }
 
     useEffect(() => {
-        console.log('activepage--',activePage)
+        console.log('activepage--', activePage)
         const pagination = {
-            _page:activePage,
-            _per_page:PAGE_PER_LIMIT
+            _page: activePage,
+            _per_page: PAGE_PER_LIMIT
         }
         // dispatch(fetchProducts())
-        dispatch(fetchProductsByFilterAsync({filter,sort,pagination}))
-    }, [dispatch,filter,sort,activePage])
+        dispatch(fetchProductsByFilterAsync({ filter, sort, pagination }))
+    }, [dispatch, filter, sort, activePage])
 
-    useEffect(()=>{
+    useEffect(() => {
         setActivePage(1) // when filter change or sort change move to first page 
-    },[items,sort])
+    }, [items, sort])
 
-    useEffect(()=>{
+    useEffect(() => {
         // console.log('useEffect for category')
         dispatch(FetchAllCategoriesAsync())
         dispatch(FetchAllBrandsAsync())
-    },[dispatch])
+    }, [dispatch])
 
 
 
@@ -143,7 +142,7 @@ const ProductList = () => {
 
         <div className="bg-white">
             <div>
-                <MobileFilter filters={filters} mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} handleFilter={handleFilter}/>
+                <MobileFilter filters={filters} mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} handleFilter={handleFilter} />
 
                 <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
@@ -205,19 +204,19 @@ const ProductList = () => {
 
                         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                             {/* Filters */}
-                            <DesktopFilter 
-                            handleFilter={handleFilter}
-                            filters={filters}
+                            <DesktopFilter
+                                handleFilter={handleFilter}
+                                filters={filters}
                             />
 
                             {/* Product grid */}
                             <ProductGrid products={allProducts} />
-                           
+
                         </div>
                     </section>
 
                     {/* Pagination component */}
-                    <Pagination activePage={activePage} setActivePage={setActivePage} handlePagination={handlePagination} limit={PAGE_PER_LIMIT} pages={pages} totalProducts={items}   />
+                    <Pagination activePage={activePage} setActivePage={setActivePage} handlePagination={handlePagination} limit={PAGE_PER_LIMIT} pages={pages} totalProducts={items} />
 
                 </main>
             </div>
@@ -225,13 +224,13 @@ const ProductList = () => {
     )
 }
 
-export default ProductList
+export default AdminProductList
 
 
 // child components
 
-const MobileFilter = ({mobileFiltersOpen, setMobileFiltersOpen,handleFilter,filters}) => {
-    
+const MobileFilter = ({ mobileFiltersOpen, setMobileFiltersOpen, handleFilter, filters }) => {
+
     return (
         <>
             {/* Mobile filter dialog */}
@@ -339,7 +338,7 @@ const MobileFilter = ({mobileFiltersOpen, setMobileFiltersOpen,handleFilter,filt
     )
 }
 
-const DesktopFilter = ({handleFilter,filters}) => {
+const DesktopFilter = ({ handleFilter, filters }) => {
     return (
         <>
             <form className="hidden lg:block">
@@ -407,19 +406,19 @@ const DesktopFilter = ({handleFilter,filters}) => {
     )
 }
 
-const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProducts,pages}) => {
+const Pagination = ({ activePage, setActivePage, handlePagination, limit, totalProducts, pages }) => {
     return (
         <>
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div className="flex flex-1 justify-between sm:hidden">
                     <button
-                         onClick={()=>handlePagination(prev => prev > 1 ? activePage-1 : prev)}
+                        onClick={() => handlePagination(prev => prev > 1 ? activePage - 1 : prev)}
                         className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Previous
                     </button>
                     <button
-                         onClick={()=>handlePagination(prev=> prev < pages ? prev + 1 : prev)}
+                        onClick={() => handlePagination(prev => prev < pages ? prev + 1 : prev)}
                         className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Next
@@ -428,33 +427,33 @@ const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProduc
                 <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                     <div>
                         <p className="text-sm text-gray-700">
-                            Showing <span className="font-medium">{(activePage-1)*limit+1}</span> to <span className="font-medium">{activePage * limit > totalProducts ? totalProducts  : activePage * limit }</span> of{' '}
+                            Showing <span className="font-medium">{(activePage - 1) * limit + 1}</span> to <span className="font-medium">{activePage * limit > totalProducts ? totalProducts : activePage * limit}</span> of{' '}
                             <span className="font-medium">{totalProducts}</span> results
                         </p>
                     </div>
                     <div>
                         <nav aria-label="Pagination" className="isolate inline-flex -space-x-px rounded-md shadow-xs">
                             <button
-                                onClick={()=>setActivePage(prev => prev > 1 ? activePage-1 : prev)}
+                                onClick={() => setActivePage(prev => prev > 1 ? activePage - 1 : prev)}
                                 className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">Previous</span>
                                 <ChevronLeftIcon aria-hidden="true" className="size-5" />
                             </button>
                             {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-                            {Array.from({length:pages || (totalProducts/limit)}).map((_,idx)=>(
+                            {Array.from({ length: pages || (totalProducts / limit) }).map((_, idx) => (
                                 <button
-                                key={idx}
-                                onClick={()=>handlePagination(idx+1)}
-                                aria-current="page"
-                                className={`relative z-10 inline-flex items-center ${activePage === idx + 1 && 'bg-indigo-600 text-white'} border border-gray-400  px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
-                            >
-                                {idx + 1}
-                            </button>
+                                    key={idx}
+                                    onClick={() => handlePagination(idx + 1)}
+                                    aria-current="page"
+                                    className={`relative z-10 inline-flex items-center ${activePage === idx + 1 && 'bg-indigo-600 text-white'} border border-gray-400  px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                                >
+                                    {idx + 1}
+                                </button>
                             ))}
-                           
+
                             <button
-                                onClick={()=>handlePagination(prev=> prev < pages ? prev + 1 : prev)}
+                                onClick={() => handlePagination(prev => prev < pages ? prev + 1 : prev)}
                                 className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">Next</span>
@@ -468,54 +467,69 @@ const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProduc
     )
 }
 
-const ProductGrid = ({products}) => {
+const ProductGrid = ({ products }) => {
     // const navigate = useNavigate()
     return (
-       <>
-        <div className="lg:col-span-3">
-                                {/* Your content */}
-                                <div className="bg-white">
-                                    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-                                        {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
-                                        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                                            {products.map((product) => (
-                                                <Link to={`/product-details/${product.id}`}  key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
-                                                    <div className="">
-                                                        <img
-                                                            alt={product.thumbnail}
-                                                            src={product.thumbnail}
-                                                            className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
-                                                        />
-                                                        <div className="mt-4 flex justify-between">
-                                                            <div>
-                                                                <h3 className="text-sm text-gray-700">
-                                                                    <span to={'#'}>
-                                                                        <span aria-hidden="true" className="absolute inset-0" />
-                                                                        {product.title}
-                                                                    </span>
-                                                                </h3>
-                                                                <div className='flex items-center gap-1'>
-                                                                    <span><StarIcon className='h-5 w-5' /></span>
-                                                                    <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <span>
-                                                                    <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
-                                                                </span>
-                                                                <span>
-                                                                    <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
-                                                                </span>
-                                                            </div>
-                                                        </div>
+        <>
+
+            <div className="lg:col-span-3">
+                <div>
+                    <Link to={'/admin/product-form'} className="rounded-md bg-green-600 mx-10 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Add New Product
+                    </Link>
+                </div>
+                {/* Your content */}
+                <div className="bg-white">
+                    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+                        {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
+                        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                            {products.map((product) => (
+                                <div className='flex flex-col gap-2 justify-center'>
+                                    <Link to={`/product-details/${product.id}`} key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
+                                        <div className="">
+                                            <img
+                                                alt={product.thumbnail}
+                                                src={product.thumbnail}
+                                                className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
+                                            />
+                                            <div className="mt-4 flex justify-between">
+                                                <div>
+                                                    <h3 className="text-sm text-gray-700">
+                                                        <span to={'#'}>
+                                                            <span aria-hidden="true" className="absolute inset-0" />
+                                                            {product.title}
+                                                        </span>
+                                                    </h3>
+                                                    <div className='flex items-center gap-1'>
+                                                        <span><StarIcon className='h-5 w-5' /></span>
+                                                        <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
                                                     </div>
-                                                </Link>
-                                            ))}
+                                                </div>
+                                                <div>
+                                                    <span>
+                                                        <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
+                                                    </span>
+                                                    <span>
+                                                        <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </Link>
+                                    {product.delete && <span className='text-xs text-red-500'>product deleted</span>}
+                                    <div>
+                                        <Link to={`/admin/product-form/edit/${product.id}`} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            Edit Product
+                                        </Link>
                                     </div>
                                 </div>
-                            </div>
-       </>
+
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
 

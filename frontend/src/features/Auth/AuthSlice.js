@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { checkUser, createUser } from "./Auth_Api";
+import { checkUser, createUser, ForgotPassword, SignOutUser } from "./Auth_Api";
 import { updateUser } from "../User/User_Api";
 // import axios from "axios";
 
@@ -37,6 +37,25 @@ export const checkUserAsync = createAsyncThunk(
         }
     }
 );
+
+export const SignOutUserAsync = createAsyncThunk('Auth/signOut',async (userId,{rejectWithValue})=>{
+
+    try {
+        await SignOutUser()
+    } catch (error) {
+        return rejectWithValue(error.message || error )
+    }
+})
+
+export const ForgotPasswordAsync = createAsyncThunk('Auth/ForgotPassword',async (email,{rejectWithValue})=>{
+
+    try {
+        await ForgotPassword(email)
+        // create extraReducers after setup backend stuff
+    } catch (error) {
+        return rejectWithValue(error.message || error )
+    }
+})
 
 // export const updateUserAsync = createAsyncThunk('auth/updateUser',async (update,{rejectWithValue}) =>{
    
@@ -107,6 +126,22 @@ const authSlice = createSlice({
             state.error = null;
         })
         builder.addCase(checkUserAsync.rejected,(state,action)=>{
+            state.error = action.payload;
+            state.isLoading = false;
+            state.logedInUser = null;
+        })
+
+         // SignOut User reducers
+         builder.addCase(SignOutUserAsync.pending,(state)=>{
+            state.isLoading = true;
+            state.error = null;
+        })
+        builder.addCase(SignOutUserAsync.fulfilled,(state)=>{
+            state.logedInUser = null;
+            state.isLoading = false;
+            state.error = null;
+        })
+        builder.addCase(SignOutUserAsync.rejected,(state,action)=>{
             state.error = action.payload;
             state.isLoading = false;
             state.logedInUser = null;

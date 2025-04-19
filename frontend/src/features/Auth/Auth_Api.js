@@ -49,6 +49,30 @@ export const createUser = async (userData) => {
       throw new Error(error.message || 'An error occurred while checking user');
     }
   };
+
+  export const SignOutUser = async (userId) =>{
+
+    try {
+      // signout logic
+    // return {msg:'signout successfully'}
+
+    } catch (error) {
+      throw new Error(`error while signOut`,error)
+    }
+
+  }
+
+  export const ForgotPassword = async (email) =>{
+
+    try {
+    // forgot password logic here get user by email and then send email to that user with reset password link
+    
+
+    } catch (error) {
+      throw new Error(`error in forgot password`,error)
+    }
+
+  }
   
  
 //  export const checkUser = async (loginInfo) =>{

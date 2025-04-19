@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchAllBrands, FetchAllCategories, FetchAllProducts, FetchAllProductsByFilters, FetchProductById, sortProducts } from "./ProductList_Api";
+import { createProduct, FetchAllBrands, FetchAllCategories, FetchAllProducts, FetchAllProductsByFilters, FetchProductById, sortProducts, updateProductById } from "./ProductList_Api";
 
 
 export const fetchProducts = createAsyncThunk('Productlist/fetchProducts', async (_, { rejectWithValue }) => {
@@ -45,6 +45,27 @@ export const fetchProductsByFilterAsync = createAsyncThunk('productlist/fetchPro
 export const sortProductsAsync = createAsyncThunk('productlist/sortProductAsync', async (payload, { rejectWithValue }) => {
   try {
     return await sortProducts(payload)
+  } catch (error) {
+    return rejectWithValue(error.message || error)
+  }
+})
+
+export const createProductAsync = createAsyncThunk('Productlist/createProduct',async (payload,{rejectWithValue})=>{
+
+  try {
+    
+    const data = await createProduct(payload)
+    return data
+  } catch (error) {
+    return rejectWithValue(error.message || error)
+  }
+})
+
+export const updateProductByIdAsync = createAsyncThunk('Productlist/updateProduct',async (payload,{rejectWithValue})=>{
+
+  try {
+    const data = await updateProductById(payload)
+    return data
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -153,6 +174,36 @@ const ProductSlice = createSlice({
       state.isLoading = false
       state.error = action.error
     })
+
+    // create Product
+
+    builder.addCase(createProductAsync.pending,(state)=>{
+      state.isLoading = true
+    })
+    builder.addCase(createProductAsync.fulfilled,(state,action)=>{
+      state.isLoading = false,
+      state.allProducts.push(action.payload)
+    })
+    builder.addCase(createProductAsync.rejected,(state,action)=>{
+      state.isLoading = false
+      state.error = action.payload
+    })
+    // update product
+
+    builder.addCase(updateProductByIdAsync.pending,(state)=>{
+      state.isLoading = true
+    })
+    builder.addCase(updateProductByIdAsync.fulfilled,(state,action)=>{
+      state.isLoading = false
+      const index = state.allProducts.findIndex((item)=>item.id === action.payload.id)
+      state.allProducts[index] = action.payload
+    })
+    builder.addCase(updateProductByIdAsync.rejected,(state,action)=>{
+      state.isLoading = false
+      state.error = action.payload
+    })
+
+
   }
 })
 

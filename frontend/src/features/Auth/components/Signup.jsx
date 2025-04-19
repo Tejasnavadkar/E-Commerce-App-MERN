@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import {userSelector,createUserAsync} from '../AuthSlice'
+import { userSelector, createUserAsync } from '../AuthSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { store } from '../../../app/store'
 
@@ -13,44 +13,45 @@ const Signup = () => {
   const navigate = useNavigate()
   const logedInUser = useSelector(userSelector)
 
-const handleFormData = async (data) => {
-  try {
+  const handleFormData = async (data) => {
+    try {
       const result = dispatch(createUserAsync({
-          email: data.email,
-          password: data.password,
-          address:[]
+        email: data.email,
+        password: data.password,
+        addreses: [],
+        role:'user'
       }))
-      
+
       // Handle successful signup here if needed
       console.log('User created:', result);
-      
-  } catch (error) {
+
+    } catch (error) {
       console.error('Failed to create user:', error);
+    }
   }
-}
 
   useEffect(() => {
     console.log('[Lifecycle] Signup component mounted');
-    
+
     // Add state change monitoring
     const unsubscribe = store.subscribe(() => {
       console.log('[Redux State] Auth state changed:', store.getState().Auth);
     });
-    
+
     return () => {
       console.log('[Lifecycle] Signup component unmounting...');
       unsubscribe();
     };
   }, []);
 
-   useEffect(()=>{
-      if (logedInUser) {
-        navigate('/')
-       }
-    },[navigate,logedInUser])
+  useEffect(() => {
+    if (logedInUser) {
+      navigate('/')
+    }
+  }, [navigate, logedInUser])
 
   return (
-    
+
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       {/* {logedInUser[} */}
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -65,7 +66,7 @@ const handleFormData = async (data) => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form noValidate  onSubmit={handleSubmit(handleFormData)}  className="space-y-6">
+        <form noValidate onSubmit={handleSubmit(handleFormData)} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
               Email address
@@ -86,6 +87,11 @@ const handleFormData = async (data) => {
               <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
                 Password
               </label>
+              <div className="text-sm">
+                <Link to={'/forgot-password'} className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
             <div className="mt-2">
               <input
@@ -93,7 +99,7 @@ const handleFormData = async (data) => {
                 {...register('password', {
                   required: "password is required", pattern: {
                     value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-                    message:  (
+                    message: (
                       <>
                         <div>- at least 8 characters</div>
                         <div>- must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number</div>
@@ -119,10 +125,10 @@ const handleFormData = async (data) => {
             <div className="mt-2">
               <input
                 id="Confirm-Password"
-                {...register('confirmPassword', { 
+                {...register('confirmPassword', {
                   required: "Confirm Password is required",
-                  validate:(value,formValues)=> value === formValues.password || 'password not matching'  // validate accept callback & it get all form values so we can compare it here if password not match it shows msg
-                  })}
+                  validate: (value, formValues) => value === formValues.password || 'password not matching'  // validate accept callback & it get all form values so we can compare it here if password not match it shows msg
+                })}
                 type="password"
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />

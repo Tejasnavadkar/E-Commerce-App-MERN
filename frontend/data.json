@@ -5,7 +5,7 @@
       "title": "Essence Mascara Lash Princess",
       "description": "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
       "category": "beauty",
-      "price": 9.99,
+      "price": 1000,
       "discountPercentage": 7.17,
       "rating": 4.94,
       "stock": 5,
@@ -56,9 +56,12 @@
         "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
       },
       "images": [
-        "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png"
+        "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png",
+        "",
+        ""
       ],
-      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png"
+      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png",
+      "ratings": 0
     },
     {
       "id": "2",
@@ -178,7 +181,8 @@
       "images": [
         "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/1.png"
       ],
-      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png"
+      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
+      "delete": true
     },
     {
       "id": "4",
@@ -6007,6 +6011,23 @@
         "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/3.png"
       ],
       "thumbnail": "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/thumbnail.png"
+    },
+    {
+      "id": "3363",
+      "title": "Apple Airpods - 2025",
+      "description": "apple",
+      "brand": "Apple",
+      "category": "mobile-accessories",
+      "price": "5000",
+      "discountPercentage": 10,
+      "stock": "50",
+      "thumbnail": "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/3.png",
+      "images": [
+        "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/3.png",
+        "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/3.png",
+        "https://cdn.dummyjson.com/products/images/mobile-accessories/Apple%20Airpods/3.png"
+      ],
+      "ratings": 0
     }
   ],
   "categories": [
@@ -6276,6 +6297,7 @@
       "city": "pune",
       "state": "maharashtra",
       "pinCode": "12345",
+      "role": "user",
       "addreses": [
         {
           "name": "vaibhav",
@@ -6311,6 +6333,7 @@
       "email": "vaibhav@gmail.com",
       "password": "123",
       "address": [],
+      "role": "user",
       "addreses": [
         {
           "name": "vaibhav",
@@ -6322,6 +6345,13 @@
           "pinCode": "12345"
         }
       ]
+    },
+    {
+      "id": "8bba",
+      "email": "admin@gmail.com",
+      "password": "123",
+      "addreses": [],
+      "role": "admin"
     }
   ],
   "cart": [],

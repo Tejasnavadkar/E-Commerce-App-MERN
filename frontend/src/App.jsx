@@ -18,23 +18,33 @@ import UserProfile from './features/User/components/UserProfile'
 import UserOrders from './features/User/components/UserOrders'
 import UsersOrdersPage from './pages/UsersOrdersPage'
 import UserProfilePage from './pages/UserProfilePage'
+import SignOut from './features/Auth/components/SignOut'
+import ForgotPassword from './features/Auth/components/ForgotPassword'
+import AdminProductDetailsPage from './pages/AdminProductDetailsPage'
+import AdminProductListPage from './pages/AdminHomePage'
+import AdminProtected from './features/Auth/components/AdminProtected'
+import AdminHome from './pages/AdminHomePage'
+import AdminHomePage from './pages/AdminHomePage'
+import ProductForm from './features/Admin/components/ProductForm'
+import AdminProductFormPage from './pages/AdminProductFormPage'
 
 
 function App() {
 
- const dispatch = useDispatch()
- const user = useSelector(userSelector)
+  const dispatch = useDispatch()
+  const user = useSelector(userSelector)
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchCartsById(user?.data.id))
-  },[dispatch,user])
+  }, [dispatch, user])
 
   return (
     <>
       <div>
         <BrowserRouter>
           <Routes>
-            <Route path='/signup' element={<SignupPage />} /> 
+            <Route path='/signup' element={<SignupPage />} />
+
             <Route path='/' element={
               <Protected>
                 <Home />
@@ -43,39 +53,72 @@ function App() {
             />
             <Route path='/login' element={<LoginPage />} />
 
-            <Route path='/cart' element={ 
+            <Route path='/cart' element={
               <Protected>
                 <CartPage />
               </Protected>} />
-              
+
             <Route path='/checkout' element={
               <Protected>
                 <CheckOutPage />
               </Protected>
-              
-              } />
-            <Route path='/product-details/:id' element={ 
+
+            } />
+            <Route path='/product-details/:id' element={
               <Protected>
-                 <ProductDetailsPage/>
+                <ProductDetailsPage />
               </Protected>
-             
-            }/>
-            <Route path='/order-success/:id' element={ 
-                 <OrderSuccessPage/>
-            }/>
-             <Route path='/orders' element={ 
+            } />
+            <Route path='/order-success/:id' element={
+              <OrderSuccessPage />
+            } />
+            <Route path='/orders' element={
               <Protected>
-                 <UsersOrdersPage/>
+                <UsersOrdersPage />
               </Protected>
-            }/>
-              <Route path='/profile' element={ 
+            } />
+            <Route path='/profile' element={
               <Protected>
-                 <UserProfilePage/>
+                <UserProfilePage />
               </Protected>
-            }/>
-             <Route path='*' element={ 
-                 <PageNotFound/>
-            }/>
+            } />
+            <Route path='/signOut' element={
+              <Protected>
+                <SignOut />
+              </Protected>
+            } />
+            <Route path='/forgot-password' element={
+              <ForgotPassword />
+            } />
+
+            <Route path='/admin/product-details/:id' element={
+              <AdminProtected>
+                <AdminProductDetailsPage />
+              </AdminProtected>
+            } />
+
+            <Route path='/admin' element={
+              <AdminProtected>
+                <AdminHomePage />
+              </AdminProtected>
+            } />
+
+            <Route path='/admin/product-form' element={
+              <AdminProtected>
+                <AdminProductFormPage />
+              </AdminProtected>
+            } />
+
+            <Route path='/admin/product-form/edit/:id' element={
+              <AdminProtected>
+                <AdminProductFormPage />
+              </AdminProtected>
+            } />
+
+
+            <Route path='*' element={
+              <PageNotFound />
+            } />
           </Routes>
         </BrowserRouter>
       </div>
