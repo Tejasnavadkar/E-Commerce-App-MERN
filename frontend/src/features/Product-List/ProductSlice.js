@@ -61,6 +61,8 @@ export const createProductAsync = createAsyncThunk('Productlist/createProduct',a
   }
 })
 
+
+
 export const updateProductByIdAsync = createAsyncThunk('Productlist/updateProduct',async (payload,{rejectWithValue})=>{
 
   try {
@@ -78,6 +80,7 @@ const initialState = {
   allProducts: [],
   categories:[],
   brands:[],
+  // allOrders:null,
   selectedProductById:[],
   pages:0,
   items:0,
@@ -188,8 +191,8 @@ const ProductSlice = createSlice({
       state.isLoading = false
       state.error = action.payload
     })
-    // update product
 
+    // update product
     builder.addCase(updateProductByIdAsync.pending,(state)=>{
       state.isLoading = true
     })
@@ -202,6 +205,8 @@ const ProductSlice = createSlice({
       state.isLoading = false
       state.error = action.payload
     })
+
+     
 
 
   }

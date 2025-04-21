@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { cartSelector, deleteCartItemAsync, updateCartQuantityAsync } from '../CartSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { discountedPrice } from '../../../app/Constants'
 
 // const products = [
 //     {
@@ -35,7 +36,7 @@ const Cart = () => {
     const products = useSelector(cartSelector)
     console.log('cartItem', products)
     
-    const subTotal = Math.round(products.reduce((acc, item) => item.price * item.quantity + acc, 0))
+    const subTotal = Math.round(products.reduce((acc, item) => discountedPrice(item) * item.quantity + acc, 0))
     const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
 
 
@@ -92,7 +93,8 @@ const Cart = () => {
                                                     <h3>
                                                         <a href={item?.href}>{item?.title}</a>
                                                     </h3>
-                                                    <p className="ml-4">${item?.price}</p>
+                                                    <p className="ml-4">${discountedPrice(item)}</p>
+                                                    
                                                 </div>
                                                 <p className="mt-1 text-sm text-gray-500">{item?.color}</p>
                                             </div>

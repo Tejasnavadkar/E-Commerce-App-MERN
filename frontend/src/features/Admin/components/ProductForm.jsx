@@ -80,7 +80,7 @@ const ProductForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
     setValue,
     formState: { errors },
   } = useForm()
@@ -95,7 +95,7 @@ const ProductForm = () => {
   },[dispatch,id])
   
   useEffect(()=>{
-    if(id && selectedProduct){
+    if(id && Object.keys(selectedProduct).length){
       setValue('title',selectedProduct?.title)
       setValue('description',selectedProduct?.description)
       setValue('brand',selectedProduct?.brand)
@@ -129,13 +129,14 @@ const ProductForm = () => {
       // todo: make update product api
       // action to update
       product.id = selectedProduct.id
-      console.log('hii from inside if')
       dispatch(updateProductByIdAsync(product))
-      console.log('hii-2 from inside if')
+      reset()
+      
 
     }else{
       // action to create 
       dispatch(createProductAsync(product))
+      reset()
     }
 
     

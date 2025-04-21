@@ -17,7 +17,7 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, Chevr
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector, FetchAllCategoriesAsync, FetchAllBrandsAsync } from '../../Product-List/ProductSlice'
-import { PAGE_PER_LIMIT } from '../../../app/Constants'
+import { discountedPrice, PAGE_PER_LIMIT } from '../../../app/Constants'
 
 const sortOptions = [
 
@@ -507,7 +507,7 @@ const ProductGrid = ({ products }) => {
                                                 </div>
                                                 <div>
                                                     <span>
-                                                        <p className="text-sm font-medium text-gray-900">${Math.round(product.price * (1 - product.discountPercentage / 100))}</p>
+                                                        <p className="text-sm font-medium text-gray-900">${discountedPrice(product)}</p>
                                                     </span>
                                                     <span>
                                                         <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>

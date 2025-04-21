@@ -27,6 +27,7 @@ import AdminHome from './pages/AdminHomePage'
 import AdminHomePage from './pages/AdminHomePage'
 import ProductForm from './features/Admin/components/ProductForm'
 import AdminProductFormPage from './pages/AdminProductFormPage'
+import AdminOrdersPage from './pages/AdminOrdersPage'
 
 
 function App() {
@@ -106,6 +107,12 @@ function App() {
             <Route path='/admin/product-form' element={
               <AdminProtected>
                 <AdminProductFormPage />
+              </AdminProtected>
+            } />
+
+            <Route path='/admin/orders' element={
+              <AdminProtected>
+                <AdminOrdersPage />
               </AdminProtected>
             } />
 

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ProductByIdSelector,fetchProductsById } from '../ProductSlice'
 import { userSelector } from '../../Auth/AuthSlice'
 import { addToCartAsync } from '../../Cart/CartSlice'
+import { discountedPrice } from '../../../app/Constants'
 
 // const product = {
 //   name: 'Basic Tee 6-Pack',
@@ -144,7 +145,7 @@ const ProductDetails = () => {
               <img
               key={idx}
               alt={img}
-              src={img}
+              src={img || null}
               className="hidden size-full rounded-lg object-cover lg:block"
             />
             ))}
@@ -159,7 +160,7 @@ const ProductDetails = () => {
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-gray-900">${product?.price}</p>
+              <p className="text-3xl tracking-tight text-gray-900">${discountedPrice(product)}</p>
   
               {/* Reviews */}
               <div className="mt-6">
