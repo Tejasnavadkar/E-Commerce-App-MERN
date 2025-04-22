@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProductByIdSelector,fetchProductsById } from '../ProductSlice'
 import { userSelector } from '../../Auth/AuthSlice'
-import { addToCartAsync } from '../../Cart/CartSlice'
+import { addToCartAsync, cartSelector } from '../../Cart/CartSlice'
 import { discountedPrice } from '../../../app/Constants'
 
 // const product = {
@@ -86,10 +86,12 @@ const ProductDetails = () => {
     const [selectedSize, setSelectedSize] = useState(sizes[2])
     const product = useSelector(ProductByIdSelector)
     const user = useSelector(userSelector)
+    const carts = useSelector(cartSelector)
     const {id} =  useParams()
     const dispatch = useDispatch()
     //  const state = useLocation()
      console.log('user',user)
+     console.log('carts',carts)
 
     useEffect(()=>{
       dispatch(fetchProductsById({id}))
@@ -97,9 +99,19 @@ const ProductDetails = () => {
 
     const handleCart = (e) =>{
       e.preventDefault()
-      const newProduct = {...product,quantity:1,user:user?.data.id } // dispatch action
+
+      // make sure dont add same item again in cart so we pass productId to newProduct while adding onto cart so next we chek id is already present in cart or not
+      const newProduct = {...product,productId:product.id,quantity:1,user:user?.data.id } // dispatch action
       delete newProduct['id']
-      console.log('newProduct',newProduct)
+      const index = carts.findIndex((item)=>item.productId == newProduct.productId)
+
+      console.log('index',index)
+
+      if(index >= 0){
+        alert('item already present in cart')
+       return console.log('already in bag')
+      }
+      // console.log('newProduct',newProduct)
       dispatch(addToCartAsync(newProduct))
 
     }
