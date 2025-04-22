@@ -16,12 +16,16 @@ export const CreateOrder = async (payload) => {
 
 }
 
-export const fetchAllOrders = async (pagination) =>{
+export const fetchAllOrders = async ({pagination,sort}) =>{
 
     let queryString =''
 
     for(let key in pagination){
-        queryString+=`${key}=${pagination[key]}`
+        queryString+=`${key}=${pagination[key]}&`
+    }
+
+    for(let key in sort){
+        queryString+=`${key}=${sort[key]}&`
     }
 
    const response = await fetch(`http://localhost:8000/orders?${queryString}`)

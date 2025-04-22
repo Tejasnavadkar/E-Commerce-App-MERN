@@ -5,6 +5,7 @@ import { discountedPrice, PAGE_PER_LIMIT } from '../../../app/Constants'
 import { fetchAllOrdersAsync, ordersPagesSelector, ordersSelectorForAdmin, totalOrdersCountSelector, updateOrderAsync } from '../../Orders/Orders_Slice'
 import { EyeIcon, PencilIcon} from '@heroicons/react/24/solid'
 import Pagination from '../../Common/Pagination'
+import { ArrowDownCircleIcon, ArrowUpCircleIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 
 const AdminOrders = () => {
 
@@ -14,6 +15,7 @@ const AdminOrders = () => {
     const orders = useSelector(ordersSelectorForAdmin)
     const totalOrders = useSelector(totalOrdersCountSelector)
     const orderPages = useSelector(ordersPagesSelector)
+    const [sort,setSort] = useState({})
 
     // console.log('orders--', orders)
     // console.log('totalOrders--', totalOrders)
@@ -22,10 +24,10 @@ const AdminOrders = () => {
     useEffect(() => {
         const pagination = {
             _page: activePage,
-            _limit: PAGE_PER_LIMIT
+            _per_page: PAGE_PER_LIMIT
         }
-        dispatch(fetchAllOrdersAsync(pagination))
-    }, [dispatch, activePage])
+        dispatch(fetchAllOrdersAsync({pagination,sort}))
+    }, [dispatch, activePage,sort])
 
     const handleEdit = (order) =>{
         console.log('edit')
@@ -70,6 +72,15 @@ const AdminOrders = () => {
         setActivePage(Page)
     }
 
+    const handleSort = (payload) =>{
+
+     const newsort = {_sort:payload.orderId,_order:payload.order}
+     setSort(newsort)
+
+     console.log('sort',newsort)
+
+    }
+
     return (
         <div className="overflow-x-auto">
             <div className="min-w-screen  flex items-center justify-center bg-gray-100 font-sans overflow-hidden">
@@ -78,9 +89,16 @@ const AdminOrders = () => {
                         <table className="min-w-max w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                    <th className="py-3 px-6 text-left">Order #</th>
+                                    <th onClick={()=>handleSort({orderId:'id',order: sort._order === 'desc' ? 'asc' : 'desc'})} className="py-3 px-6 text-left flex gap-2 cursor-pointer">
+                                       <span> Order #</span>
+                                      { sort._order == 'desc' ? <ArrowUpCircleIcon className='h-6 w-6'/> : <ArrowDownCircleIcon className='h-6 w-6'/>}
+                                        
+                                    </th>
                                     <th className="py-3 px-6 text-left">items</th>
-                                    <th className="py-3 px-6 text-center">Total Amount</th>
+                                    <th onClick={()=>handleSort({orderId:'subTotal',order: sort._order === 'desc' ? 'asc' : 'desc'})}  className="py-3 px-6 flex gap-2 text-center cursor-pointer">
+                                        <span>Total Amount</span>
+                                        { sort._order == 'desc' ? <ArrowUpCircleIcon className='h-6 w-6'/> : <ArrowDownCircleIcon className='h-6 w-6'/>}
+                                    </th>
                                     <th className="py-3 px-6 text-center">Shipping Address</th>
                                     <th className="py-3 px-6 text-center">Status</th>
                                     <th className="py-3 px-6 text-center">Actions</th>

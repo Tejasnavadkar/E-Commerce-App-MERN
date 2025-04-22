@@ -15,9 +15,9 @@ export const createOrderAsync = createAsyncThunk('orderSlice/createOrder', async
 
 })
 
-export const fetchAllOrdersAsync = createAsyncThunk('Productlist/fetchAllOrders', async (pagination, { rejectWithValue }) => {
+export const fetchAllOrdersAsync = createAsyncThunk('Productlist/fetchAllOrders', async ({pagination,sort}, { rejectWithValue }) => {
     try {
-        return await fetchAllOrders(pagination)
+        return await fetchAllOrders({pagination,sort})
     } catch (error) {
         return rejectWithValue(error.message || error)
     }
