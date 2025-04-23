@@ -6,6 +6,7 @@ import { fetchAllOrdersAsync, ordersPagesSelector, ordersSelectorForAdmin, total
 import { EyeIcon, PencilIcon} from '@heroicons/react/24/solid'
 import Pagination from '../../Common/Pagination'
 import { ArrowDownCircleIcon, ArrowUpCircleIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
+import { toast } from 'react-toastify'
 
 const AdminOrders = () => {
 
@@ -40,7 +41,15 @@ const AdminOrders = () => {
 
         const updatedOrder = {...order,status:e.target.value}
     
-        dispatch(updateOrderAsync(updatedOrder))  // dispatch a action to update order status
+       const upadateStatus = dispatch(updateOrderAsync(updatedOrder))  // dispatch a action to update order status
+       toast.promise(
+        upadateStatus,
+        {
+            pending: 'Loading..',
+            success: ' Status Update Successfully👌',
+            error: 'Unable to update status 🤯'
+          }
+       )
         setEditableOrderId(-1)
     }
 

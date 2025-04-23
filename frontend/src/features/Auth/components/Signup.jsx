@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { userSelector, createUserAsync } from '../AuthSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { store } from '../../../app/store'
+import { toast } from 'react-toastify'
 
 
 const Signup = () => {
@@ -21,6 +22,15 @@ const Signup = () => {
         addreses: [],
         role:'user'
       }))
+
+      toast.promise(
+           result,
+              {
+                  pending: 'Loading..',
+                  success: ' User Created Successfully👌',
+                  error: 'Unable to create user 🤯'
+                }
+             )
 
       // Handle successful signup here if needed
       console.log('User created:', result);

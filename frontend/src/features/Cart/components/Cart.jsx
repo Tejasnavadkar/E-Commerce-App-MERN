@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { cartSelector, deleteCartItemAsync, updateCartQuantityAsync } from '../CartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { discountedPrice } from '../../../app/Constants'
+import { toast } from 'react-toastify'
 
 // const products = [
 //     {
@@ -36,8 +37,8 @@ const Cart = () => {
     const products = useSelector(cartSelector)
     console.log('cartItem', products)
     
-    const subTotal = Math.round(products.reduce((acc, item) => discountedPrice(item) * item.quantity + acc, 0))
-    const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
+    const subTotal = Math.round(products?.reduce((acc, item) => discountedPrice(item) * item?.quantity + acc, 0))
+    const totalItems = products.reduce((acc, item) => parseInt(item?.quantity) + acc, 0)
 
 
     const handleQuantity = (e, item) => {
@@ -45,12 +46,28 @@ const Cart = () => {
         // delete item.id
         const newItem = { ...item, quantity: e.target.value }  // here we pass copy of updated item
 
-        dispatch(updateCartQuantityAsync(newItem))
+       const updateCartQuantity = dispatch(updateCartQuantityAsync(newItem))
+        toast.promise(
+                updateCartQuantity,
+                {
+                    pending: 'Loading..',
+                    success: ' Quantity updated👌',
+                    error: 'Unable to update quantity 🤯'
+                  }
+               )
 
     }
 
     const RemoveCartItem = (itemId) => {
-        dispatch(deleteCartItemAsync(itemId))
+       const removedCartItem = dispatch(deleteCartItemAsync(itemId))
+         toast.promise(
+            removedCartItem,
+             {
+               pending: 'Removing..',
+               success: 'Item removed from cart👌',
+               error: 'unable to remove item 🤯'
+             }
+           )
     }
 
     // const HandleOrder = () => {
@@ -84,7 +101,7 @@ const Cart = () => {
                                 {products?.map((item) => (
                                     <li key={item?.id} className="flex py-6">
                                         <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                            <img alt={item?.imageAlt} src={item?.images[0]} className="size-full object-cover" />
+                                            <img alt={item?.imageAlt} src={item?.images?.[0]} className="size-full object-cover" />
                                         </div>
 
                                         <div className="ml-4 flex flex-1 flex-col">
@@ -109,7 +126,7 @@ const Cart = () => {
                                                 </div>
 
                                                 <div className="flex">
-                                                    <button onClick={() => RemoveCartItem(item.id)} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                    <button onClick={() => RemoveCartItem(item?.id)} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
                                                         Remove
                                                     </button>
                                                 </div>

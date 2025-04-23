@@ -9,11 +9,13 @@ export const addToCartAsync = createAsyncThunk(
     'cart/addToCart',
     async (item,{rejectWithValue}) => {
         try {
+            //   await new Promise((resolve,reject)=> setTimeout(()=>reject(),5000)) 
          const data = await addToCart(item) // this api reload page  coz of this create user api call tree reloades
             return data
         // return item
         } catch (error) {
-            return rejectWithValue(error.message || 'Failed to create user');
+            throw new Error('err in addToCartAsync:',error)
+            // return rejectWithValue(error.message || 'Failed to create user');
         }
     }
 );
@@ -39,6 +41,7 @@ export const fetchCartsById = createAsyncThunk('Cart/fetchAllCarts', async (user
 export const deleteCartItemAsync = createAsyncThunk('Cart/deleteCartItem',async (itemId,{rejectWithValue})=>{
     try {
         // console.log('update',update)
+        // await new Promise((resolve)=>setTimeout(()=>resolve(),5000))
        const data = await deleteCartItemById(itemId)
        return data
     } catch (error) {

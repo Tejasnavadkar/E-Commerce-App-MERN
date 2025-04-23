@@ -1,25 +1,41 @@
+import { toast } from "react-toastify";
+
 export const addToCart = async (item) => {
     try {
-        const response = await fetch(`http://localhost:8000/cart`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Accept': 'application/json'
-            },
-            body: JSON.stringify(item),
-            // credentials: 'include',
-        });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to create user');
-        }
 
-        const data = await response.json();
-        return data;
+        
+    //    await new Promise((resolve,reject)=> setTimeout(()=>reject(),5000)) //delay
+       
+        
+        new Promise((resolve,reject)=>{
+             fetch(`http://localhost:8000/cart`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Accept': 'application/json'
+                },
+                body: JSON.stringify(item),
+                // credentials: 'include',
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to create user');
+                }
+        
+                const data = await response.json();
+                return resolve(data)
+                 
+            }).catch((err)=>{
+                   return reject(err)
+            })
+        })
+       
     } catch (error) {
+       
         console.error('API Error:', error);
-        throw error;
+        throw new Error(error)
+    
     }
 };
 
@@ -63,6 +79,7 @@ export const deleteCartItemById = async (itemId) => {
             method: 'DELETE',
             headers: { 'content-type': 'application/json' }
         })
+        // await new Promise((resolve)=>setTimeout(()=>resolve(),3000))
         return {
             id: itemId,
             msg: 'cart item deleted successfully'

@@ -9,6 +9,7 @@ import { updateUserAsync } from '../features/User/UserSlice'
 import { cartSelector, deleteCartItemAsync, resetCartAsync, updateCartQuantityAsync } from '../features/Cart/CartSlice'
 import { createOrderAsync, selectCurrentOrder } from '../features/Orders/Orders_Slice'
 import { discountedPrice } from '../app/Constants'
+import { toast } from 'react-toastify'
 
 // const addreses = [
 //     {
@@ -47,11 +48,11 @@ const CheckOutPage = () => {
     const currentOrder = useSelector(selectCurrentOrder)
     const user = loggedInUser.data
 
-    console.log('loggedInuser',loggedInUser)
-    console.log('cartItem', products)
-    console.log('user', loggedInUser)
-    console.log('selectedAddress', selectedAddress)
-    console.log('selectedPayment', selectedPaymentMethod)
+    // console.log('loggedInuser',loggedInUser)
+    // console.log('cartItem', products)
+    // console.log('user', loggedInUser)
+    // console.log('selectedAddress', selectedAddress)
+    // console.log('selectedPayment', selectedPaymentMethod)
 
 
     const subTotal = Math.round(products.reduce((acc, item) => item.price * item.quantity + acc, 0))
@@ -62,15 +63,23 @@ const CheckOutPage = () => {
     }
 
     const handlePaymentMethod = (method) => {  // we cant pass directly pass object from radio input
-        console.log('Payment-method', method)
         setPaymentMethod(method)
     }
 
     const handleFormSubmit = (data) => {
         const userData = { ...loggedInUser.data, addreses: [...(loggedInUser.data.addreses || []), data] } //loggedInUser.addreses might be undefined when trying to spread it in the handleFormSubmit function so add a check
         console.log('userData', userData)
-        dispatch(updateUserAsync(userData))  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
-        reset()
+       const addAddress = dispatch(updateUserAsync(userData))  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
+       reset()
+
+       toast.promise(
+        addAddress,
+        {
+            pending: 'Loading..',
+            success: ' Add address successfully👌',
+            error: 'Unable to add address 🤯'
+          }
+       )
     }
 
     const handleQuantity = (e, item) => {
@@ -78,24 +87,50 @@ const CheckOutPage = () => {
         // delete item.id
         const newItem = { ...item, quantity: e.target.value }  // here we pass copy of updated item
 
-        dispatch(updateCartQuantityAsync(newItem))
+       const updateCartQuantity = dispatch(updateCartQuantityAsync(newItem))
+
+       toast.promise(
+        updateCartQuantity,
+        {
+            pending: 'Loading..',
+            success: ' Quantity updated👌',
+            error: 'Unable to update quantity 🤯'
+          }
+       )
 
     }
 
     const RemoveCartItem = (itemId) => {
-        dispatch(deleteCartItemAsync(itemId))
+       const removedCartItem = dispatch(deleteCartItemAsync(itemId))
+        toast.promise(
+                    removedCartItem,
+                     {
+                       pending: 'Removing..',
+                       success: 'Item removed from cart👌',
+                       error: 'unable to remove item 🤯'
+                     }
+                   )
     }
 
     const HandleOrder = async () => {
 
         if (selectedAddress && selectedPaymentMethod) {
             const order = { user, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
-            dispatch(createOrderAsync(order))
-            // console.log('hii currentOrder',currentOrder)
+           const createOrder = dispatch(createOrderAsync(order))
+            
+           toast.promise(
+            createOrder,
+            {
+                pending:'creating order..',
+                success:'order created successfully',
+                error:'unable to create order'
+            }
+           )
            
 
         } else {
-            alert('select address and payment method')
+            // alert('select address and payment method')
+            toast.error('select address and payment method')
         }
         //todo when order created succefully navigate to success page
         // todo: also cleare all carts after order in db and redux state also

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { checkUserAsync, errorSelector, userSelector } from '../AuthSlice';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
@@ -15,10 +16,19 @@ const Login = () => {
 
   const handleFormData = async (data) => {
     try {
-      dispatch(checkUserAsync({  // this returns promise
+     const loginUser = dispatch(checkUserAsync({  // this returns promise
         email: data.email,
         password: data.password
       }))
+
+      toast.promise(
+        loginUser,
+        {
+            pending: 'Loading..',
+            success: ' Login Successfully👌',
+            error: 'Unable to login 🤯'
+          }
+       )
 
       // Handle successful signup here if needed
       console.log('User checked:', user);
