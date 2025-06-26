@@ -484,8 +484,8 @@ const ProductGrid = ({ products }) => {
                         {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                             {products.map((product) => (
-                                <div className='flex flex-col gap-2 justify-center'>
-                                    <Link to={`/product-details/${product.id}`} key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
+                                <div key={product.id}  className='flex flex-col gap-2 justify-center'>
+                                    <Link to={`/product-details/${product.id}`} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
                                         <div className="">
                                             <img
                                                 alt={product.thumbnail}

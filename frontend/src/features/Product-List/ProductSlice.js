@@ -81,7 +81,7 @@ const initialState = {
   categories:[],
   brands:[],
   // allOrders:null,
-  selectedProductById:[],
+  selectedProductById:null,
   pages:0,
   items:0,
   isLoading: false,
@@ -93,6 +93,9 @@ const ProductSlice = createSlice({
   name: 'ProductSlice',
   initialState,
   reducers: {
+    resetSelectedProduct(state) {  // to reset selectedProduct to null
+      state.selectedProductById = null
+    },
 
   },
   extraReducers(builder) {
@@ -209,13 +212,14 @@ const ProductSlice = createSlice({
      
 
 
-  }
+  },
 })
 
 export const productSelector = (state) => state.Products
 export const categoriesSelector = (state) => state.Products.categories
 export const brandsSelector = (state) => state.Products.brands
 export const ProductByIdSelector = (state) => state.Products.selectedProductById
+export const productListStatus = (state) => state.Products.isLoading
 
-// export const {} = ProductSlice.actions
+export const {resetSelectedProduct} = ProductSlice.actions
 export default ProductSlice.reducer

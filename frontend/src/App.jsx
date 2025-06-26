@@ -118,7 +118,7 @@ function App() {
 
             <Route path='/admin/product-form/edit/:id' element={
               <AdminProtected>
-                <AdminProductFormPage />
+                <AdminProductFormPage  />
               </AdminProtected>
             } />
 

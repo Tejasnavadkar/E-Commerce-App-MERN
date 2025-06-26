@@ -16,9 +16,10 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector,FetchAllCategoriesAsync,FetchAllBrandsAsync } from '../ProductSlice'
+import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector,FetchAllCategoriesAsync,FetchAllBrandsAsync, productListStatus } from '../ProductSlice'
 import { PAGE_PER_LIMIT,discountedPrice } from '../../../app/Constants'
 import Pagination from '../../Common/Pagination'
+import { Grid } from 'react-loader-spinner'
 
 const sortOptions = [
 
@@ -47,6 +48,7 @@ const ProductList = () => {
     const { allProducts,pages,items} = useSelector(productSelector)
     const categories = useSelector(categoriesSelector)
     const brands = useSelector(brandsSelector)
+    const isLoading = useSelector(productListStatus)
     const dispatch = useDispatch()
    
     const filters = [
@@ -211,7 +213,7 @@ const ProductList = () => {
                             />
 
                             {/* Product grid */}
-                            <ProductGrid products={allProducts} />
+                            <ProductGrid products={allProducts} isLoading={isLoading} />
                            
                         </div>
                     </section>
@@ -409,7 +411,7 @@ const DesktopFilter = ({handleFilter,filters}) => {
 
 
 
-const ProductGrid = ({products}) => {
+const ProductGrid = ({products,isLoading}) => {
     // const navigate = useNavigate()
     return (
        <>
@@ -418,6 +420,23 @@ const ProductGrid = ({products}) => {
                                 <div className="bg-white">
                                     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                                         {/* <h3 className='text-2xl font-bold block tracking-tight '>Products</h3> */}
+                                        {
+                                            isLoading ? (
+                                                <div className='w-full h-full flex justify-center'>
+                                                    <Grid
+                                                  visible={true}
+                                                  height="80"
+                                                  width="80"
+                                                  color="#4f39f6"
+                                                  ariaLabel="grid-loading"
+                                                  radius="12.5"
+                                                  wrapperStyle={{}}
+                                                  wrapperClass="grid-wrapper"
+                                                  />
+                                                </div>
+                                            ) : null
+                                        }
+
                                         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                                             {products.map((product) => (
                                                 <Link to={`/product-details/${product.id}`}  key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
@@ -454,6 +473,8 @@ const ProductGrid = ({products}) => {
                                                 </Link>
                                             ))}
                                         </div>
+
+
                                     </div>
                                 </div>
                             </div>

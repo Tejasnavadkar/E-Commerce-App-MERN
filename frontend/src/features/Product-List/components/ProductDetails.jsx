@@ -68,7 +68,11 @@ const ProductDetails = () => {
     }
    
     const addToCart =  await dispatch(addToCartAsync(newProduct)).unwrap()
-    localStorage.setItem('addToCart',JSON.stringify(addToCart))
+    // localStorage.setItem('addToCart',JSON.stringify(addToCart))
+
+    // todo:it will be based on server rresponse of backend
+
+    // .promise is not usefull here
     toast.promise(
       addToCart,
       {

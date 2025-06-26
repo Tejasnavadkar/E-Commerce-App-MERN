@@ -21,12 +21,12 @@ import { ToastContainer } from 'react-toastify';
 // console.log('alertProvider-',AlertProvider)
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       {/* <AlertProvider template={AlertTemplate} {...options} > */}
         <App />
         <ToastContainer />
       {/* </AlertProvider> */}
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

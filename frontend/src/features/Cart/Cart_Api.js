@@ -20,7 +20,7 @@ export const addToCart = async (item) => {
             }).then(async (response)=>{
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.message || 'Failed to create user');
+                    throw new Error(error.message || 'Failed to add to cart');
                 }
         
                 const data = await response.json();
