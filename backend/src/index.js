@@ -3,7 +3,7 @@ dotenv.config()
 import express from 'express'
 import db from './db/db.js'
 import cors from 'cors'
-
+import rootRoter from './router.js'
 const app = express()
 const port = process.env.PORT
 
@@ -18,5 +18,8 @@ app.get('/',(req,res)=>{
         msg:'Success'
     })
 })
+
+// main routes
+app.use(rootRoter)
 
 app.listen(port,()=>console.log(`server started at ${port} port`))
