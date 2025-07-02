@@ -4,6 +4,7 @@ export const FetchAllProducts = async () => {
     try {
 
         const response = await fetch('http://localhost:8000/products')
+        //  const response = await fetch('http://localhost:8080/api/product/fetchAllProducts')
         const data = await response.json()
         return data
 

@@ -15,6 +15,7 @@ const Login = () => {
   const dispatch = useDispatch()
 
   const handleFormData = async (data) => {
+    console.log(data)
     try {
      const loginUser = dispatch(checkUserAsync({  // this returns promise
         email: data.email,

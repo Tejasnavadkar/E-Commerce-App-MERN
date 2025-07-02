@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
         type: [String], // array of strings url
         required: true
     },
-    delete: {
+    deleted: {
         type: Boolean,
         default: false
     }

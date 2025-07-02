@@ -1,11 +1,12 @@
 import productModel from "../models/product.js";
+import productServices from "../services/productServices.js";
 
 // different way
 const createProductController = async (req, res) => {
     try {
         const data = req.body;
-        const product = new productModel(data);
-        const createdProduct = await product.save();
+
+        const createdProduct = await productServices.createProducts(data)
         // console.log('createdProduct--',createdProduct)
         if (createdProduct) {
             res.status(201).json({
@@ -29,42 +30,43 @@ const fetchAllProductController = async (req, res) => {
 
         let query = productModel.find({}); // pehele sab find karenge then one by one we perform sorting and filtering and last me .exec to execute the query
         let totalProductsQuery = productModel.find({}) // it just to take count // dont await it if you await it it gives actual result and you wont erform queries on it
-     
+
         //filtering
-        if(req.query.category){
+        if (req.query.category) {
             // console.log(req.query.category)
-           query = query.find({category:req.query.category})
-           totalProductsQuery = totalProductsQuery.find({category:req.query.category})
+            query = query.find({ category: req.query.category })
+            totalProductsQuery = totalProductsQuery.find({ category: req.query.category })
         }
-        if(req.query.brand){
-           query = query.find({brand:req.query.brand})
-           totalProductsQuery = totalProductsQuery.find({brand:req.query.brand})
+        if (req.query.brand) {
+            query = query.find({ brand: req.query.brand })
+            totalProductsQuery = totalProductsQuery.find({ brand: req.query.brand })
         }
 
         // sorting
-        if(req.query._sort && req.query._order){ // if query me sort option hai to hi .sort karana
-           query = query.sort({[req.query._sort]:req.query._order})  // here mongoose gives us query that is .sort({"sortfiels":sortOrder})
-           totalProductsQuery = totalProductsQuery.sort({[req.query._sort]:req.query._order})
+        // how to get sort on discounted price not on actual price
+        if (req.query._sort && req.query._order) { // if query me sort option hai to hi .sort karana
+            query = query.sort({ [req.query._sort]: req.query._order })  // here mongoose gives us query that is .sort({"sortfiels":sortOrder})
+            totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order })
         }
 
         //pagination
-        if(req.query._page && req.query._limit){
+        if (req.query._page && req.query._limit) {
             const pageSize = req.query._limit  // 10
             const page = req.query._page // current page
-            query = query.skip(pageSize*(page-1)).limit(pageSize)  // skip karana 
-            totalProductsQuery = totalProductsQuery.sort({[req.query._sort]:req.query._order})
+            query = query.skip(pageSize * (page - 1)).limit(pageSize)  // skip karana 
+            totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order })
         }
 
         const allProducts = await query.exec() // whatever we query applied above exicute it
         const totalDocs = await totalProductsQuery.countDocuments().exec()
-        console.log({totalDocs})
+        console.log({ totalDocs })
 
         //err
         // The error "query.exec is not a function" is because you are using await with productModel.find({}), 
         // which immediately returns the result array, not a query object. So, query is now an array, not a Mongoose query, 
         // and arrays do not have .find(), .sort(), .skip(), .limit(), or .exec() methods.
-       
-        res.set('X-Total-Count',totalDocs) // here send doc count in headers
+
+        res.set('X-Total-Count', totalDocs) // here send doc count in headers
         res.status(201).json({
             msg: "all products",
             allProducts: allProducts,
@@ -76,9 +78,46 @@ const fetchAllProductController = async (req, res) => {
     }
 };
 
+const fetchProductByIdController = async (req, res) => {
+
+    try {
+        // const {id} = req.query
+        const { id } = req.params;  // we recive id from params /:id
+        //  console.log({id})
+        const product = await productServices.fetchProductById(id)
+        res.status(200).json({ product })
+
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+
+
+}
+
+const updateProductController = async (req, res) => {
+
+    try {
+        const { id } = req.params
+        const data = req.body
+
+        const updatedProduct = await productServices.updateProduct({ id, data })
+        res.status(200).json({
+            msg: 'product updated',
+            updatedProduct
+        })
+
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+}
+
+
 export default {
     createProductController,
     fetchAllProductController,
+    fetchProductByIdController,
+    updateProductController
+
 };
 
 //  product.save((err,doc)=>{   but now save() not accepts callback anymore use async await

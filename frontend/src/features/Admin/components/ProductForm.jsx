@@ -156,7 +156,7 @@ const ProductForm = () => {
 
   const handleDelete = () => {
     const product = { ...selectedProduct };
-    product.delete = true;
+    product.deleted = true;
     // here we not delete actually just add extra field delete in db and in ui we just filter out
     dispatch(updateProductByIdAsync(product));
   };
@@ -181,7 +181,7 @@ const ProductForm = () => {
               { selectedProduct ?  "Edit Product" : "Add Product"}
             </h2>
 
-            {selectedProduct?.delete && <h2 className="text-red-500" >This Product is Deleted</h2>}
+            {selectedProduct?.deleted && <h2 className="text-red-500" >This Product is Deleted</h2>}
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
@@ -670,7 +670,7 @@ const ProductForm = () => {
             Cancel
           </button>
 
-         { selectedProduct && !selectedProduct?.delete && <button
+         { selectedProduct && !selectedProduct?.deleted && <button
             onClick={(e) =>{
               e.preventDefault()
               setModalopen(true)
