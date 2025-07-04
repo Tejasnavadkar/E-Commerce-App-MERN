@@ -14,7 +14,7 @@ const createUserController = async (req,res) =>{
     }
 }
 
-const checkUserController = async (req,res) =>{
+const loginController = async (req,res) =>{
     try {
         const {email,password} = req.body
 
@@ -39,7 +39,18 @@ const checkUserController = async (req,res) =>{
     }
 }
 
+const signOutController = async(req,res) => {
+    // todo
+}
+
+const forgotPasswordController = async(req,res) => {
+    //todo
+
+}
+
 export default {
       createUserController,
-      checkUserController
+      loginController,
+      signOutController,
+      forgotPasswordController
 }

@@ -33,7 +33,7 @@ export const checkUserAsync = createAsyncThunk(
          const data = await checkUser(loginInfo) //  coz of this create user api call tree reloades
         return data
         } catch (error) {
-            return rejectWithValue(error.message || 'Failed to check user');
+            return rejectWithValue(error.message || 'Failed to check user'); // rejectWithValue catch the err in action.payload in rejected case
         }
     }
 );
