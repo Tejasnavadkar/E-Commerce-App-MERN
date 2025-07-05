@@ -58,7 +58,7 @@ const ProductDetails = () => {
     e.preventDefault()
 
     // make sure dont add same item again in cart so we pass productId to newProduct while adding onto cart so next we chek id is already present in cart or not
-    const newProduct = { ...product, productId: product.id, quantity: 1, user: user?.data.id } // dispatch action
+    const newProduct = { ...product, productId: product.id, quantity: 1, user: user?.data.id } // dispatch action // userId 
     delete newProduct['id']
     const index = carts.findIndex((item) => item.productId == newProduct.productId)
 

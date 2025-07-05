@@ -14,8 +14,8 @@ export const addToCartAsync = createAsyncThunk(
             return data
         // return item
         } catch (error) {
-            throw new Error('err in addToCartAsync:',error)
-            // return rejectWithValue(error.message || 'Failed to create user');
+            // throw new Error('err in addToCartAsync:',error)
+            return rejectWithValue(error.message || 'Failed to add cart');
         }
     }
 );
