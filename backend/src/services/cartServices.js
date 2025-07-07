@@ -20,7 +20,10 @@ const addToCart = async ({product,quantity,user}) => {
 const fetchCartByUserId = async (id) => {
 
   try {
-      const carts = await cartModel.find({user:id}).populate('product').populate('user')
+      const carts = await cartModel.find({user:id}).populate('product').populate({
+        path:'user',
+        select:'id email role addresses orders'
+      })
       return carts
 
   } catch (error) {
