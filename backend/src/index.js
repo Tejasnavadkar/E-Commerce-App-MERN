@@ -11,7 +11,7 @@ const port = process.env.PORT
 db.ConnectDb()
 app.use(express.json()) // for body parsing
 app.use(cors({
-    exposedHeaders:['X-Total-Count'] // we send header from backend so we need expose that
+    exposedHeaders:['X-Total-Count','X-Total-items'] // we send header from backend so we need expose that
 })) // prevevt cors errors
 
 //routes place here

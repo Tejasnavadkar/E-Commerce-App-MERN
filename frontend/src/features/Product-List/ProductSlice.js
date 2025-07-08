@@ -139,10 +139,11 @@ const ProductSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(fetchProductsByFilterAsync.fulfilled, (state, action) => {
-      if(action.payload.data){
-        state.allProducts = action.payload.data
-        state.pages = action.payload.pages
-        state.items = action.payload.items
+      console.log('action-payload--inproductslice--',action.payload)
+      if(action.payload.products){
+        state.allProducts = action.payload.products
+        // state.pages = action.payload.pages
+        state.items = action.payload.totalProducts
       state.isLoading = false
       }else{
         state.allProducts = action.payload
@@ -220,6 +221,7 @@ export const categoriesSelector = (state) => state.Products.categories
 export const brandsSelector = (state) => state.Products.brands
 export const ProductByIdSelector = (state) => state.Products.selectedProductById
 export const productListStatus = (state) => state.Products.isLoading
+export const totalProductCount = (state) => state.Products.items
 
 export const {resetSelectedProduct} = ProductSlice.actions
 export default ProductSlice.reducer

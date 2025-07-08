@@ -1,27 +1,36 @@
-// import axios from 'axios'
+import axios from 'axios'
 
 export const createUser = async (userData) => {
     try {
-        const response = await fetch(`http://localhost:8000/users`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Accept': 'application/json'
-            },
-            body: JSON.stringify(userData),
-            // credentials: 'include',
-        });
+        // const response = await fetch(`http://localhost:8000/users`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         // 'Accept': 'application/json'
+        //     },
+        //     body: JSON.stringify(userData),
+        //     // credentials: 'include',
+        // });
  
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to create user');
-        }
+        // if (!response.ok) {
+        //     const error = await response.json();
+        //     throw new Error(error.message || 'Failed to create user');
+        // }
  
-        const data = await response.json();
-        return data;
-    } catch (error) {
+        // const data = await response.json();
+        // return data;
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/signup`,userData)
+
+      if (response.status !== 201) {
+        throw new Error('api fail');
+      }
+      console.log('response-',response)
+      return response.data.createdUser
+    
+      } catch (error) {
         console.error('API Error:', error);
-        throw error;
+        throw new Error(error.message | 'failed to create user');
     }
  };
 
@@ -30,21 +39,17 @@ export const createUser = async (userData) => {
     const password = loginInfo.password;
   
     try {
-      const response = await fetch(`http://localhost:8000/users?email=${email}`);
-      if (!response.ok) {
+      // const response = await fetch(`http://localhost:8000/users?email=${email}`);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/login`,{email,password})
+
+      
+      if (response.status !== 201) {
         throw new Error('api fail');
       }
   
-      const data = await response.json();
-      if (data.length) {
-        if (data[0].password === password) {
-          return { data: data[0] }; // Return the user data if credentials are valid
-        } else {
-          throw new Error('invalid credentials');
-        }
-      } else {
-        throw new Error('invalid credentials');
-      }
+      const user = response.data.User
+      console.log(user)
+      return user
     } catch (error) {
       throw new Error(error.message || 'An error occurred while checking user');
     }

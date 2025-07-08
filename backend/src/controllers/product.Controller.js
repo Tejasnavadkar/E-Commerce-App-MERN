@@ -30,7 +30,7 @@ const fetchAllProductController = async (req, res) => {
 
         let query = productModel.find({}); // pehele sab find karenge then one by one we perform sorting and filtering and last me .exec to execute the query
         let totalProductsQuery = productModel.find({}) // it just to take count // dont await it if you await it it gives actual result and you wont erform queries on it
-
+        let totalProduct = productModel.find({})
         //filtering
         if (req.query.category) {
             // console.log(req.query.category)
@@ -46,7 +46,7 @@ const fetchAllProductController = async (req, res) => {
         // how to get sort on discounted price not on actual price
         if (req.query._sort && req.query._order) { // if query me sort option hai to hi .sort karana
             query = query.sort({ [req.query._sort]: req.query._order })  // here mongoose gives us query that is .sort({"sortfiels":sortOrder})
-            totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order })
+            // totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order })
         }
 
         //pagination
@@ -54,12 +54,13 @@ const fetchAllProductController = async (req, res) => {
             const pageSize = req.query._limit  // 10
             const page = req.query._page // current page
             query = query.skip(pageSize * (page - 1)).limit(pageSize)  // skip karana 
-            totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order })
+            // totalProductsQuery = totalProductsQuery.skip(pageSize * (page - 1)).limit(pageSize)
         }
 
         const allProducts = await query.exec() // whatever we query applied above exicute it
         const totalDocs = await totalProductsQuery.countDocuments().exec()
-        console.log({ totalDocs })
+        const totalProductCount = await totalProduct.countDocuments().exec()
+        console.log({ totalProductCount })
 
         //err
         // The error "query.exec is not a function" is because you are using await with productModel.find({}), 
@@ -67,6 +68,7 @@ const fetchAllProductController = async (req, res) => {
         // and arrays do not have .find(), .sort(), .skip(), .limit(), or .exec() methods.
 
         res.set('X-Total-Count', totalDocs) // here send doc count in headers
+        res.set('X-Total-items', totalProductCount)
         res.status(201).json({
             msg: "all products",
             allProducts: allProducts,

@@ -1,3 +1,4 @@
+import orderModel from "../models/order.js"
 import orderServices from "../services/orderServices.js"
 
 
@@ -36,11 +37,31 @@ const fetchOrderByIdController = async (req,res) => {
 }
 
 const fetchAllOrdersController = async (req,res) => {
-    //fetch all orders
+    //fetch all orders (apply filters and sorting)
     try {
-    
 
-    const allOrders = await orderServices.fetchAllOrders()
+    // const allOrders = await orderServices.fetchAllOrders()
+    let query = orderModel.find({})
+    let totalProductsQuery = orderModel.find({})
+
+    // handle sorting
+    if(req.query._sort && req.query._order){
+        query.sort({[req.query._sort]:req.query._order}) //.sort({"sortfiels":sortOrder})
+        totalProductsQuery.sort({[req.query._sort]:req.query._order})
+    }
+    
+    // handle pagination
+    if(req.query._page && req.query._per_page){
+         const pageSize = req.query._per_page
+         const page = req.query._page
+         query.skip(pageSize*(page-1)).limit(pageSize)
+         totalProductsQuery.skip(pageSize*(page-1)).limit(pageSize)
+    }
+    
+    const allOrders = await query.exec()
+    const totalDocs = await totalProductsQuery.countDocuments().exec()
+    
+    res.set('X-Total-Count',totalDocs) //send doc count in headers 
     res.status(200).json({
         msg:'all orders',
         allOrders

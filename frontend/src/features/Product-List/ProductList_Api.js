@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 // here place api call and import in extraReducers
 
 export const FetchAllProducts = async () => {
@@ -106,15 +108,26 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination }) =>
     }
 
     try {
-        // console.log('queryString--',queryString)
-        const response = await fetch(`http://localhost:8000/products?${queryString}`)
-        const data = await response.json()
-        return data
+        
+        // const response = await fetch(`http://localhost:8000/products?${queryString}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?${queryString}`)
+        const products = await response.data.allProducts
+        console.log('response in product slice--',response)
+        console.log('prod----',products)
+        const pages = response.headers['x-total-count']
+        const items = response.headers['x-total-items'] 
+
+        const payload = {
+            products,
+            totalProducts:pages,
+            items
+        }
+        return payload
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
         console.log('error while fetching products in ProductList_Api-', error)
+        throw new Error(error.message | 'cant fetch products') 
     }
 }
 

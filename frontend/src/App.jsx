@@ -34,9 +34,10 @@ function App() {
 
   const dispatch = useDispatch()
   const user = useSelector(userSelector)
+  console.log('user in app.jsx-',user)
 
   useEffect(() => {
-    dispatch(fetchCartsById(user?.data.id))
+    dispatch(fetchCartsById(user?.id))
   }, [dispatch, user])
 
   return (

@@ -111,7 +111,7 @@ const ProductList = () => {
         console.log('activepage--',activePage)
         const pagination = {
             _page:activePage,
-            _per_page:PAGE_PER_LIMIT
+            _limit:PAGE_PER_LIMIT
         }
         // dispatch(fetchProducts())
         dispatch(fetchProductsByFilterAsync({filter,sort,pagination}))
@@ -442,7 +442,7 @@ const ProductGrid = ({products,isLoading}) => {
                                                 <Link to={`/product-details/${product.id}`}  key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
                                                     <div className="">
                                                         <img
-                                                            alt={product.thumbnail}
+                                                            alt={'image not found'}
                                                             src={product.thumbnail}
                                                             className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
                                                         />
