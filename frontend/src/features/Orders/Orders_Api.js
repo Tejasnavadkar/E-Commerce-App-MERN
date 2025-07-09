@@ -1,17 +1,14 @@
+import axios from "axios"
 
 
 
 export const CreateOrder = async (payload) => {
     try {
-        const response = await fetch(`http://localhost:8000/orders`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        })
-
-        const data = response.json()
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/order/createOrder`,payload)
+        const data = response.data.order
         return data
     } catch (error) {
-        throw new Error(error)
+        throw new Error(error.message)
     }
 
 }
@@ -28,10 +25,10 @@ export const fetchAllOrders = async ({pagination,sort}) =>{
         queryString+=`${key}=${sort[key]}&`
     }
 
-   const response = await fetch(`http://localhost:8000/orders?${queryString}`)
+   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`)
 
-   const data = response.json()
-   const totalOrders = await response.headers.get['x-Total-Count']
+   const data = response.data.allOrders
+   const totalOrders = await response.headers['x-total-count']
 
 //    return {data:data,totalOrders:totalOrders}
      console.log('totalOrders',totalOrders)
@@ -42,15 +39,16 @@ export const fetchAllOrders = async ({pagination,sort}) =>{
 
 export const updateOrder = async (payload) => {
     try {
-        const response = await fetch(`http://localhost:8000/orders/${payload.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify(payload)
-        })
+        // const response = await fetch(`http://localhost:8000/orders/${payload.id}`, {
+        //     method: 'PATCH',
+        //     body: JSON.stringify(payload)
+        // })
 
-        const data = response.json()
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/order/updateOrder/${payload.id}`)
+        const data = response.data.updatedOrder
         return data
     } catch (error) {
-        throw new Error(error)
+        throw new Error(error.message)
     }
 
 }

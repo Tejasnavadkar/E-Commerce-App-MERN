@@ -19,7 +19,7 @@ export const FetchUserInfoByIdAsync = createAsyncThunk('userSlice/fetchUserInfo'
 export const FetchUserOrdersByIdAsync = createAsyncThunk('userSlice/fetchUsersOrders', async (userId, { rejectWithValue }) => {
 
     try {
-
+        console.log({userId})
         const data = await FetchUsersOrdersById(userId)
         return data
     } catch (error) {

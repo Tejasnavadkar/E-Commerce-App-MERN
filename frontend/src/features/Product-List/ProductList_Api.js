@@ -5,57 +5,57 @@ import axios from 'axios'
 export const FetchAllProducts = async () => {
     try {
 
-        const response = await fetch('http://localhost:8000/products')
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts`)
         //  const response = await fetch('http://localhost:8080/api/product/fetchAllProducts')
-        const data = await response.json()
+        const data = response.data.allProducts
         return data
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
         console.log('error while fetching products in ProductList_Api-', error)
+           throw new Error(error.message) 
     }
 }
 
 export const FetchProductById = async ({ id }) => {
     try {
 
-        const response = await fetch(`http://localhost:8000/products/${id}`)
-        const data = await response.json()
+         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchProductById/${id}`)
+        const data = response.data.product
         return data
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
         console.log('error while fetching products by id in ProductList_Api-', error)
+           throw new Error(error.message) 
     }
 }
 
 export const FetchAllCategories = async () => {
     try {
 
-        const response = await fetch('http://localhost:8000/categories')
-        const data = await response.json()
+         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/categories/fetchCategories`)
+        const data = response.data.categories
         return data
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
         console.log('error while fetching products in ProductList_Api-', error)
+           throw new Error(error.message)
     }
 }
 
 export const FetchAllBrands = async () => {
     try {
 
-        const response = await fetch('http://localhost:8000/brands')
-        const data = await response.json()
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/brands/fetchBrands`)
+        const data = response.data.brands
         return data
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
-        console.log('error while fetching products in ProductList_Api-', error)
+        console.log('error while fetching products in ProductList_Api-',error) 
+        throw new Error(error.message)
     }
 }
 
@@ -115,7 +115,7 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination }) =>
         console.log('response in product slice--',response)
         console.log('prod----',products)
         const pages = response.headers['x-total-count']
-        const items = response.headers['x-total-items'] 
+        const items = response.headers['x-total-items']  // not needed
 
         const payload = {
             products,
@@ -133,14 +133,14 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination }) =>
 
 export const sortProducts = async (payload) => {
     try {
-        const response = await fetch(`http://localhost:8000/products?_sort=${payload.sort}&_order=${payload.order}`)
-        const data = await response.json()
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?_sort=${payload.sort}&_order=${payload.order}`)
+        const data = response.data.allProducts
         return data
 
     } catch (error) {
 
-        //    throw Error('error while fetching products in ProductList_Api-',error) 
         console.log('error while fetching products in ProductList_Api-', error)
+           throw new Error(error.message) 
     }
 }
 
@@ -148,20 +148,22 @@ export const createProduct = async (payload) => {
 
     try {
 
-        const response = await fetch(`http://localhost:8000/products`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
+        // const response = await fetch(`http://localhost:8000/products`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(payload)
+        // })
 
-        const data = await response.json()
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/product/createProduct`,payload)
+
+        const data = response.data.product
         return data
 
     } catch (error) {
 
-        throw new Error(error)
+        throw new Error(error.message)
 
     }
 }
@@ -170,19 +172,21 @@ export const updateProductById = async (payload) => {
 
     try {
           
-        const response = await fetch(`http://localhost:8000/products/${JSON.parse(payload.id)}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        const data = await response.json()
+        // const response = await fetch(`http://localhost:8000/products/${JSON.parse(payload.id)}`, {
+        //     method: 'PATCH',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         // 'Accept': 'application/json'
+        //     },
+        //     body: JSON.stringify(payload)
+        // })
+
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/product/updateProduct/${payload.id}`,payload)
+        const data = response.data.updatedProduct
         return data
     } catch (error) {
         console.log('err--',error)
-        throw new Error('err in updateProductById_api',error)
+        throw new Error(error.message)
     }
 
 }

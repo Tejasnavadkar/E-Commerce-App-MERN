@@ -60,7 +60,7 @@ const fetchAllProductController = async (req, res) => {
         const allProducts = await query.exec() // whatever we query applied above exicute it
         const totalDocs = await totalProductsQuery.countDocuments().exec()
         const totalProductCount = await totalProduct.countDocuments().exec()
-        console.log({ totalProductCount })
+        // console.log({ totalProductCount })
 
         //err
         // The error "query.exec is not a function" is because you are using await with productModel.find({}), 

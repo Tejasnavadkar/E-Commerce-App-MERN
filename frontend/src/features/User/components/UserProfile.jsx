@@ -60,7 +60,7 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
-        dispatch(FetchUserInfoByIdAsync(loggedInUser.data.id))
+        dispatch(FetchUserInfoByIdAsync(loggedInUser?.id))
     }, [dispatch, loggedInUser])
     return (
         <div>
@@ -234,7 +234,7 @@ const UserProfile = () => {
                         <div>
                             <p className="mt-0.5 text-sm text-gray-500">Your Addresses :</p>
                             {
-                                userInfo?.addreses.map((item, idx) => (
+                                loggedInUser?.addresses.map((item, idx) => (
                                     <div key={idx} className='mt-4 space-y-4'>
                                         {selectedIndexedForm === idx && <form onSubmit={handleSubmit(SubmitEditedAddress)} >
                                             <div className="border-b border-gray-900/10 pb-12">
