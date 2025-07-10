@@ -48,7 +48,7 @@ export const updateUser = async (update) => {
         //     // credentials: 'include',
         // });
           
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/users/updateUser/${update.id}`)
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/users/updateUser/${update.id}`,update)
         // if (response.status !== 200) {
         //     const error = await response.json();
         //     throw new Error(error.message || 'Failed to update user');

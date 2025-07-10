@@ -80,6 +80,7 @@ const cartSlice = createSlice({
             state.isLoading = true
         })
         builder.addCase(addToCartAsync.fulfilled,(state,action)=>{
+            console.log('cart action--',action.payload)
             state.isLoading = false
             state.cartItems.push(action.payload)
         })
@@ -93,6 +94,7 @@ const cartSlice = createSlice({
             state.isLoading = true
         })
         builder.addCase(fetchCartsById.fulfilled,(state,action)=>{
+            console.log('action-payload-cart',action.payload)
             state.isLoading = false
             state.cartItems = action.payload
         })

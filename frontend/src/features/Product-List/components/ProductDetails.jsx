@@ -56,11 +56,11 @@ const ProductDetails = () => {
 
   const handleCart = async (e) => {
     e.preventDefault()
-
+    console.log('inside cart',product)
+    console.log('inside user',user)
     // make sure dont add same item again in cart so we pass productId to newProduct while adding onto cart so next we chek id is already present in cart or not
-    const newProduct = { ...product, productId: product.id, quantity: 1, user: user?.data.id } // dispatch action // userId 
-    delete newProduct['id']
-    const index = carts.findIndex((item) => item.productId == newProduct.productId)
+    const newProduct = { product: product.id, quantity: 1, user: user?.id } // dispatch action // userId 
+    const index = carts.findIndex((item) => item.productId == newProduct.product)
 
 
     if (index >= 0) {
@@ -73,14 +73,14 @@ const ProductDetails = () => {
     // todo:it will be based on server rresponse of backend
 
     // .promise is not usefull here
-    toast.promise(
-      addToCart,
-      {
-        pending: 'loading..',
-        success: 'Item added to cart👌',
-        error: 'unable to add item 🤯'
-      }
-    )
+    // toast.promise(
+    //   addToCart,
+    //   {
+    //     pending: 'loading..',
+    //     success: 'Item added to cart👌',
+    //     error: 'unable to add item 🤯'
+    //   }
+    // )
 
     // try {
     //   await toast.promise(

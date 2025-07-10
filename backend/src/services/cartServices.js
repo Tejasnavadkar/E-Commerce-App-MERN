@@ -10,7 +10,11 @@ const addToCart = async ({product,quantity,user}) => {
         quantity,
         user
     })
-   return await cart.save()
+    await cart.save()
+    await cart.populate('product')
+    await cart.populate('user')
+    
+    return cart
 
   } catch (error) {
     throw new Error(error.message)

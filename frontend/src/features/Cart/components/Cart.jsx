@@ -44,8 +44,11 @@ const Cart = () => {
   console.log("cartItem", products);
 
   const subTotal = Math.round(
-    products?.reduce(
-      (acc, item) => discountedPrice(item) * item?.quantity + acc,
+   products.length > 0 && products?.reduce(
+      (acc, item) => {
+        let itemCopy = item.product
+       return discountedPrice(itemCopy) * item?.quantity + acc
+      },
       0
     )
   );
@@ -108,8 +111,8 @@ const Cart = () => {
                   <li key={item?.id} className="flex py-6">
                     <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        alt={item?.imageAlt}
-                        src={item?.images?.[0]}
+                        alt={`img not found`}
+                        src={item?.product.images?.[0]}
                         className="size-full object-cover"
                       />
                     </div>
@@ -118,9 +121,9 @@ const Cart = () => {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={item?.href}>{item?.title}</a>
+                            <a href={item?.product?.href}>{item?.product?.title}</a>
                           </h3>
-                          <p className="ml-4">${discountedPrice(item)}</p>
+                          <p className="ml-4">${discountedPrice(item.product)}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
                           {item?.color}
@@ -144,7 +147,7 @@ const Cart = () => {
 
                         <div className="flex">
                           <Modal
-                            title={`Delete ${item?.title}`}
+                            title={`Delete ${item?.product?.title}`}
                             message={`Are you sure you want to delete this cart.`}
                             dangerOption={`delete`}
                             // dangerCallback={RemoveCartItem(item?.id)}

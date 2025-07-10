@@ -27,12 +27,15 @@ export const fetchAllOrders = async ({pagination,sort}) =>{
 
    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`)
 
-   const data = response.data.allOrders
+   const orders = response.data.allOrders
    const totalOrders = await response.headers['x-total-count']
 
 //    return {data:data,totalOrders:totalOrders}
      console.log('totalOrders',totalOrders)
-    return data
+    return {
+        orders,
+        totalOrders
+    }
 
     
 }

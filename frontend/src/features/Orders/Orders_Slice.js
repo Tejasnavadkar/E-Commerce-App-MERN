@@ -78,9 +78,9 @@ const orderSlice = createSlice({
         })
         builder.addCase(fetchAllOrdersAsync.fulfilled, (state, action) => {
             state.isLoading = false
-            state.allOrders = action.payload.data
-            state.ordersPages = action.payload.pages
-            state.totalOrdersCount = action.payload.items
+            state.allOrders = action.payload.orders
+            // state.ordersPages = action.payload.pages
+            state.totalOrdersCount = action.payload.totalOrders
             
         })
         builder.addCase(fetchAllOrdersAsync.rejected, (state, action) => {

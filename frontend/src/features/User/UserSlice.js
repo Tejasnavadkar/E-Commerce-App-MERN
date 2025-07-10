@@ -28,15 +28,16 @@ export const FetchUserOrdersByIdAsync = createAsyncThunk('userSlice/fetchUsersOr
 
 })
 
-export const updateUserAsync = createAsyncThunk('userSlice/updateUser', async (update, { rejectWithValue }) => {
+// in auth
+// export const updateUserAsync = createAsyncThunk('userSlice/updateUser', async (update, { rejectWithValue }) => {
 
-    try {
-        const data = await updateUser(update)
-        return data
-    } catch (error) {
-        return rejectWithValue(error.message || error)
-    }
-})
+//     try {
+//         const data = await updateUser(update)
+//         return data
+//     } catch (error) {
+//         return rejectWithValue(error.message || error)
+//     }
+// })
 
 const initialState = {
     logedInUser: null,
@@ -79,20 +80,20 @@ const userSlice = createSlice({
 
         // update user in checkout page
 
-        builder.addCase(updateUserAsync.pending, (state) => {
-            state.isLoading = true;
-            state.error = null;
-        })
-        builder.addCase(updateUserAsync.fulfilled, (state, action) => {
-            state.logedInUser = action.payload;
-            state.isLoading = false;
-            state.error = null;
-        })
-        builder.addCase(updateUserAsync.rejected, (state, action) => {
-            state.error = action.payload;
-            state.isLoading = false;
-            state.logedInUser = null;
-        })
+        // builder.addCase(updateUserAsync.pending, (state) => {
+        //     state.isLoading = true;
+        //     state.error = null;
+        // })
+        // builder.addCase(updateUserAsync.fulfilled, (state, action) => {
+        //     state.logedInUser = action.payload;
+        //     state.isLoading = false;
+        //     state.error = null;
+        // })
+        // builder.addCase(updateUserAsync.rejected, (state, action) => {
+        //     state.error = action.payload;
+        //     state.isLoading = false;
+        //     state.userInfo = null;
+        // })
     }
 })
 

@@ -6,7 +6,7 @@ import userModel from "../models/user.js"
 const fetchUserById = async (id) =>{
 
     try {
-       const user = await userModel.findById(id,'id name email') // only gives id name and email
+       const user = await userModel.findById(id,'id name email role') // only gives id name and email
        return user
 
     } catch (error) {

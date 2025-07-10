@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { FetchUserInfoByIdAsync, updateUserAsync, userInfoSelector } from '../UserSlice'
+import { FetchUserInfoByIdAsync, userInfoSelector } from '../UserSlice'
+import {updateUserAsync} from '../../Auth/AuthSlice'
 import { userSelector } from '../../Auth/AuthSlice'
 import { useForm } from 'react-hook-form'
 
@@ -62,6 +63,8 @@ const UserProfile = () => {
     useEffect(() => {
         dispatch(FetchUserInfoByIdAsync(loggedInUser?.id))
     }, [dispatch, loggedInUser])
+
+    
     return (
         <div>
             <div>

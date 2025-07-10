@@ -4,8 +4,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Cart from '../features/Cart/components/Cart'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import {  userSelector } from '../features/Auth/AuthSlice'
-import { updateUserAsync } from '../features/User/UserSlice'
+import {  userSelector,updateUserAsync } from '../features/Auth/AuthSlice'
+import { userInfoSelector } from '../features/User/UserSlice'
 import { cartSelector, deleteCartItemAsync, resetCartAsync, updateCartQuantityAsync } from '../features/Cart/CartSlice'
 import { createOrderAsync, selectCurrentOrder } from '../features/Orders/Orders_Slice'
 import { discountedPrice } from '../app/Constants'
@@ -47,15 +47,16 @@ const CheckOutPage = () => {
     const products = useSelector(cartSelector)
     const currentOrder = useSelector(selectCurrentOrder)
     const user = loggedInUser.data
+    const userInfo = useSelector(userInfoSelector)
 
     // console.log('loggedInuser',loggedInUser)
     // console.log('cartItem', products)
-    // console.log('user', loggedInUser)
+    console.log('user', loggedInUser)
     // console.log('selectedAddress', selectedAddress)
     // console.log('selectedPayment', selectedPaymentMethod)
 
 
-    const subTotal = Math.round(products.reduce((acc, item) => item.price * item.quantity + acc, 0))
+    const subTotal = Math.round(products.reduce((acc, item) => discountedPrice(item.product) * item.quantity + acc, 0))
     const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
 
     const handleAddress = (index) => {  // we cant pass directly pass object from radio input
@@ -67,7 +68,7 @@ const CheckOutPage = () => {
     }
 
     const handleFormSubmit = (data) => {
-        const userData = { ...loggedInUser.data, addreses: [...(loggedInUser.data.addreses || []), data] } //loggedInUser.addreses might be undefined when trying to spread it in the handleFormSubmit function so add a check
+        const userData = { ...loggedInUser, addresses: [...(loggedInUser.addresses || []), data] } //loggedInUser.addreses might be undefined when trying to spread it in the handleFormSubmit function so add a check
         console.log('userData', userData)
        const addAddress = dispatch(updateUserAsync(userData))  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
        reset()
@@ -146,6 +147,7 @@ const CheckOutPage = () => {
         <div className='grid grid-cols-5 space-x-2.5 mx-auto w-[90%] sm:max-w-7xl'>
             <div className='col-span-5 md:col-span-3 bg-white mt-10 px-4 py-4'>
                 <div>
+                    {/* form to add address */}
                     <form onSubmit={handleSubmit(handleFormSubmit)} >
                         <div className="border-b border-gray-900/10 pb-12">
                             <h2 className="text-base/7 font-semibold text-gray-900">Personal Information</h2>
@@ -280,7 +282,8 @@ const CheckOutPage = () => {
                             </button>
                         </div>
                     </form>
-
+                     
+                     {/* select address and select payment mode  */}
                     <div className="border-b border-gray-900/10 pb-12">
                         <div>
                             <h2 className="text-base/7 font-semibold text-gray-900">Address</h2>
@@ -289,7 +292,7 @@ const CheckOutPage = () => {
                             </p>
                             <div>
                                 <ul role="list" className="divide-y divide-gray-100">
-                                    {loggedInUser?.data.addreses?.map((address, idx) => (
+                                    {loggedInUser?.addresses?.map((address, idx) => (
                                         <li key={idx} className="flex justify-between gap-x-6 py-5">
 
                                             <div className="flex min-w-0 gap-x-4">
@@ -356,12 +359,11 @@ const CheckOutPage = () => {
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
             <div className='col-span-5 md:col-span-2'>
-                {/* Cart  */}
+                {/* Cart  */} 
+
                 {/* <div className='pt-10'>
                     <div className="flex h-full mx-auto  flex-col bg-white shadow-xl">
                         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
@@ -459,7 +461,7 @@ const CheckOutPage = () => {
                                         {products?.map((item) => (
                                             <li key={item?.id} className="flex py-6">
                                                 <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                    <img alt={item?.imageAlt} src={item?.images[0]} className="size-full object-cover" />
+                                                    <img alt={`img not found`} src={item?.product.images[0]} className="size-full object-cover" />
                                                 </div>
 
                                                 <div className="ml-4 flex flex-1 flex-col">
@@ -468,7 +470,7 @@ const CheckOutPage = () => {
                                                             <h3>
                                                                 <a href={item?.href}>{item?.title}</a>
                                                             </h3>
-                                                            <p className="ml-4">${discountedPrice(item)}</p>
+                                                            <p className="ml-4">${discountedPrice(item.product)}</p>
                                                         </div>
                                                         <p className="mt-1 text-sm text-gray-500">{item?.color}</p>
                                                     </div>

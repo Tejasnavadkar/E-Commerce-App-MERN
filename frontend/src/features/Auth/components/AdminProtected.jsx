@@ -12,7 +12,7 @@ const AdminProtected = ({children}) => {
         return <Navigate to={'/login'} />
     }
 
-    if(loggedInUser.data.role !== 'admin'){
+    if(loggedInUser.role !== 'admin'){
         return <Navigate to={'/'} />
     }
 

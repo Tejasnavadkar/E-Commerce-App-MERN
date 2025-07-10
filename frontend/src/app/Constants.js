@@ -2,7 +2,7 @@ export const PAGE_PER_LIMIT = 10
 
 export const discountedPrice = (item) =>{
    
-    
+    console.log({item})
     let price = parseInt(item?.price) 
     let discount = parseInt(item?.discountPercentage)
 

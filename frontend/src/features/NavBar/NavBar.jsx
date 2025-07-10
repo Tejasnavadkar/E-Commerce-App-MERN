@@ -35,7 +35,7 @@ const NavBar = ({ children }) => {
   const items = useSelector(cartSelector)
   const userInfo = useSelector(userInfoSelector)
 
-
+console.log('userInfo-in-navbar-',userInfo)
   const navigate = useNavigate()
 
   return (

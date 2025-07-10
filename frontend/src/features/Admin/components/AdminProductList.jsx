@@ -108,7 +108,7 @@ const AdminProductList = () => {
         console.log('activepage--', activePage)
         const pagination = {
             _page: activePage,
-            _per_page: PAGE_PER_LIMIT
+            _limit: PAGE_PER_LIMIT
         }
         // dispatch(fetchProducts())
         dispatch(fetchProductsByFilterAsync({ filter, sort, pagination }))
