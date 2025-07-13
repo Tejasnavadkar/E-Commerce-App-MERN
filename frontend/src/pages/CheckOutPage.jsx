@@ -46,7 +46,7 @@ const CheckOutPage = () => {
     const navigate = useNavigate()
     const products = useSelector(cartSelector)
     const currentOrder = useSelector(selectCurrentOrder)
-    const user = loggedInUser.data
+    const user = loggedInUser
     const userInfo = useSelector(userInfoSelector)
 
     // console.log('loggedInuser',loggedInUser)
@@ -60,7 +60,8 @@ const CheckOutPage = () => {
     const totalItems = products.reduce((acc, item) => parseInt(item.quantity) + acc, 0)
 
     const handleAddress = (index) => {  // we cant pass directly pass object from radio input
-        setAddress(loggedInUser.data.addreses[index])
+        console.log('addd----',loggedInUser.addresses[index])
+        setAddress(loggedInUser.addresses[index])
     }
 
     const handlePaymentMethod = (method) => {  // we cant pass directly pass object from radio input
@@ -114,10 +115,16 @@ const CheckOutPage = () => {
     }
 
     const HandleOrder = async () => {
-
+       console.log({
+        selectedAddress,
+        selectedPaymentMethod
+       })
         if (selectedAddress && selectedPaymentMethod) {
-            const order = { user, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
-           const createOrder = dispatch(createOrderAsync(order))
+            console.log({user})
+            const order = { user:user.id, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
+           console.log('order--',order)
+            const createOrder = dispatch(createOrderAsync(order))
+            dispatch(resetCartAsync(user.id))
             
            toast.promise(
             createOrder,

@@ -17,33 +17,31 @@ const Login = () => {
   const handleFormData = async (data) => {
     console.log(data)
     try {
-     const loginUser = dispatch(checkUserAsync({  // this returns promise
+     dispatch(checkUserAsync({  // this returns promise
         email: data.email,
         password: data.password
       }))
-
-      toast.promise(
-        loginUser,
-        {
-            pending: 'Loading..',
-            success: ' Login Successfully👌',
-            error: 'Unable to login 🤯'
-          }
-       )
-
       // Handle successful signup here if needed
       console.log('User checked:', user);
+      if(stateError !== null ) {
+        return  toast.error(`${stateError}`)
+      }
+      console.log({stateError})
+      toast.success('Login Successfull..')
+      console.log('stateError-2',stateError)
 
     } catch (error) {
       console.error('Failed to create user:', error);
     }
   }
   
+  
   useEffect(()=>{
     if (user) {
       navigate('/')
      }
   },[navigate,user])
+
 
   return (
     <>

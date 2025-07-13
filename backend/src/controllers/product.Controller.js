@@ -28,9 +28,15 @@ const fetchAllProductController = async (req, res) => {
         // TODO: on server we will support multiple values in filter
         // pagination : _page=1&_limit=10
 
-        let query = productModel.find({}); // pehele sab find karenge then one by one we perform sorting and filtering and last me .exec to execute the query
-        let totalProductsQuery = productModel.find({}) // it just to take count // dont await it if you await it it gives actual result and you wont erform queries on it
-        let totalProduct = productModel.find({})
+        // console.log('admin',req.query.admin)
+        const condition = {}
+        if(!req.query.admin){  // if user is not admin then no show deleted items
+            condition.deleted = {$ne:true}
+        }
+
+        let query = productModel.find(condition); // pehele sab find karenge then one by one we perform sorting and filtering and last me .exec to execute the query
+        let totalProductsQuery = productModel.find(condition) // it just to take count // dont await it if you await it it gives actual result and you wont erform queries on it
+        let totalProduct = productModel.find(condition)
         //filtering
         if (req.query.category) {
             // console.log(req.query.category)

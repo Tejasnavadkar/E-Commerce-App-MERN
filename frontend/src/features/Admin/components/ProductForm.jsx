@@ -159,6 +159,7 @@ const ProductForm = () => {
     product.deleted = true;
     // here we not delete actually just add extra field delete in db and in ui we just filter out
     dispatch(updateProductByIdAsync(product));
+    setModalopen(false)
   };
 
   return (

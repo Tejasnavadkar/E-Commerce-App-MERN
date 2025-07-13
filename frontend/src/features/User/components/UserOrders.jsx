@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userSelector } from '../../Auth/AuthSlice'
 import { FetchUsersOrdersById } from '../User_Api'
 import { FetchUserOrdersByIdAsync, userOrdersSelector } from '../UserSlice'
+import { discountedPrice } from '../../../app/Constants'
 
 const UserOrders = () => {
     const dispatch = useDispatch()
@@ -23,7 +24,7 @@ const UserOrders = () => {
                 {/* {products.length === 0 && <Navigate to={'/'} />} */}
                 <div className='flex flex-col gap-6 w-full'>
                     {
-                        orders?.map((item) => (
+                       orders && orders?.map((item) => (
                             <div key={item?.id} className="flex h-full  flex-col bg-white shadow-xl">
                                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                                     <div className="flex items-start justify-between">
@@ -39,7 +40,7 @@ const UserOrders = () => {
                                                 <li key={item?.id} className="flex py-6">
                                                     {/* inside products use map coz its an array */}
                                                     <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                        <img alt={item?.products[0]?.images[0]} src={item?.products[0].images[0]} className="size-full object-cover" />
+                                                        <img alt={'img not found'} src={item?.products?.[0].product?.images?.[0]} className="size-full object-cover" />
                                                     </div>
 
                                                     <div className="ml-4 flex flex-1 flex-col">
@@ -49,7 +50,8 @@ const UserOrders = () => {
                                                                     <a className='text-gray-900' href={item?.href}>{item?.products[0].title}</a>
                                                                     <span className='text-gray-500'>{item?.products[0].brand}</span>
                                                                 </div>
-                                                                <p className="ml-4">${item?.products[0].price}</p>
+                                                                {/* <p className="ml-4">${item?.products[0].product.price}</p> */}
+                                                                <p className="ml-4">${discountedPrice(item?.products[0].product)}</p>
                                                             </div>
                                                         </div>
                                                         <div className="flex flex-1 items-end justify-between text-sm">

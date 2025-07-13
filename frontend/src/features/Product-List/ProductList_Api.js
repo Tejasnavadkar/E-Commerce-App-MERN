@@ -59,7 +59,7 @@ export const FetchAllBrands = async () => {
     }
 }
 
-export const FetchAllProductsByFilters = async ({ filter, sort, pagination }) => {
+export const FetchAllProductsByFilters = async ({ filter, sort, pagination,role }) => {
     // let queryString = '';
 
     // for (let key in filter) {
@@ -105,6 +105,9 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination }) =>
 
     for (let key in pagination) {
         queryString += `${key}=${pagination[key]}&`
+    }
+     for (let key in role) {
+        queryString += `${key}=${role[key]}&`
     }
 
     try {

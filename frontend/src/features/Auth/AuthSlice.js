@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { checkUser, createUser, ForgotPassword, SignOutUser } from "./Auth_Api";
 import { updateUser } from "../User/User_Api";
+import { data } from "react-router-dom";
 // import axios from "axios";
 
 
@@ -33,6 +34,7 @@ export const checkUserAsync = createAsyncThunk(
          const data = await checkUser(loginInfo) //  coz of this create user api call tree reloades
         return data
         } catch (error) {
+            console.log('checkErrorinlogin-',error.message)
             return rejectWithValue(error.message || 'Failed to check user'); // rejectWithValue catch the err in action.payload in rejected case
         }
     }

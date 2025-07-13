@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brandsSelector, FetchAllCategoriesAsync, FetchAllBrandsAsync } from '../../Product-List/ProductSlice'
 import { discountedPrice, PAGE_PER_LIMIT } from '../../../app/Constants'
+import { userSelector } from '../../Auth/AuthSlice'
 
 const sortOptions = [
 
@@ -46,6 +47,7 @@ const AdminProductList = () => {
     const { allProducts, pages, items } = useSelector(productSelector)
     const categories = useSelector(categoriesSelector)
     const brands = useSelector(brandsSelector)
+    const loggedInUser = useSelector(userSelector)
     const dispatch = useDispatch()
 
     const filters = [
@@ -67,6 +69,7 @@ const AdminProductList = () => {
         const isChecked = e.target.checked;
         const newFilter = { ...filter }   // not need to spread bcoz key is same so it override prev value not retain prev value
         console.log('newFilter--1', newFilter)
+
 
         if (isChecked) { // agar filter uncheck kiya to firse reset ho jayega 
             if (newFilter[section.id]) {
@@ -110,9 +113,12 @@ const AdminProductList = () => {
             _page: activePage,
             _limit: PAGE_PER_LIMIT
         }
+        const role = {
+            [loggedInUser.role]:true
+        }
         // dispatch(fetchProducts())
-        dispatch(fetchProductsByFilterAsync({ filter, sort, pagination }))
-    }, [dispatch, filter, sort, activePage])
+        dispatch(fetchProductsByFilterAsync({ filter, sort, pagination,role }))
+    }, [dispatch, filter, sort, activePage,loggedInUser])
 
     useEffect(() => {
         setActivePage(1) // when filter change or sort change move to first page 
@@ -488,8 +494,8 @@ const ProductGrid = ({ products }) => {
                                     <Link to={`/product-details/${product.id}`} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
                                         <div className="">
                                             <img
-                                                alt={product.thumbnail}
-                                                src={product.thumbnail}
+                                                alt={`img not found`}
+                                                src={product?.thumbnail}
                                                 className="h-full w-full overflow-hidden object-cover object-center lg:h-full lg:w-full"
                                             />
                                             <div className="mt-4 flex justify-between">
@@ -497,12 +503,12 @@ const ProductGrid = ({ products }) => {
                                                     <h3 className="text-sm text-gray-700">
                                                         <span to={'#'}>
                                                             <span aria-hidden="true" className="absolute inset-0" />
-                                                            {product.title}
+                                                            {product?.title}
                                                         </span>
                                                     </h3>
                                                     <div className='flex items-center gap-1'>
                                                         <span><StarIcon className='h-5 w-5' /></span>
-                                                        <p className="mt-1 text-sm text-gray-500">{product.rating}</p>
+                                                        <p className="mt-1 text-sm text-gray-500">{product?.rating}</p>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -510,13 +516,13 @@ const ProductGrid = ({ products }) => {
                                                         <p className="text-sm font-medium text-gray-900">${discountedPrice(product)}</p>
                                                     </span>
                                                     <span>
-                                                        <p className="text-sm font-medium text-gray-500 line-through">${product.price}</p>
+                                                        <p className="text-sm font-medium text-gray-500 line-through">${product?.price}</p>
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </Link>
-                                    {product.delete && <span className='text-xs text-red-500'>product deleted</span>}
+                                    {product?.deleted && <span className='text-xs text-red-500'>product deleted</span>}
                                     <div>
                                         <Link to={`/admin/product-form/edit/${product.id}`} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                             Edit Product

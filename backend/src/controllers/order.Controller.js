@@ -1,4 +1,5 @@
 import orderModel from "../models/order.js"
+import cartServices from "../services/cartServices.js"
 import orderServices from "../services/orderServices.js"
 
 
@@ -8,6 +9,7 @@ const createOrderController = async (req,res) => {
         try {
             const data = req.body
             const order = await orderServices.createOrder(data)
+            // await cartServices.resetCart() // after order placed reset cart
             res.status(200).json({
                 msg:'order created..',
                 order

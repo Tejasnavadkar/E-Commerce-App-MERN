@@ -20,6 +20,7 @@ import { productSelector, fetchProductsByFilterAsync, categoriesSelector, brands
 import { PAGE_PER_LIMIT,discountedPrice } from '../../../app/Constants'
 import Pagination from '../../Common/Pagination'
 import { Grid } from 'react-loader-spinner'
+import { userSelector } from '../../Auth/AuthSlice'
 
 const sortOptions = [
 
@@ -49,6 +50,7 @@ const ProductList = () => {
     const categories = useSelector(categoriesSelector)
     const brands = useSelector(brandsSelector)
     const isLoading = useSelector(productListStatus)
+    const loggedInUser = useSelector(userSelector)
     const dispatch = useDispatch()
    
     const filters = [
@@ -113,9 +115,12 @@ const ProductList = () => {
             _page:activePage,
             _limit:PAGE_PER_LIMIT
         }
+         const role = {
+            [loggedInUser.role]:true
+        }
         // dispatch(fetchProducts())
-        dispatch(fetchProductsByFilterAsync({filter,sort,pagination}))
-    }, [dispatch,filter,sort,activePage])
+        dispatch(fetchProductsByFilterAsync({filter,sort,pagination,role}))
+    }, [dispatch,filter,sort,activePage,loggedInUser])
 
     useEffect(()=>{
         setActivePage(1) // when filter change or sort change move to first page 
@@ -437,8 +442,8 @@ const ProductGrid = ({products,isLoading}) => {
                                             ) : null
                                         }
 
-                                        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                                            {products.map((product) => (
+                                        <div className="mt-6  grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                                            {products.length > 0 ? (products.map((product) => (
                                                 <Link to={`/product-details/${product.id}`}  key={product.id} className=' group relative border-1 border-gray-500 p-2'> {/*onClick={() => navigate(`/product-details`,{state:{id:product.id}})}*/}
                                                     <div className="">
                                                         <img
@@ -470,8 +475,9 @@ const ProductGrid = ({products,isLoading}) => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </Link>
-                                            ))}
+                                                    {product?.deleted && <span className='text-xs text-red-500'>product deleted</span>}
+                                                </Link>  
+                                            ))) : (<div className=' font-bold flex w-full'>Products not found</div>) }
                                         </div>
 
 

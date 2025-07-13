@@ -34,9 +34,9 @@ export const FetchAllBrandsAsync = createAsyncThunk('Productlist/fetchBrands', a
   }
 })
 
-export const fetchProductsByFilterAsync = createAsyncThunk('productlist/fetchProductsByFilterAsync', async ({filter,sort,pagination}, { rejectWithValue }) => {
+export const fetchProductsByFilterAsync = createAsyncThunk('productlist/fetchProductsByFilterAsync', async ({filter,sort,pagination,role}, { rejectWithValue }) => {
   try {
-    return await FetchAllProductsByFilters({filter,sort,pagination})
+    return await FetchAllProductsByFilters({filter,sort,pagination,role})
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -204,6 +204,7 @@ const ProductSlice = createSlice({
       state.isLoading = false
       const index = state.allProducts.findIndex((item)=>item.id === action.payload.id)
       state.allProducts[index] = action.payload
+      state.selectedProductById = action.payload
     })
     builder.addCase(updateProductByIdAsync.rejected,(state,action)=>{
       state.isLoading = false

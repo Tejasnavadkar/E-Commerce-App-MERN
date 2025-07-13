@@ -51,7 +51,8 @@ export const createUser = async (userData) => {
       console.log(user)
       return user
     } catch (error) {
-      throw new Error(error.message || 'An error occurred while checking user');
+      console.log({error})
+      throw new Error(error.response.data.msg || 'unable to login');
     }
   };
 
