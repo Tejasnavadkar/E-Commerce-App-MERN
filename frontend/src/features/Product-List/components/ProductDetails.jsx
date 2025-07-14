@@ -55,21 +55,25 @@ const ProductDetails = () => {
   }, [dispatch, id])
 
   const handleCart = async (e) => {
+
     e.preventDefault()
-    console.log('inside cart',product)
-    console.log('inside user',user)
+   
     // make sure dont add same item again in cart so we pass productId to newProduct while adding onto cart so next we chek id is already present in cart or not
     const newProduct = { product: product.id, quantity: 1, user: user?.id } // dispatch action // userId 
-    const index = carts.findIndex((item) => item.productId == newProduct.product)
-
+    console.log('carts--',carts)
+    const index = carts.findIndex((item) => item.product.id == newProduct.product)
+    console.log({index})
 
     if (index >= 0) {
       return toast.error('item already present in cart')
     }
    
-    const addToCart =  await dispatch(addToCartAsync(newProduct)).unwrap()
-    // localStorage.setItem('addToCart',JSON.stringify(addToCart))
-
+     try {
+    await dispatch(addToCartAsync(newProduct)).unwrap(); //.unwrap() will throw if the thunk is rejected, so you can catch the error.
+    toast.success('Item added to cart 👌');
+  } catch (error) {
+    toast.error(error || 'Unable to add item 🤯');
+  }
     // todo:it will be based on server rresponse of backend
 
     // .promise is not usefull here
@@ -82,28 +86,8 @@ const ProductDetails = () => {
     //   }
     // )
 
-    // try {
-    //   await toast.promise(
-    //     dispatch(addToCartAsync(newProduct)).unwrap(), // Use .unwrap() to handle rejected promises properly
-    //     {
-    //       pending: 'Loading...',
-    //       success: 'Item added to cart 👌',
-    //       error: 'Unable to add item 🤯',
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.error('Error adding to cart:', error);
-    // }
 
   }
-
-  // const notify = () => {
-  //   toast("Hello there", {
-  //     onOpen: () => window.alert('Called when I open'),
-  //     onClose: () => window.alert('Called when I close')
-  //   });
-  // }
-
 
 
   return (

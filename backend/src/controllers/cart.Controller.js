@@ -7,6 +7,9 @@ const addToCartController = async (req,res) => {
         try {
             const {product,quantity,user} = req.body
             const cart = await cartServices.addToCart({product,quantity,user})
+            if(!cart){
+                return res.status(401).json({msg:'unable to add item in cart'})
+            }
             res.status(200).json({
                 msg:'cart added..',
                 cart

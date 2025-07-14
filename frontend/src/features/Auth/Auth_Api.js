@@ -29,8 +29,8 @@ export const createUser = async (userData) => {
       return response.data.createdUser
     
       } catch (error) {
-        console.error('API Error:', error);
-        throw new Error(error.message | 'failed to create user');
+        console.error('API Error:', error.response.data.msg);
+        throw new Error(error.response.data.msg || 'failed to create user');
     }
  };
 

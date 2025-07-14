@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { checkUser, createUser, ForgotPassword, SignOutUser } from "./Auth_Api";
 import { updateUser } from "../User/User_Api";
-import { data } from "react-router-dom";
+// import { data } from "react-router-dom";
 // import axios from "axios";
 
 
@@ -22,6 +22,7 @@ export const createUserAsync = createAsyncThunk(
          const data = await createUser(userData) //  coz of this create user api call tree reloades
             return data
         } catch (error) {
+            console.log({error})
             return rejectWithValue(error.message || 'Failed to create user');
         }
     }
@@ -112,7 +113,8 @@ const authSlice = createSlice({
             state.error = null;
         })
         builder.addCase(createUserAsync.rejected,(state,action)=>{
-            state.error = action.error;
+            console.log({action})
+            state.error = action.payload;
             state.isLoading = false;
             state.logedInUser = null;
         })

@@ -120,20 +120,25 @@ const CheckOutPage = () => {
         selectedPaymentMethod
        })
         if (selectedAddress && selectedPaymentMethod) {
-            console.log({user})
-            const order = { user:user.id, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
-           console.log('order--',order)
-            const createOrder = dispatch(createOrderAsync(order))
-            dispatch(resetCartAsync(user.id))
+
+            try {
+                const order = { user:user.id, products, subTotal, totalItems, selectedAddress, selectedPaymentMethod, status: 'pending' }  // we changed status after placed
             
-           toast.promise(
-            createOrder,
-            {
-                pending:'creating order..',
-                success:'order created successfully',
-                error:'unable to create order'
+           await dispatch(createOrderAsync(order)).unwrap()
+           toast.success('order created successfully')
+            dispatch(resetCartAsync(user.id))
+            } catch (error) {
+                toast.error(error.message || 'cant place order..')
             }
-           )
+            
+        //    toast.promise(
+        //     createOrder,
+        //     {
+        //         pending:'creating order..',
+        //         success:'order created successfully',
+        //         error:'unable to create order'
+        //     }
+        //    )
            
 
         } else {

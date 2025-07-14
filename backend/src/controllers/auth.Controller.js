@@ -4,11 +4,23 @@ import authServices from "../services/authServices.js"
 const createUserController = async (req,res) =>{
     try {
         const data = req.body
+        const isUserExist = await authServices.fetchUser(data.email)
+
+        if(isUserExist){
+            return res.status(401).json({msg:'user with email or username already exist'})
+        }
+        
         const createdUser = await authServices.createUser(data)
         res.status(201).json({
             msg:'user Created..',
             createdUser
         })
+
+          if (!createdUser) {
+            res.status(401).json({ msg: "unable To create user" })
+            // next(new ErrorHandler('unable to create user', 401))
+            return
+        }
     } catch (error) {
         res.status(400).json(error.message)
     }

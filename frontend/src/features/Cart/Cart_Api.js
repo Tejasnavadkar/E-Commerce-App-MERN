@@ -34,7 +34,7 @@ export const addToCart = async (item) => {
     } catch (error) {
        
         console.error('API Error:', error);
-        throw new Error(error.message)
+        throw new Error(error.response.data.msg || 'unable to add item in cart')
     
     }
 };

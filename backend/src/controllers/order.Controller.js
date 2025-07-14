@@ -10,6 +10,9 @@ const createOrderController = async (req,res) => {
             const data = req.body
             const order = await orderServices.createOrder(data)
             // await cartServices.resetCart() // after order placed reset cart
+            if(!order){
+                return res.status(400).json({msg:'cant palce order'})
+            }
             res.status(200).json({
                 msg:'order created..',
                 order

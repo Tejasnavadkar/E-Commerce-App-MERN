@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { userSelector, createUserAsync } from '../AuthSlice'
+import { userSelector, createUserAsync, errorSelector } from '../AuthSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { store } from '../../../app/store'
 import { toast } from 'react-toastify'
@@ -13,6 +13,7 @@ const Signup = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const logedInUser = useSelector(userSelector)
+  const stateError = useSelector(errorSelector)
 
   const handleFormData = async (data) => {
     try {
@@ -23,14 +24,14 @@ const Signup = () => {
         role:'user'
       }))
 
-      toast.promise(
-           result,
-              {
-                  pending: 'Loading..',
-                  success: ' User Created Successfully👌',
-                  error: 'Unable to create user 🤯'
-                }
-             )
+      // toast.promise(
+      //      result,
+      //         {
+      //             pending: 'Loading..',
+      //             success: ' User Created Successfully👌',
+      //             error: 'Unable to create user 🤯'
+      //           }
+      //        )
 
       // Handle successful signup here if needed
       console.log('User created:', result);
@@ -55,10 +56,15 @@ const Signup = () => {
   }, []);
 
   useEffect(() => {
+     if (stateError) {
+        toast.error(`${stateError}`);
+      }
+
     if (logedInUser) {
+      toast.success(' User Created Successfully👌')
       navigate('/')
     }
-  }, [navigate, logedInUser])
+  }, [navigate, logedInUser,stateError])
 
   return (
 
