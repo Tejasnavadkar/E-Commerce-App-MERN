@@ -57,6 +57,9 @@ const updateCartController = async (req,res) => {
 const deleteCartController = async (req,res) => {
       try {
         const {id} = req.params // cartId
+    //    await new Promise((res)=>{
+    //     setTimeout(()=>res(),5000)
+    //    })
         const deletedCart = await cartServices.deleteCart(id)
         res.status(200).json({
             msg:'delete successfully..',

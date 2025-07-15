@@ -14,6 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Modal from "../../Common/Modal";
+import { toast } from "react-toastify";
 
 // {
 //   "id": "1",
@@ -83,11 +84,11 @@ const ProductForm = () => {
   const { id } = useParams();
   //  const resetSelectedProduct = useSelector(resetSelectedProduct)
   const selectedProduct = useSelector(ProductByIdSelector);
- 
+
   const [isModalOpen, setModalopen] = useState(false);
-  const navigate = useNavigate()
-  console.log('selectedProduct--', selectedProduct?.length > 0)
-  console.log('selectedProduct--', selectedProduct)
+  const navigate = useNavigate();
+  console.log("selectedProduct--", selectedProduct?.length > 0);
+  console.log("selectedProduct--", selectedProduct);
 
   const {
     register,
@@ -99,13 +100,12 @@ const ProductForm = () => {
 
   useEffect(() => {
     if (id) {
-
       dispatch(fetchProductsById({ id }));
     }
 
-     return ()=>{
-      dispatch(resetSelectedProduct())  // here we create addition clean up fn so when we unmounted it reset selectted product state for that we created simple reducer function
-    }
+    return () => {
+      dispatch(resetSelectedProduct()); // here we create addition clean up fn so when we unmounted it reset selectted product state for that we created simple reducer function
+    };
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -122,8 +122,6 @@ const ProductForm = () => {
       setValue("image2", selectedProduct?.images?.[2] || "");
       setValue("image3", selectedProduct?.images?.[3] || "");
     }
-
-   
   }, [id, selectedProduct]);
 
   const handleForm = (data) => {
@@ -145,44 +143,62 @@ const ProductForm = () => {
       // todo: make update product api
       // action to update
       product.id = selectedProduct.id;
-      dispatch(updateProductByIdAsync(product));
+      const updtateResult = dispatch(updateProductByIdAsync(product)).unwrap()
+       toast.promise(updtateResult, {
+      pending: "Updating..",
+      success: "Item updated..👌",
+      error: "unable to update item 🤯",
+    });
       reset();
     } else {
       // action to create
-      dispatch(createProductAsync(product));
+     const createResult = dispatch(createProductAsync(product)).unwrap()
+      toast.promise(createResult, {
+      pending: "creating..",
+      success: "Item created..👌",
+      error: "unable to create item 🤯",
+    });
       reset();
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const product = { ...selectedProduct };
     product.deleted = true;
     // here we not delete actually just add extra field delete in db and in ui we just filter out
-    dispatch(updateProductByIdAsync(product));
-    setModalopen(false)
+    const result = dispatch(updateProductByIdAsync(product)).unwrap();
+    console.log({ result });
+    setModalopen(false);
+    toast.promise(result, {
+      pending: "Deleting..",
+      success: "Item deleted..👌",
+      error: "unable delete item 🤯",
+    });
   };
 
   return (
     <div>
-       {/* delete modal  */}
-          <Modal
-            title={`Delete ${selectedProduct?.title}`}
-            message={`Are you sure you want to delete this Item.`}
-            dangerOption={`delete`}
-            // dangerCallback={RemoveCartItem(item?.id)}
-            cancleOption={`cancel`}
-            openStatus={isModalOpen}
-            onClose={() => setModalopen(false)}
-            onDelete={() => handleDelete()}
-          />
+      {/* delete modal  */}
+      <Modal
+        title={`Delete ${selectedProduct?.title}`}
+        message={`Are you sure you want to delete this Item.`}
+        dangerOption={`delete`}
+        // dangerCallback={RemoveCartItem(item?.id)}
+        cancleOption={`cancel`}
+        openStatus={isModalOpen}
+        onClose={() => setModalopen(false)}
+        onDelete={() => handleDelete()}
+      />
       <form onSubmit={handleSubmit(handleForm)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base/7 font-semibold text-gray-900">
-              { selectedProduct ?  "Edit Product" : "Add Product"}
+              {selectedProduct ? "Edit Product" : "Add Product"}
             </h2>
 
-            {selectedProduct?.deleted && <h2 className="text-red-500" >This Product is Deleted</h2>}
+            {selectedProduct?.deleted && (
+              <h2 className="text-red-500">This Product is Deleted</h2>
+            )}
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
@@ -253,8 +269,10 @@ const ProductForm = () => {
                   className="border rounded"
                 >
                   <option value="chooseBrand">--Choose brand--</option>
-                  {brands.map((brand,idx) => (
-                    <option key={idx} value={brand.value}>{brand.label}</option>
+                  {brands.map((brand, idx) => (
+                    <option key={idx} value={brand.value}>
+                      {brand.label}
+                    </option>
                   ))}
                 </select>
                 {errors.brand && (
@@ -306,7 +324,7 @@ const ProductForm = () => {
                         {...register("price", {
                           required: "price is required",
                           min: {
-                            value: 100,
+                            value: 1,
                             message: "Price must be at least 100",
                           },
                           max: {
@@ -315,6 +333,7 @@ const ProductForm = () => {
                           },
                         })}
                         type="number"
+                        step="0.01" // <-- allow decimals
                         placeholder="Product price"
                         className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                       />
@@ -339,6 +358,7 @@ const ProductForm = () => {
                         id="discount"
                         {...register("discountPercentage")}
                         type="text"
+                        step="0.01" // <-- allow decimals
                         placeholder="Product discount"
                         className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                       />
@@ -360,6 +380,7 @@ const ProductForm = () => {
                           required: "stock is required",
                         })}
                         type="text"
+                        step="0.01" // <-- allow decimals
                         placeholder="Product stock"
                         className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                       />
@@ -665,22 +686,24 @@ const ProductForm = () => {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="button"
-            onClick={()=>navigate('/admin')}
+            onClick={() => navigate("/admin")}
             className="text-sm/6 font-semibold text-gray-900 cursor-pointer"
-           >
+          >
             Cancel
           </button>
 
-         { selectedProduct && !selectedProduct?.deleted && <button
-            onClick={(e) =>{
-              e.preventDefault()
-              setModalopen(true)
-            }}
-            type="button"
-            className="text-sm/6 font-semibold text-red-500 cursor-pointer"
-          >
-            Delete
-          </button>}
+          {selectedProduct && !selectedProduct?.deleted && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setModalopen(true);
+              }}
+              type="button"
+              className="text-sm/6 font-semibold text-red-500 cursor-pointer"
+            >
+              Delete
+            </button>
+          )}
           <button
             type="submit"
             className="rounded-md cursor-pointer bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

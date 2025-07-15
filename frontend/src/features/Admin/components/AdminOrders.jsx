@@ -18,7 +18,7 @@ const AdminOrders = () => {
     const orderPages = useSelector(ordersPagesSelector)
     const [sort,setSort] = useState({})
 
-    // console.log('orders--', orders)
+    console.log('orders--', orders)
     // console.log('totalOrders--', totalOrders)
     console.log('editableOrderId--', editableOrderId)
 
@@ -37,11 +37,12 @@ const AdminOrders = () => {
     }
 
     const handleChange = (e,order) =>{
-        console.log(e.target.value)
+        console.log('e.target.value--',e.target.value)
 
-        const updatedOrder = {...order,status:e.target.value}
+        const updatedOrder = {id:order.id,status:e.target.value}
+        console.log('updated-Payload-',updatedOrder)
     
-       const upadateStatus = dispatch(updateOrderAsync(updatedOrder))  // dispatch a action to update order status
+       const upadateStatus = dispatch(updateOrderAsync(updatedOrder)).unwrap()  // dispatch a action to update order status
        toast.promise(
         upadateStatus,
         {
@@ -130,10 +131,10 @@ const AdminOrders = () => {
                                                     <div className="mr-2">
                                                         <img
                                                             className="w-6 h-6 rounded-full"
-                                                            src={`${item.thumbnail}`}
+                                                            src={`${item.product.thumbnail}`}
                                                         />
                                                     </div>
-                                                    <span className='text-xs'>{item.title}-{item.quantity}-${discountedPrice(item)}</span>
+                                                    <span className='text-xs'>{item.product.title}-{item.product.quantity}-${discountedPrice(item.product)}</span>
                                                 </div>
                                             ))}
                                         </td>
@@ -142,16 +143,17 @@ const AdminOrders = () => {
                                             ${order.subTotal}
                                         </td>
                                         <td className="py-3 px-6 text-center">
-                                            <div>{order.selectedAddress.name}</div>
-                                            <div>{order.selectedAddress.street}</div>
-                                            <div>{order.selectedAddress.city}</div>
-                                            <div>{order.selectedAddress.state}</div>
+                                            <div>{order.selectedAddress[0].name}</div>
+                                            <div>{order.selectedAddress[0].street}</div>
+                                            <div>{order.selectedAddress[0].city}</div>
+                                            <div>{order.selectedAddress[0].state}</div>
                                         </td>
 
                                         <td className="py-3 px-6 text-center">
                                             {
                                                 order.id == editableOrderId ? (<span className=" py-1 px-3 rounded-full border">
-                                                    <select onChange={(e)=>handleChange(e,order)} >
+                                                    <select onChange={(e)=>handleChange(e,order)} onBlur={()=>setEditableOrderId(-1)}  >
+                                                        <option defaultChecked > select status</option>
                                                       <option value="pending">Pending</option>
                                                       <option value="dispached">Dispatched</option>
                                                       <option value="delievered">Delievered</option>
@@ -183,7 +185,7 @@ const AdminOrders = () => {
                             </tbody>
                         </table>
                         {/* pagination */}
-                        <Pagination activePage={activePage} setActivePage={setActivePage} handlePagination={handlePagination} limit={5} totalProducts={totalOrders} pages={orderPages}/>
+                        <Pagination activePage={activePage} setActivePage={setActivePage} handlePagination={handlePagination} limit={PAGE_PER_LIMIT} totalProducts={totalOrders} pages={orderPages}/>
                     </div>
                 </div>
             </div>

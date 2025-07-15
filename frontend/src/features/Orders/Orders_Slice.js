@@ -94,6 +94,7 @@ const orderSlice = createSlice({
             state.error = null;
         })
         builder.addCase(updateOrderAsync.fulfilled, (state, action) => {
+            console.log('action-payload-in-orders--',action.payload)
            const index = state.allOrders.findIndex((item)=>item.id == action.payload.id)
             state.allOrders[index] = action.payload
             state.isLoading = false;

@@ -107,7 +107,7 @@ const updateProductController = async (req, res) => {
     try {
         const { id } = req.params
         const data = req.body
-
+        
         const updatedProduct = await productServices.updateProduct({ id, data })
         res.status(200).json({
             msg: 'product updated',

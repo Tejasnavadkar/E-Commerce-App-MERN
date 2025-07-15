@@ -6013,11 +6013,11 @@ const products = [
 
 const categories = [...new Set(products.map(item=>(item.category)))]
 const brand = [...new Set(products.map(item=>(item.brand)))].filter((x)=>x) // filter to filterout undefined
-
-
+ 
 console.log(categories)
 console.log(brand)
 
 // convert this into objects
 console.log(categories.map((x)=>({value:x,lable:x.split('-').join(' '),checked:false})))
 console.log(brand.map((x)=>({value:x,lable:x.split('-').join(' '),checked:false})))
+

@@ -103,7 +103,7 @@ const CheckOutPage = () => {
     }
 
     const RemoveCartItem = (itemId) => {
-       const removedCartItem = dispatch(deleteCartItemAsync(itemId))
+       const removedCartItem = dispatch(deleteCartItemAsync(itemId)).unwrap()
         toast.promise(
                     removedCartItem,
                      {
@@ -128,7 +128,8 @@ const CheckOutPage = () => {
            toast.success('order created successfully')
             dispatch(resetCartAsync(user.id))
             } catch (error) {
-                toast.error(error.message || 'cant place order..')
+                console.log('error in order--',error)
+                toast.error(error || 'cant place order..')
             }
             
         //    toast.promise(

@@ -47,7 +47,7 @@ export const updateOrder = async (payload) => {
         //     body: JSON.stringify(payload)
         // })
 
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/order/updateOrder/${payload.id}`)
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/order/updateOrder/${payload.id}`,{status:payload.status})
         const data = response.data.updatedOrder
         return data
     } catch (error) {
