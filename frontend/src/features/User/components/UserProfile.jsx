@@ -4,6 +4,7 @@ import { FetchUserInfoByIdAsync, userInfoSelector } from '../UserSlice'
 import {updateUserAsync} from '../../Auth/AuthSlice'
 import { userSelector } from '../../Auth/AuthSlice'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 const UserProfile = () => {
 
@@ -40,23 +41,48 @@ const UserProfile = () => {
 
     // to remove address
     const HandleRemove = (idx) => {
-        const newUser = { ...userInfo, addreses: [...userInfo.addreses] }
-        newUser.addreses.splice(idx, 1)
-        dispatch(updateUserAsync(newUser))
+        const newUser = { ...loggedInUser, addresses: [...loggedInUser.addresses] }
+        newUser.addresses.splice(idx, 1)
+        const removeResult = dispatch(updateUserAsync(newUser)).unwrap()
+        toast.promise(
+        removeResult,
+        {
+            pending: 'Loading..',
+            success: ' Address Remove Successfully👌',
+            error: 'Unable to Remove🤯'
+          }
+       )
 
     }
 
     // to edit the address
     const SubmitEditedAddress = (data) => {
-        const newUser = { ...userInfo, addreses: [...userInfo.addreses] }
-        newUser.addreses.splice(selectedIndexedForm, 1, data) // remove previous one[1-index] & add new one
-        dispatch(updateUserAsync(newUser))
+        const newUser = { ...loggedInUser, addresses: [...loggedInUser.addresses] }
+        newUser.addresses.splice(selectedIndexedForm, 1, data) // remove previous one[1-index] & add new one
+        const editResult = dispatch(updateUserAsync(newUser)).unwrap()
+        toast.promise(
+        editResult,
+        {
+            pending: 'Loading..',
+            success: ' Edit Successfully👌',
+            error: 'Unable to edit'
+          }
+       )
+      setSelectedIndexedForm(-1)
     }
 
     // add new address to profile
     const AddNewAddress = (data) =>{
-        const newUser = { ...userInfo, addreses: [...userInfo.addreses,data] }
-        dispatch(updateUserAsync(newUser))
+        const newUser = { ...loggedInUser, addresses: [...loggedInUser.addresses,data] }
+        const result = dispatch(updateUserAsync(newUser)).unwrap()
+        toast.promise(
+            result,
+            {
+                pending: 'Loading..',
+                success: 'Added Successfully👌',
+                error: 'Unable to add address'
+            }
+        )
         setAddAddressForm(false)
     }
 
