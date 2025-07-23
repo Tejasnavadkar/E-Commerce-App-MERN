@@ -11,6 +11,7 @@ import { updateUser } from "../User/User_Api";
 
 const initialState = {
     logedInUser:null,
+    userToken:null,
     isLoading:false,
     error:null
 }
@@ -108,7 +109,9 @@ const authSlice = createSlice({
             state.error = null;
         })
         builder.addCase(createUserAsync.fulfilled,(state,action)=>{
-            state.logedInUser = action.payload;
+            // console.log('action.payload-in-create-user--',action.payload)
+            state.logedInUser = action.payload.createdUser;
+            state.userToken = action.payload.token;
             state.isLoading = false;
             state.error = null;
         })
@@ -125,7 +128,8 @@ const authSlice = createSlice({
             state.error = null;
         })
         builder.addCase(checkUserAsync.fulfilled,(state,action)=>{
-            state.logedInUser = action.payload;
+            state.logedInUser = action.payload.User;
+            state.userToken = action.payload.token;
             state.isLoading = false;
             state.error = null;
         })
@@ -174,6 +178,7 @@ const authSlice = createSlice({
 
 // import in useSelector
 export const userSelector = (state) => state.Auth?.logedInUser
+export const userTokenSelector = (state) => state.Auth?.userToken
 export const errorSelector = (state) => state.Auth?.error
 
 export default authSlice.reducer

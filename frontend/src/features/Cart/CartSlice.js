@@ -30,9 +30,9 @@ export const updateCartQuantityAsync = createAsyncThunk('Cart/updateQuantity',as
     }
 })
 
-export const fetchCartsById = createAsyncThunk('Cart/fetchAllCarts', async (userId, { rejectWithValue }) => {
+export const fetchCartsById = createAsyncThunk('Cart/fetchAllCarts', async (_, { rejectWithValue }) => {
   try {
-    return await fetchCartsByUserId(userId)
+    return await fetchCartsByUserId()
   } catch (error) {
     return rejectWithValue(error.message || error)
   }
@@ -49,10 +49,10 @@ export const deleteCartItemAsync = createAsyncThunk('Cart/deleteCartItem',async 
     }
 })
 
-export const resetCartAsync = createAsyncThunk('Cart/resetCart',async (userId,{rejectWithValue})=>{
+export const resetCartAsync = createAsyncThunk('Cart/resetCart',async (_,{rejectWithValue})=>{
     try {
      
-       const data = await resetCartByUserId(userId)  // creat state
+       const data = await resetCartByUserId()  // creat state
        console.log(data)
        return data
     } catch (error) {

@@ -37,8 +37,8 @@ function App() {
   console.log('user in app.jsx-',user)
 
   useEffect(() => {
-    dispatch(fetchCartsById(user?.id))
-  }, [dispatch, user])
+    dispatch(fetchCartsById())
+  }, [dispatch])
 
   return (
     <>

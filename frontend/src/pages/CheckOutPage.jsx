@@ -71,7 +71,7 @@ const CheckOutPage = () => {
     const handleFormSubmit = (data) => {
         const userData = { ...loggedInUser, addresses: [...(loggedInUser.addresses || []), data] } //loggedInUser.addreses might be undefined when trying to spread it in the handleFormSubmit function so add a check
         console.log('userData', userData)
-       const addAddress = dispatch(updateUserAsync(userData))  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
+       const addAddress = dispatch(updateUserAsync(userData)).unwrap()  // dispatch action //here we basically update the current loggedin user with this additional info like address city etc
        reset()
 
        toast.promise(
@@ -126,7 +126,7 @@ const CheckOutPage = () => {
             
            await dispatch(createOrderAsync(order)).unwrap()
            toast.success('order created successfully')
-            dispatch(resetCartAsync(user.id))
+            dispatch(resetCartAsync())
             } catch (error) {
                 console.log('error in order--',error)
                 toast.error(error || 'cant place order..')

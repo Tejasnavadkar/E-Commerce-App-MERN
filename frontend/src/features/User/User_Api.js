@@ -2,7 +2,7 @@ import axios from "axios"
 
 
 
-export const FetchUserById = async (userId) => {
+export const FetchUserById = async () => {
 
     try {
 
@@ -10,7 +10,7 @@ export const FetchUserById = async (userId) => {
           
         // })
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users/fetchUserById/${userId}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users/fetchUserById`,{withCredentials:true})
         const data = response.data.user
         return data
 
@@ -19,7 +19,7 @@ export const FetchUserById = async (userId) => {
     }
 }
 
-export const FetchUsersOrdersById = async (userId) => {
+export const FetchUsersOrdersById = async () => {
 
     try {
 
@@ -27,7 +27,7 @@ export const FetchUsersOrdersById = async (userId) => {
         //     method:'GET'
         // })
        
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchOrderByUser/${userId}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchOrderByUser`,{withCredentials:true})
         const data = response.data.orders
         return data
 
@@ -48,7 +48,7 @@ export const updateUser = async (update) => {
         //     // credentials: 'include',
         // });
           
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/users/updateUser/${update.id}`,update)
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/users/updateUser`,update,{withCredentials:true})
         // if (response.status !== 200) {
         //     const error = await response.json();
         //     throw new Error(error.message || 'Failed to update user');

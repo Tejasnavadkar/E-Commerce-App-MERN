@@ -14,7 +14,7 @@ const OrderSuccessPage = () => {
     console.log('user',user)
 
     useEffect(()=>{
-       user?.data && dispatch(resetCartAsync(user.data.id)) // after order placed reset/remove the cart items in cart
+       user?.data && dispatch(resetCartAsync()) // after order placed reset/remove the cart items in cart
     //    once order placed succefully then clear current order state in redux
     dispatch(ClearCurrentOrder())
     },[dispatch,loggedInUser,user])

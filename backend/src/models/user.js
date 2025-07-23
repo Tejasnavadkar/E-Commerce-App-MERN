@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
         unique:true
     },
     password:{
-        type:String,
+        type:Buffer,
         required:true
     },
     role:{
@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
     orders:{
         type:[mongoose.Schema.Types.Mixed] 
     },
+    salt:{
+        type:Buffer
+    }
 })
 
 const virtual = userSchema.virtual('id')

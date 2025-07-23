@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchUserById, FetchUsersOrdersById, updateUser } from "./User_Api";
+import { FetchUserById, FetchUsersOrdersById } from "./User_Api";
 
 
 
-export const FetchUserInfoByIdAsync = createAsyncThunk('userSlice/fetchUserInfo', async (userId, { rejectWithValue }) => {
+export const FetchUserInfoByIdAsync = createAsyncThunk('userSlice/fetchUserInfo', async (_, { rejectWithValue }) => {
 
     try {
-        console.log('user--id', userId)
-        const data = await FetchUserById(userId)
+        // console.log('user--id', userId)
+        const data = await FetchUserById()
         console.log('data', data)
         return data
     } catch (error) {
@@ -16,11 +16,11 @@ export const FetchUserInfoByIdAsync = createAsyncThunk('userSlice/fetchUserInfo'
 
 })
 
-export const FetchUserOrdersByIdAsync = createAsyncThunk('userSlice/fetchUsersOrders', async (userId, { rejectWithValue }) => {
+export const FetchUserOrdersByIdAsync = createAsyncThunk('userSlice/fetchUsersOrders', async (_, { rejectWithValue }) => {
 
     try {
-        console.log({userId})
-        const data = await FetchUsersOrdersById(userId)
+        // console.log({userId})
+        const data = await FetchUsersOrdersById()
         return data
     } catch (error) {
         return rejectWithValue(error.message || error)

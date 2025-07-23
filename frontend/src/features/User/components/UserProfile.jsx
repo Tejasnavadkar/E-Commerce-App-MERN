@@ -87,8 +87,8 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
-        dispatch(FetchUserInfoByIdAsync(loggedInUser?.id))
-    }, [dispatch, loggedInUser])
+        dispatch(FetchUserInfoByIdAsync())
+    }, [dispatch])
 
     
     return (

@@ -27,7 +27,7 @@ export const addToCart = async (item) => {
     //         })
     //     })
        
-       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/cart/addToCart`,item)
+       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/cart/addToCart`,item,{withCredentials:true})
        const data = response.data.cart
        return data
 
@@ -39,12 +39,12 @@ export const addToCart = async (item) => {
     }
 };
 
-export const fetchCartsByUserId = async (userId) => {
+export const fetchCartsByUserId = async () => {
     try {
 
         // const response = await fetch(`http://localhost:8000/cart?user=${userId}`)
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/cart/fetchCarts/${userId}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/cart/fetchCarts`,{withCredentials:true})
         const data = response.data.carts
         return data
 
@@ -66,7 +66,7 @@ export const updateCartById = async (update) => {
         //     headers: { 'content-type': 'application/json' }
         // })
 
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/cart/updateCart/${update.id}`,update)
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/cart/updateCart/${update.id}`,update,{withCredentials:true})
         const data = response.data.updatedCart
         return data
 
@@ -84,7 +84,7 @@ export const deleteCartItemById = async (itemId) => {
         //     headers: { 'content-type': 'application/json' }
         // })
 
-        await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/cart/deleteCart/${itemId}`)
+        await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/cart/deleteCart/${itemId}`,{withCredentials:true})
 
         // await new Promise((resolve)=>setTimeout(()=>resolve(),3000))
         return {
@@ -97,10 +97,10 @@ export const deleteCartItemById = async (itemId) => {
     }
 }
 
-export const resetCartByUserId = async (userId) => {
+export const resetCartByUserId = async () => {
 
     try {
-        const carts = await fetchCartsByUserId(userId)
+        const carts = await fetchCartsByUserId()
         const cartIds = carts.map((item) => item.id)
         for (let i = 0; i < cartIds.length; i++) {
             await deleteCartItemById(cartIds[i])

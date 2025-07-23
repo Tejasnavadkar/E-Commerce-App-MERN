@@ -4,7 +4,7 @@ import axios from "axios"
 
 export const CreateOrder = async (payload) => {
     try {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/order/createOrder`,payload)
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/order/createOrder`,payload,{withCredentials:true})
         const data = response.data.order
         return data
     } catch (error) {
@@ -25,7 +25,7 @@ export const fetchAllOrders = async ({pagination,sort}) =>{
         queryString+=`${key}=${sort[key]}&`
     }
 
-   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`)
+   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`,{withCredentials:true})
 
    const orders = response.data.allOrders
    const totalOrders = await response.headers['x-total-count']
@@ -47,7 +47,7 @@ export const updateOrder = async (payload) => {
         //     body: JSON.stringify(payload)
         // })
 
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/order/updateOrder/${payload.id}`,{status:payload.status})
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/order/updateOrder/${payload.id}`,{status:payload.status},{withCredentials:true})
         const data = response.data.updatedOrder
         return data
     } catch (error) {

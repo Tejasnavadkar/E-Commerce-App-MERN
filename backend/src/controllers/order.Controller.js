@@ -27,7 +27,7 @@ const fetchOrderByIdController = async (req,res) => {
     //fetch by userId
     try {
     
-    const {id} = req.params;
+    const {id} = req.user; //we serialize user through passport
 
     const orders = await orderServices.fetchOrdersByUser(id)
     res.status(200).json({

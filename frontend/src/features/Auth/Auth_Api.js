@@ -20,13 +20,13 @@ export const createUser = async (userData) => {
         // const data = await response.json();
         // return data;
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/signup`,userData)
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/signup`,userData, {withCredentials:true})
 
       if (response.status !== 201) {
         throw new Error('api fail');
       }
       console.log('response-',response)
-      return response.data.createdUser
+      return response.data
     
       } catch (error) {
         console.error('API Error:', error.response.data.msg);
@@ -40,14 +40,14 @@ export const createUser = async (userData) => {
   
     try {
       // const response = await fetch(`http://localhost:8000/users?email=${email}`);
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/login`,{email,password})
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/login`,{email,password},{withCredentials:true})
 
       
       if (response.status !== 201) {
         throw new Error('api fail');
       }
   
-      const user = response.data.User
+      const user = response.data
       console.log(user)
       return user
     } catch (error) {

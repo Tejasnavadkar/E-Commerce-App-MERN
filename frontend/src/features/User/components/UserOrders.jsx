@@ -13,9 +13,9 @@ const UserOrders = () => {
     console.log('logedInUser',loggedInuser)
     useEffect(() => {
 
-        dispatch(FetchUserOrdersByIdAsync(loggedInuser?.id))
+        dispatch(FetchUserOrdersByIdAsync())
 
-    }, [dispatch, loggedInuser])
+    }, [dispatch])
 
     return (
         <div className='pt-10'>

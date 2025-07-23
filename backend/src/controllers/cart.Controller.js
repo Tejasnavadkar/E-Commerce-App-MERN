@@ -24,7 +24,7 @@ const fetchCartByIdController = async (req,res) => {
     //fetch by userId
     try {
     
-    const {id} = req.params;
+    const {id} = req.user;
 
     const carts = await cartServices.fetchCartByUserId(id)
     res.status(200).json({

@@ -5,7 +5,7 @@ import userServices from "../services/userServices.js"
 
 const fetchUserByIdController = async (req,res) =>{
     try {
-        const {id} = req.params
+        const {id} = req.user
         const user = await userServices.fetchUserById(id)
         res.status(201).json({
             user
@@ -18,7 +18,8 @@ const fetchUserByIdController = async (req,res) =>{
 const updateUserController = async (req, res) => {
 
     try {
-        const { id } = req.params
+        const { id } = req.user
+        console.log('userID-',id)
         const data = req.body
 
         const updatedUser = await userServices.updateUser({ id, data })

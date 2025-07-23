@@ -5,7 +5,7 @@ import axios from 'axios'
 export const FetchAllProducts = async () => {
     try {
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts`,{withCredentials:true})
         //  const response = await fetch('http://localhost:8080/api/product/fetchAllProducts')
         const data = response.data.allProducts
         return data
@@ -20,7 +20,7 @@ export const FetchAllProducts = async () => {
 export const FetchProductById = async ({ id }) => {
     try {
 
-         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchProductById/${id}`)
+         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchProductById/${id}`,{withCredentials:true})
         const data = response.data.product
         return data
 
@@ -34,7 +34,7 @@ export const FetchProductById = async ({ id }) => {
 export const FetchAllCategories = async () => {
     try {
 
-         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/categories/fetchCategories`)
+         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/categories/fetchCategories`,{withCredentials:true})
         const data = response.data.categories
         return data
 
@@ -48,7 +48,7 @@ export const FetchAllCategories = async () => {
 export const FetchAllBrands = async () => {
     try {
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/brands/fetchBrands`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/brands/fetchBrands`,{withCredentials:true})
         const data = response.data.brands
         return data
 
@@ -113,7 +113,7 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination,role 
     try {
         
         // const response = await fetch(`http://localhost:8000/products?${queryString}`)
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?${queryString}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?${queryString}`,{withCredentials:true})
         const products = await response.data.allProducts
         console.log('response in product slice--',response)
         console.log('prod----',products)
@@ -136,7 +136,7 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination,role 
 
 export const sortProducts = async (payload) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?_sort=${payload.sort}&_order=${payload.order}`)
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product/fetchAllProducts?_sort=${payload.sort}&_order=${payload.order}`,{withCredentials:true})
         const data = response.data.allProducts
         return data
 
@@ -159,7 +159,7 @@ export const createProduct = async (payload) => {
         //     body: JSON.stringify(payload)
         // })
 
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/product/createProduct`,payload)
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/product/createProduct`,payload,{withCredentials:true})
 
         const data = response.data.product
         return data
@@ -184,7 +184,7 @@ export const updateProductById = async (payload) => {
         //     body: JSON.stringify(payload)
         // })
 
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/product/updateProduct/${payload.id}`,payload)
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/product/updateProduct/${payload.id}`,payload,{withCredentials:true})
         const data = response.data.updatedProduct
         return data
     } catch (error) {
