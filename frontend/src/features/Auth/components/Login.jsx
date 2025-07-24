@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { checkUserAsync, errorSelector, userSelector } from "../AuthSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { errorSelector, loginUserAsync, userSelector } from "../AuthSlice";
 import { toast } from "react-toastify";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    // watch,
     formState: { errors },
   } = useForm({});
   const user = useSelector(userSelector);
@@ -22,7 +22,7 @@ const Login = () => {
     console.log(data);
     try {
       dispatch(
-        checkUserAsync({
+        loginUserAsync({
           // this returns promise
           email: data.email,
           password: data.password,

@@ -34,7 +34,7 @@ export const createUser = async (userData) => {
     }
  };
 
- export const checkUser = async (loginInfo) => {
+ export const login = async (loginInfo) => {
     const email = loginInfo.email;
     const password = loginInfo.password;
   
@@ -52,9 +52,18 @@ export const createUser = async (userData) => {
       return user
     } catch (error) {
       console.log({error})
-      throw new Error(error.response.data.msg || 'unable to login');
+      throw new Error(error.response.data || 'unable to login');
     }
   };
+
+  // tocheck user is authenticated when we reload the page
+  export const checkAuth = async () => {
+   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/auth/checkUser`,{withCredentials:true})
+    if (response.status === 401) {
+        throw new Error('user not authenticated');
+      }
+      return response.data
+  }
 
   export const SignOutUser = async (userId) =>{
 

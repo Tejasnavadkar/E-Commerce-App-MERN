@@ -10,7 +10,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage'
 import Protected from './features/Auth/components/Protected'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { userSelector } from './features/Auth/AuthSlice'
+import { checkUserAsync, userCheck, userSelector } from './features/Auth/AuthSlice'
 import { fetchCartsById } from './features/Cart/CartSlice'
 import PageNotFound from './pages/PageNotFound'
 import OrderSuccessPage from './pages/OrderSuccessPage'
@@ -34,7 +34,13 @@ function App() {
 
   const dispatch = useDispatch()
   const user = useSelector(userSelector)
+  const checkUserStatus = useSelector(userCheck)
   console.log('user in app.jsx-',user)
+  console.log('check-user',checkUserStatus)
+
+  useEffect(()=>{
+    dispatch(checkUserAsync())
+  },[dispatch])
 
   useEffect(() => {
     dispatch(fetchCartsById())
@@ -43,7 +49,8 @@ function App() {
   return (
     <>
       <div>
-        <BrowserRouter>
+       {checkUserStatus && ( // user check karane ke baad hi routing perform karana
+         <BrowserRouter>
           <Routes>
             <Route path='/signup' element={<SignupPage />} />
 
@@ -129,6 +136,7 @@ function App() {
             } />
           </Routes>
         </BrowserRouter>
+       )}
       </div>
     </>
   )

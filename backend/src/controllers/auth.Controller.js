@@ -96,6 +96,24 @@ const loginController = async (req,res) =>{
     }
 }
 
+const checkUserController = async (req,res) =>{
+    try {
+
+        if(req.user){
+           return  res.status(201).json({
+            msg:'user is authenticated',
+            User:req.user,
+        })
+        }else{
+            res.sendStatus(401)
+        }
+
+       
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+}
+
 const signOutController = async(req,res) => {
     // todo
 }
@@ -109,5 +127,6 @@ export default {
       createUserController,
       loginController,
       signOutController,
-      forgotPasswordController
+      forgotPasswordController,
+      checkUserController
 }

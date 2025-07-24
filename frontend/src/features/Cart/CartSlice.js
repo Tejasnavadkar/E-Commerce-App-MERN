@@ -64,7 +64,8 @@ export const resetCartAsync = createAsyncThunk('Cart/resetCart',async (_,{reject
 const initialState = {
     cartItems:[],
     isLoading:false,
-    error:null
+    error:null,
+    cartCheckStatus:false
 }
 
 
@@ -97,10 +98,12 @@ const cartSlice = createSlice({
             console.log('action-payload-cart',action.payload)
             state.isLoading = false
             state.cartItems = action.payload
+            state.cartCheckStatus = true
         })
         builder.addCase(fetchCartsById.rejected,(state,action)=>{
             state.isLoading = false
             state.error = action.payload
+            state.cartCheckStatus = true
         })
 
         //update cart quantity
@@ -155,5 +158,6 @@ const cartSlice = createSlice({
 // import in useSelector
 export const cartSelector = (state) => state.Cart.cartItems
 export const errorSelector = (state) => state.Cart.error
+export const cartCheckSelector = (state) => state.Cart.cartCheckStatus
 
 export default cartSlice.reducer

@@ -24,7 +24,7 @@ const UserOrders = () => {
                 {/* {products.length === 0 && <Navigate to={'/'} />} */}
                 <div className='flex flex-col gap-6 w-full'>
                     {
-                       orders && orders?.map((item) => (
+                       orders?.length > 0 ? orders?.map((item) => (
                             <div key={item?.id} className="flex h-full  flex-col bg-white shadow-xl">
                                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                                     <div className="flex items-start justify-between">
@@ -107,7 +107,9 @@ const UserOrders = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))
+                        )) : (
+                            <span  className='font-bold text-2xl text-center mt-5' >Orders not available..</span>
+                        )
                     }
                 </div>
             </div>

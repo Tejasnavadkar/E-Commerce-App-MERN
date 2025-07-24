@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
+  cartCheckSelector,
   cartSelector,
   deleteCartItemAsync,
   updateCartQuantityAsync,
@@ -40,6 +41,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const products = useSelector(cartSelector);
+  const cartCheckStatus = useSelector(cartCheckSelector)
   const [removeId,setRemoveId] = useState(-1)
   console.log("cartItem", products);
 
@@ -97,7 +99,7 @@ const Cart = () => {
 
   return (
     <div className="pt-10">
-      {products.length === 0 && <Navigate to={"/"} />}
+      {products.length === 0 && cartCheckStatus && <Navigate to={"/"} />}
       <div className="flex h-full w-[70%] mx-auto  flex-col bg-white shadow-xl">
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
           <div className="flex items-start justify-between">
