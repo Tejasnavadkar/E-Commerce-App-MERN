@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { errorSelector, loginUserAsync, userSelector } from "../AuthSlice";
 import { toast } from "react-toastify";
+import { IoMdEye } from "react-icons/io";
+import { IoEyeOff } from "react-icons/io5";
+import { useState } from "react";
 
 const Login = () => {
   const {
@@ -12,13 +15,18 @@ const Login = () => {
     // watch,
     formState: { errors },
   } = useForm({});
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [isActive, setActive] = useState(false);
+
   const user = useSelector(userSelector);
   const stateError = useSelector(errorSelector);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const handleFormData = async (data) => {
+  const handleFormData = async (data, e) => {
+    e.preventDefault();
     console.log(data);
     try {
       dispatch(
@@ -40,16 +48,19 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-  if (stateError) {
-    toast.error(`${stateError}`);
-  }
-  if (user) {
-    toast.success("Login successful");
-    navigate("/");
-  }
-}, [user, stateError, navigate]);
+  const PasswordToggel = () => {
+    setShowPassword((prev) => !prev);
+  };
 
+  useEffect(() => {
+    if (stateError) {
+      toast.error(`${stateError}`);
+    }
+    if (user) {
+      toast.success("Login successful");
+      navigate("/");
+    }
+  }, [user, stateError, navigate]);
 
   // if (stateError !== null) {
   //   toast.error(`${stateError}`);
@@ -130,16 +141,24 @@ const Login = () => {
                 </div>
               </div>
               <div className="mt-2">
-                <input
-                  id="password"
-                  {...register("password", {
-                    required: "password is required",
-                  })}
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
+                <div className="flex w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                  <input
+                    id="password"
+                    {...register("password", {
+                      required: "password is required",
+                    })}
+                    onKeyDown={() => setActive(true)}
+                    type={`${showPassword ? "text" : "password"}`}
+                    required
+                    autoComplete="current-password"
+                    className="w-full outline-none"
+                  />
+                  {isActive && (
+                    <button type="button" onClick={PasswordToggel} className="">
+                      {showPassword ? <IoMdEye /> : <IoEyeOff />}
+                    </button>
+                  )}
+                </div>
                 {errors?.password && (
                   <span className="text-sm text-red-700 block">
                     {errors?.password?.message}
