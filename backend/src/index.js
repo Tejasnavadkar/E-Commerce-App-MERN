@@ -40,7 +40,7 @@ app.use(cors({
 
 
 app.use(session({
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }));
