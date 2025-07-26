@@ -116,6 +116,16 @@ const checkUserController = async (req,res) =>{
 
 const signOutController = async(req,res) => {
     // todo
+
+     // Clearing the cookie
+      res
+    .cookie('jwt', '', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      expires: new Date(0) // Set expiry to past date
+    })
+    .sendStatus(200)
 }
 
 const forgotPasswordController = async(req,res) => {

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { cartSelector } from '../Cart/CartSlice'
 import { userInfoSelector } from '../User/UserSlice'
+import axios from 'axios'
 
 
 const user = {
@@ -22,7 +23,9 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', link: '/profile' },
   { name: 'My Orders', link: '/orders' },
-  { name: 'Sign out', link: '/SignOut' },
+  { name: 'Sign out', link: '/SignOut', Function: async ()=>{
+    await axios.get(`${import.meta.env.VITE_BASE_URL}/api/auth/signOut`,{withCredentials:true})
+  }},
 ]
 
 function classNames(...classes) {
@@ -34,6 +37,8 @@ const NavBar = ({ children }) => {
 
   const items = useSelector(cartSelector)
   const userInfo = useSelector(userInfoSelector)
+  
+  
 
 console.log('userInfo-in-navbar-',userInfo)
   const navigate = useNavigate()
@@ -103,6 +108,7 @@ console.log('userInfo-in-navbar-',userInfo)
                       <MenuItem key={item?.name}>
                         <Link to={item?.link}
                           href={item?.href}
+                          onClick={item?.name === 'Sign out' && item.Function }
                           className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                         >
                           {item?.name}
