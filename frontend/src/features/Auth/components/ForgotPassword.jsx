@@ -7,7 +7,11 @@ const ForgotPassword = () => {
      const { register, handleSubmit,formState: { errors } } = useForm({});
 
      const handleFormData = (data) =>{
-        console.log('eail',data)
+      
+        console.log('email',data)
+        // forgot password api call
+
+
 
      }
 

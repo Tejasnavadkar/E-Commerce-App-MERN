@@ -14,11 +14,13 @@ import { cookieExtractor, sanitizeUser } from './services/common.js'
 import { Strategy as JwtStrategy, ExtractJwt, } from 'passport-jwt';
 import userModel from './models/user.js'
 import cookieParser from 'cookie-parser'
+import nodemailer from 'nodemailer'
 
 
 
 const app = express()
 const port = process.env.PORT
+
 
 let opts = {}
 opts.jwtFromRequest = cookieExtractor;
@@ -29,6 +31,7 @@ opts.secretOrKey = process.env.JWT_SECRET;
 
 
 db.ConnectDb()
+
 app.use(express.json()) // for body parsing
 app.use(cookieParser()) // now we can get cookie from req
 app.use(cors({
@@ -46,6 +49,16 @@ app.use(session({
 }));
 app.use(passport.initialize())
 app.use(passport.authenticate('session'));
+
+// nodemailer transporter
+// export const transporter = nodemailer.createTransport({
+//     host:'smtp-relay.brevo.com',
+//     port:587,
+//     auth:{
+//         user:process.env.SMTP_USER,
+//         pass:process.env.SMTP_PASS
+//     }
+// })
 
 
 //routes place here

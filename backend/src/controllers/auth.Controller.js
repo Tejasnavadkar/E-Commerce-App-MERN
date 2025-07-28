@@ -2,6 +2,7 @@ import authServices from "../services/authServices.js"
 import crypto from 'crypto'
 import { sanitizeUser } from "../services/common.js"
 import tokenHandler from "../utils/tokenHandler.js"
+import mailService from "../services/mailService.js"
 
 const createUserController = async (req,res) =>{
     try {
@@ -128,8 +129,34 @@ const signOutController = async(req,res) => {
     .sendStatus(200)
 }
 
-const forgotPasswordController = async(req,res) => {
+const verifyMailController = async(req,res) => {
     //todo
+    
+    try {
+        const {email} = req.body
+        const user = await authServices.fetchUser(email)
+
+        if(!user){
+            return res.status(401).json({msg:'user with this email not exist'})
+        }
+       
+         const resetPageLink = `${process.env.BASE_URL}/verifyotp?userId=${user._id}` // configure url
+         const from = process.env.EMAIL_USER // from mail create seperate mail
+         const to = user?.email
+         const subject = 'reset password for e-commerce account'
+        // const text = `Welcome to Auth-Project your account has been created with email ${user.email}`
+         const html = `<p>Click <a href='${resetPageLink}'>here</a> to Reset Password</p>`
+        const info = await mailService.sendVerificationMail({from, to, subject, html})
+
+        res.status(201).json({
+            msg:'Link has been send to verified mail',
+            info
+        })
+
+    } catch (error) {
+        console.log('err in verifymailController--',error.message)
+        res.status(400).json(error.message || 'server error')
+    }
 
 }
 
@@ -137,6 +164,6 @@ export default {
       createUserController,
       loginController,
       signOutController,
-      forgotPasswordController,
+      verifyMailController,
       checkUserController
 }
