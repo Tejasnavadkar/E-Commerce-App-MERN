@@ -1,16 +1,31 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { ForgotPasswordAsync, mailCheckSelector } from '../AuthSlice';
+import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
 
      const { register, handleSubmit,formState: { errors } } = useForm({});
+     const isMailSent = useSelector(mailCheckSelector)
+     const dispatch = useDispatch()
 
-     const handleFormData = (data) =>{
+     const handleFormData = async (data) =>{
       
         console.log('email',data)
-        // forgot password api call
-
+        // forgot password api call (dispatch action)
+        
+        const result = dispatch(ForgotPasswordAsync(data.email)).unwrap()
+        // console.log({isMailSent,result})
+          toast.promise(
+                result,
+                {
+                    pending: 'Loading..',
+                    success: ' verification mail sent👌',
+                    error: 'Unable to send verification mail🤯'
+                  }
+               )
 
 
      }
@@ -44,6 +59,7 @@ const ForgotPassword = () => {
               className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
             {errors?.email && <span className='text-sm text-red-700'>{errors?.email?.message}</span>}
+            {isMailSent && <span className='text-sm text-green-700'>mail sent</span>}
           </div>
         </div>
 

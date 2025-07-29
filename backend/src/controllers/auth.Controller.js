@@ -154,7 +154,7 @@ const verifyMailController = async(req,res) => {
         })
 
     } catch (error) {
-        console.log('err in verifymailController--',error.message)
+        console.log('err in verifymailController--',error)
         res.status(400).json(error.message || 'server error')
     }
 

@@ -14,7 +14,9 @@ const initialState = {
     userToken:null,
     isLoading:false,
     error:null,
-    userCheck:false
+    userCheck:false,
+    isMailSent:false,
+    mailInfo:null
 }
 
 export const createUserAsync = createAsyncThunk(
@@ -68,7 +70,8 @@ export const SignOutUserAsync = createAsyncThunk('Auth/signOut',async (userId,{r
 export const ForgotPasswordAsync = createAsyncThunk('Auth/ForgotPassword',async (email,{rejectWithValue})=>{
 
     try {
-        await ForgotPassword(email)
+       const data = await ForgotPassword(email)
+       return data
         // create extraReducers after setup backend stuff
     } catch (error) {
         return rejectWithValue(error.message || error )
@@ -209,6 +212,24 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.logedInUser = null;
         })
+
+        // forgot/verify mail 
+         builder.addCase(ForgotPasswordAsync.pending,(state)=>{
+            state.isLoading = true;
+            state.error = null;
+        })
+        builder.addCase(ForgotPasswordAsync.fulfilled,(state,action)=>{
+            // console.log('action in forgot pass--',action.payload)
+            state.mailInfo = action.payload.info;
+            state.isLoading = false;
+            state.error = null;
+            state.isMailSent = true
+        })
+        builder.addCase(ForgotPasswordAsync.rejected,(state,action)=>{
+            state.error = action.payload;
+            state.isLoading = false;
+            
+        })
     }
 })
 
@@ -219,5 +240,6 @@ export const userSelector = (state) => state.Auth?.logedInUser
 export const userTokenSelector = (state) => state.Auth?.userToken
 export const errorSelector = (state) => state.Auth?.error
 export const userCheck = (state) => state.Auth?.userCheck
+export const mailCheckSelector = (state) => state.Auth?.isMailSent
 
 export default authSlice.reducer

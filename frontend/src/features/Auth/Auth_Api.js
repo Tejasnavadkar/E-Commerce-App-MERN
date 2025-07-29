@@ -81,7 +81,15 @@ export const createUser = async (userData) => {
 
     try {
     // forgot password logic here get user by email and then send email to that user with reset password link
-    
+    // http://localhost:8080/api/auth/verifyMail
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/verifyMail`,{email}, {withCredentials:true})
+
+      if (response.status !== 201) {
+        throw new Error('verify mail api fail');
+      }
+      console.log('response-',response)
+      return response.data
 
     } catch (error) {
       throw new Error(`error in forgot password`,error)

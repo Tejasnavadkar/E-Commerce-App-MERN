@@ -9,10 +9,10 @@ const sendVerificationMail = async ({ from, to, subject, html }) => {
       html,
     };
 
-    console.log({
-        user:process.env.SMTP_USER,
-        pass:process.env.SMTP_PASS
-    })
+    // console.log({
+    //     user:process.env.SMTP_USER,
+    //     pass:process.env.SMTP_PASS
+    // })
     
 
     const info = await transporter.sendMail(mailOptions);
