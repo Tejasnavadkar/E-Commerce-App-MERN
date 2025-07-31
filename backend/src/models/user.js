@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
     },
     salt:{
         type:Buffer
+    },
+    resetPasswordToken:{
+        type:String,
+        default:''
     }
 })
 

@@ -28,6 +28,9 @@ import AdminHomePage from './pages/AdminHomePage'
 import ProductForm from './features/Admin/components/ProductForm'
 import AdminProductFormPage from './pages/AdminProductFormPage'
 import AdminOrdersPage from './pages/AdminOrdersPage'
+import ResetPassword from './features/Auth/components/ResetPassword'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 
 function App() {
@@ -97,7 +100,11 @@ function App() {
               </Protected>
             } />
             <Route path='/forgot-password' element={
-              <ForgotPassword />
+              <ForgotPasswordPage/>
+            } />
+
+              <Route path='/reset-password' element={
+              <ResetPasswordPage/>
             } />
 
             <Route path='/admin/product-details/:id' element={

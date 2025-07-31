@@ -3,6 +3,8 @@ import crypto from 'crypto'
 import { sanitizeUser } from "../services/common.js"
 import tokenHandler from "../utils/tokenHandler.js"
 import mailService from "../services/mailService.js"
+import userModel from "../models/user.js"
+import { hashPassword } from "../utils/hashPassword.js"
 
 const createUserController = async (req,res) =>{
     try {
@@ -13,8 +15,8 @@ const createUserController = async (req,res) =>{
             return res.status(401).json({msg:'user with email or username already exist'})
         }
 
-        const salt = crypto.randomBytes(16);
-        const  hashedPassword = crypto.pbkdf2Sync(data.password, salt, 310000, 32, 'sha256')
+
+        const  {hashedPassword,salt} = hashPassword(data.password)
 
         const payload = {
             ...data,
@@ -139,15 +141,20 @@ const verifyMailController = async(req,res) => {
         if(!user){
             return res.status(401).json({msg:'user with this email not exist'})
         }
-       
-         const resetPageLink = `${process.env.BASE_URL}/verifyotp?userId=${user._id}` // configure url
+
+        // generate token using crypto and send in mail and also save in user model 
+        // const token = tokenHandler.generateJwtToken({id:user.id,role:user.role})
+           const token = crypto.randomBytes(48).toString('hex');
+           user.resetPasswordToken = token
+           await user.save()
+         const resetPageLink = `${process.env.BASE_URL}/reset-password?token=${token}&email=${user.email}` // configure url
          const from = process.env.EMAIL_USER // from mail create seperate mail
          const to = user?.email
          const subject = 'reset password for e-commerce account'
         // const text = `Welcome to Auth-Project your account has been created with email ${user.email}`
          const html = `<p>Click <a href='${resetPageLink}'>here</a> to Reset Password</p>`
         const info = await mailService.sendVerificationMail({from, to, subject, html})
-
+    
         res.status(201).json({
             msg:'Link has been send to verified mail',
             info
@@ -155,7 +162,36 @@ const verifyMailController = async(req,res) => {
 
     } catch (error) {
         console.log('err in verifymailController--',error)
-        res.status(400).json(error.message || 'server error')
+        res.status(400).json(error || 'server error')
+    }
+
+}
+
+const resetPasswordController = async (req,res) => {
+   
+    try {
+        const {password,token,email} = req.body
+        const user = await userModel.findOne({email:email,resetPasswordToken:token})
+
+        if(!user) return res.status(401).json({msg:'user not exist with this email and token'})
+        
+        const {hashedPassword,salt} = hashPassword(password)
+        user.password = hashedPassword
+        user.salt = salt
+        await user.save()
+
+         const from = process.env.EMAIL_USER // from mail create seperate mail
+         const to = user?.email
+         const subject = 'reset password for e-commerce account'
+         const html = `<p>Your password reset successfully</p>`
+         await mailService.sendVerificationMail({from, to, subject, html})
+
+        res.status(201).json({
+            msg:'password successfully reset'
+        })
+ 
+    } catch (error) {
+        res.status(500).json(error.message || 'server error')
     }
 
 }
@@ -165,5 +201,6 @@ export default {
       loginController,
       signOutController,
       verifyMailController,
-      checkUserController
+      checkUserController,
+      resetPasswordController
 }

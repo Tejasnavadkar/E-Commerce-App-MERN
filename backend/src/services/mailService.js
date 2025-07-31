@@ -2,6 +2,8 @@ import { transporter } from "../utils/mailHandler.js";
 
 const sendVerificationMail = async ({ from, to, subject, html }) => {
   try {
+
+    // console.log('html--',html)
     const mailOptions = {
       from,
       to,
@@ -16,7 +18,7 @@ const sendVerificationMail = async ({ from, to, subject, html }) => {
     
 
     const info = await transporter.sendMail(mailOptions);
-    console.log({info})
+    // console.log({info})
     return info;
   } catch (error) {
     console.log('error in mail service--',error.message)

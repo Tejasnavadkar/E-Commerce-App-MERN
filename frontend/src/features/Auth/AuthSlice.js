@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {  checkAuth, createUser, ForgotPassword, login, SignOutUser } from "./Auth_Api";
+import {  checkAuth, createUser, ForgotPassword, login, resetPassword, SignOutUser } from "./Auth_Api";
 import { updateUser } from "../User/User_Api";
 // import { data } from "react-router-dom";
 // import axios from "axios";
@@ -16,7 +16,8 @@ const initialState = {
     error:null,
     userCheck:false,
     isMailSent:false,
-    mailInfo:null
+    mailInfo:null,
+    resetPassword:false
 }
 
 export const createUserAsync = createAsyncThunk(
@@ -73,6 +74,17 @@ export const ForgotPasswordAsync = createAsyncThunk('Auth/ForgotPassword',async 
        const data = await ForgotPassword(email)
        return data
         // create extraReducers after setup backend stuff
+    } catch (error) {
+        return rejectWithValue(error.message || error )
+    }
+})
+
+export const ResetPasswordAsync = createAsyncThunk('Auth/resetPassword',async (payload,{rejectWithValue})=>{
+
+    try {
+       const data = await resetPassword(payload)
+       return data
+        
     } catch (error) {
         return rejectWithValue(error.message || error )
     }
@@ -230,6 +242,26 @@ const authSlice = createSlice({
             state.isLoading = false;
             
         })
+
+        // ResetPasswordAsync 
+        
+          builder.addCase(ResetPasswordAsync.pending,(state)=>{
+            state.isLoading = true;
+            state.error = null;
+        })
+        builder.addCase(ResetPasswordAsync.fulfilled,(state)=>{
+      
+            state.resetPassword = true
+            state.isLoading = false;
+            state.error = null;
+          
+        })
+        builder.addCase(ResetPasswordAsync.rejected,(state,action)=>{
+            state.error = action.payload;
+            state.isLoading = false;
+            
+        })
+
     }
 })
 
@@ -241,5 +273,6 @@ export const userTokenSelector = (state) => state.Auth?.userToken
 export const errorSelector = (state) => state.Auth?.error
 export const userCheck = (state) => state.Auth?.userCheck
 export const mailCheckSelector = (state) => state.Auth?.isMailSent
+export const resetPasswordSelector = (state) => state.Auth?.resetPassword
 
 export default authSlice.reducer

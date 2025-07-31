@@ -11,4 +11,5 @@ router.post('/login',passport.authenticate('local'),authController.loginControll
 router.get('/checkUser',isAuth(),authController.checkUserController)
 router.get('/signOut',authController.signOutController)
 router.post('/verifyMail',authController.verifyMailController)
+router.post('/resetPassword',authController.resetPasswordController)
 export default router
