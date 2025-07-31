@@ -32,6 +32,8 @@ const orderSchema = new mongoose.Schema({
         // enum:['processing','pending','dispatched','delivered'],
         default:'pending'
     }
+},{
+    timestamps:true // creation and updation time
 })
 
 // "user": {

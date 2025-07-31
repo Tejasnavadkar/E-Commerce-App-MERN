@@ -24,6 +24,7 @@ export const fetchAllOrders = async ({pagination,sort}) =>{
     for(let key in sort){
         queryString+=`${key}=${sort[key]}&`
     }
+    console.log(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`)
 
    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/order/fetchAllOrders?${queryString}`,{withCredentials:true})
 

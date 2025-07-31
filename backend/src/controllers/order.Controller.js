@@ -1,6 +1,9 @@
 import orderModel from "../models/order.js"
+import userModel from "../models/user.js"
 import cartServices from "../services/cartServices.js"
+import mailService from "../services/mailService.js"
 import orderServices from "../services/orderServices.js"
+import userServices from "../services/userServices.js"
 
 
 
@@ -10,9 +13,21 @@ const createOrderController = async (req,res) => {
             const data = req.body
             const order = await orderServices.createOrder(data)
             // await cartServices.resetCart() // after order placed reset cart
+
             if(!order){
                 return res.status(400).json({msg:'cant palce order'})
             }
+
+            const user = await userServices.fetchUserById(order.user)
+
+            //todo: send invoice mail of order after order place
+            const from = process.env.EMAIL_USER // from mail create seperate mail
+            const to = user?.email
+            const subject = 'order received successfully'
+            const html = mailService.invoiceTemplate(order)
+
+            mailService.sendVerificationMail({from, to, subject, html})  // dont make it await run it in background
+
             res.status(200).json({
                 msg:'order created..',
                 order

@@ -92,40 +92,46 @@ const AdminOrders = () => {
     }
 
     return (
-        <div className="overflow-x-auto">
-            <div className="min-w-screen  flex items-center justify-center bg-gray-100 font-sans overflow-hidden">
-                <div className="w-full lg:w-5/6">
-                    <div className="bg-white shadow-md rounded my-6">
-                        <table className="min-w-max w-full table-auto">
+        <div className="w-full px-2  ">
+            <div className=" flex items-center justify-center bg-gray-100 font-sans overflow-x-scroll">
+                <div className="lg:w-full">
+                    <div className="bg-white shadow-md rounded my-6 border w-fit lg:w-full">
+                        <table className="w-full table-auto overflow-x-scroll">
                             <thead>
                                 <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                    <th onClick={()=>handleSort({orderId:'id',order: sort._order === 'desc' ? 'asc' : 'desc'})} className="py-3 px-6 text-left flex gap-2 cursor-pointer">
+                                    <th onClick={()=>handleSort({orderId:'_id',order: sort._order === 'desc' ? 'asc' : 'desc'})} className="py-3 px-1 text-left flex gap-2 cursor-pointer">
                                        <span> Order #</span>
                                       { sort._order == 'desc' ? <ArrowUpCircleIcon className='h-6 w-6'/> : <ArrowDownCircleIcon className='h-6 w-6'/>}
                                         
                                     </th>
-                                    <th className="py-3 px-6 text-left">items</th>
-                                    <th onClick={()=>handleSort({orderId:'subTotal',order: sort._order === 'desc' ? 'asc' : 'desc'})}  className="py-3 px-6 flex gap-2 text-center cursor-pointer">
+                                    <th className="py-3 px-1 text-left">items</th>
+                                    <th onClick={()=>handleSort({orderId:'subTotal',order: sort._order === 'desc' ? 'asc' : 'desc'})}  className="py-3 px-1 flex gap-2 text-center cursor-pointer">
                                         <span>Total Amount</span>
                                         { sort._order == 'desc' ? <ArrowUpCircleIcon className='h-6 w-6'/> : <ArrowDownCircleIcon className='h-6 w-6'/>}
                                     </th>
-                                    <th className="py-3 px-6 text-center">Shipping Address</th>
-                                    <th className="py-3 px-6 text-center">Status</th>
-                                    <th className="py-3 px-6 text-center">Actions</th>
+                                    <th className="py-3 px-1 text-center">Shipping Address</th>
+                                    <th className="py-3 px-1 text-center">Order Status</th>
+                                    <th className="py-3 px-1 text-center">Payment Method</th>
+                                    <th onClick={()=>handleSort({orderId:'subTotal',order: sort._order === 'desc' ? 'asc' : 'desc'})} className="py-3 px-1 text-center flex gap-1">
+                                        <span>Order Time</span>
+                                         { sort._order == 'desc' ? <ArrowUpCircleIcon className='h-6 w-6'/> : <ArrowDownCircleIcon className='h-6 w-6'/>}
+                                    </th>
+                                    <th className="py-3 px-1 text-center">Last Upadted</th>
+                                    <th className="py-3 px-1 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
 
                                 {orders?.map((order) => (
                                     <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-100">
-                                        <td className="py-3 px-6 text-left whitespace-nowrap">
+                                        <td className="py-3 px-1 text-left whitespace-nowrap">
                                             <div className="flex items-center">
 
                                                 <span className="font-medium">{order.id}</span>
                                             </div>
                                         </td>
 
-                                        <td className="py-3 px-6 text-left">
+                                        <td className="py-3 px-1 text-left">
                                             {order.products.map((item) => (
                                                 <div className="flex items-center">
                                                     <div className="mr-2">
@@ -139,17 +145,17 @@ const AdminOrders = () => {
                                             ))}
                                         </td>
 
-                                        <td className="py-3 px-6 text-center">
+                                        <td className="py-3 px-1 text-center">
                                             ${order.subTotal}
                                         </td>
-                                        <td className="py-3 px-6 text-center">
+                                        <td className="py-3 px-1 text-center">
                                             <div>{order.selectedAddress[0].name}</div>
                                             <div>{order.selectedAddress[0].street}</div>
                                             <div>{order.selectedAddress[0].city}</div>
                                             <div>{order.selectedAddress[0].state}</div>
                                         </td>
 
-                                        <td className="py-3 px-6 text-center">
+                                        <td className="py-3 px-1 text-center">
                                             {
                                                 order.id == editableOrderId ? (<span className=" py-1 px-3 rounded-full border">
                                                     <select onChange={(e)=>handleChange(e,order)} onBlur={()=>setEditableOrderId(-1)}  >
@@ -164,7 +170,22 @@ const AdminOrders = () => {
                                                 </span>) 
                                             } 
                                         </td>
-                                        <td className="py-3 px-6 text-center">
+
+                                        {/*  */}
+
+                                            <td className="py-3 px-1 text-center">
+                                              <p>{order?.selectedPaymentMethod}</p>
+                                             </td>
+
+                                             <td className="py-3 px-1 text-center">
+                                              <p>{order?.createdAt ? (new Date(order?.createdAt).toLocaleString()) : null}</p>
+                                             </td>
+
+                                             <td className="py-3 px-1 text-center">
+                                              <p>{order?.updatedAt ? (new Date(order?.updatedAt).toLocaleString()) : null}</p>
+                                             </td>
+
+                                        <td className="py-3 px-1 text-center">
                                             <div className="flex justify-center gap-2">
                                                 <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                                                     <button onClick={()=>handleShow()} className="flex item-center justify-center cursor-pointer">

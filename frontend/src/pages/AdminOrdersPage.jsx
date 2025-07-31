@@ -3,7 +3,7 @@ import AdminOrders from '../features/Admin/components/AdminOrders'
 
 const AdminOrdersPage = () => {
   return (
-    <div>
+    <div className=''>
       <AdminOrders/>
     </div>
   )

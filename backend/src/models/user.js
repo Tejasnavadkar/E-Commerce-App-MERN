@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:''
     }
+},{
+    timestamps:true // creation and update time
 })
 
 const virtual = userSchema.virtual('id')
