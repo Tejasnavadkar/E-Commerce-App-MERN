@@ -16,66 +16,21 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Modal from "../../Common/Modal";
 import { toast } from "react-toastify";
 
-// {
-//   "id": "1",
-//   "title": "Essence Mascara Lash Princess",
-//   "description": "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
-//   "category": "beauty",
-//   "price": 9.99,
-//   "discountPercentage": 7.17,
-//   "rating": 4.94,
-//   "stock": 5,
-//   "tags": [
-//     "beauty",
-//     "mascara"
-//   ],
-//   "brand": "Essence",
-//   "sku": "RCH45Q1A",
-//   "weight": 2,
-//   "dimensions": {
-//     "width": 23.17,
-//     "height": 14.43,
-//     "depth": 28.01
-//   },
-//   "warrantyInformation": "1 month warranty",
-//   "shippingInformation": "Ships in 1 month",
-//   "availabilityStatus": "Low Stock",
-//   "reviews": [
-//     {
-//       "rating": 2,
-//       "comment": "Very unhappy with my purchase!",
-//       "date": "2024-05-23T08:56:21.618Z",
-//       "reviewerName": "John Doe",
-//       "reviewerEmail": "john.doe@x.dummyjson.com"
-//     },
-//     {
-//       "rating": 2,
-//       "comment": "Not as described!",
-//       "date": "2024-05-23T08:56:21.618Z",
-//       "reviewerName": "Nolan Gonzalez",
-//       "reviewerEmail": "nolan.gonzalez@x.dummyjson.com"
-//     },
-//     {
-//       "rating": 5,
-//       "comment": "Very satisfied!",
-//       "date": "2024-05-23T08:56:21.618Z",
-//       "reviewerName": "Scarlett Wright",
-//       "reviewerEmail": "scarlett.wright@x.dummyjson.com"
-//     }
-//   ],
-//   "returnPolicy": "30 days return policy",
-//   "minimumOrderQuantity": 24,
-//   "meta": {
-//     "createdAt": "2024-05-23T08:56:21.618Z",
-//     "updatedAt": "2024-05-23T08:56:21.618Z",
-//     "barcode": "9164035109868",
-//     "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-//   },
-//   "images": [
-//     "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png"
-//   ],
-//   "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png"
-// },
+const colors = [
+  { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+  { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
+  { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+];
+const sizes = [
+  { name: "XXS", inStock: false },
+  { name: "XS", inStock: true },
+  { name: "S", inStock: true },
+  { name: "M", inStock: true },
+  { name: "L", inStock: true },
+  { name: "XL", inStock: true },
+  { name: "2XL", inStock: true },
+  { name: "3XL", inStock: true },
+];
 
 const ProductForm = () => {
   const brands = useSelector(brandsSelector);
@@ -125,7 +80,7 @@ const ProductForm = () => {
   }, [id, selectedProduct]);
 
   const handleForm = (data) => {
-    // console.log('data',data)
+    console.log("data", data);
 
     const product = { ...data };
     product.images = [product.image1, product.image2, product.image3];
@@ -136,6 +91,13 @@ const ProductForm = () => {
     delete product["image2"];
     delete product["image3"];
 
+    if(product.colors.length > 0){
+      product.colors = product.colors.map((color)=>colors.find((item)=>item.name === color))
+    }
+
+    if(product.sizes.length > 0){
+      product.sizes = product.sizes.map((size)=>sizes.find((item)=>item.name === size))
+    }
     // console.log('product',product)
 
     if (id && selectedProduct) {
@@ -143,21 +105,21 @@ const ProductForm = () => {
       // todo: make update product api
       // action to update
       product.id = selectedProduct.id;
-      const updtateResult = dispatch(updateProductByIdAsync(product)).unwrap()
-       toast.promise(updtateResult, {
-      pending: "Updating..",
-      success: "Item updated..👌",
-      error: "unable to update item 🤯",
-    });
+      const updtateResult = dispatch(updateProductByIdAsync(product)).unwrap();
+      toast.promise(updtateResult, {
+        pending: "Updating..",
+        success: "Item updated..👌",
+        error: "unable to update item 🤯",
+      });
       reset();
     } else {
       // action to create
-     const createResult = dispatch(createProductAsync(product)).unwrap()
+      const createResult = dispatch(createProductAsync(product)).unwrap();
       toast.promise(createResult, {
-      pending: "creating..",
-      success: "Item created..👌",
-      error: "unable to create item 🤯",
-    });
+        pending: "creating..",
+        success: "Item created..👌",
+        error: "unable to create item 🤯",
+      });
       reset();
     }
   };
@@ -307,6 +269,50 @@ const ProductForm = () => {
                     {errors?.category.message}
                   </span>
                 )}
+              </div>
+
+              {/* colors and sizes */}
+
+              <div className="col-span-full">
+                <label
+                  htmlFor="about"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  colors
+                </label>
+
+                {colors.map((item, idx) => (
+                  <div key={item.name}>
+                    <input
+                      type="checkbox"
+                      {...register("colors")}
+                      value={item.name}
+                      id={`color-${idx}`}
+                    />
+                    <label htmlFor={`color-${idx}`}>{item.name}</label>
+                  </div>
+                ))}
+              </div>
+
+              <div className="col-span-full">
+                <label
+                  htmlFor="about"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  sizes
+                </label>
+
+                {sizes.map((item, idx) => (
+                  <div key={item.name}>
+                    <input
+                      type="checkbox"
+                      {...register("sizes")}
+                      value={item.name}
+                      id={`size-${idx}`}
+                    />
+                    <label htmlFor={`color-${idx}`}>{item.name}</label>
+                  </div>
+                ))}
               </div>
 
               <div className="flex  gap-4 col-span-full">

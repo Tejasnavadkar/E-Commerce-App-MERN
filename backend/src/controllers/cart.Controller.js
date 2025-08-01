@@ -5,8 +5,8 @@ import cartServices from "../services/cartServices.js"
 
 const addToCartController = async (req,res) => {
         try {
-            const {product,quantity,user} = req.body
-            const cart = await cartServices.addToCart({product,quantity,user})
+            const data = req.body
+            const cart = await cartServices.addToCart(data)
             if(!cart){
                 return res.status(401).json({msg:'unable to add item in cart'})
             }

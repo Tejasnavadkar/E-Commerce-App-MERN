@@ -2,14 +2,10 @@ import cartModel from "../models/cart.js"
 
 
 
-const addToCart = async ({product,quantity,user}) => {
+const addToCart = async (data) => {
 
   try {
-      const cart = new cartModel({
-        product,
-        quantity,
-        user
-    })
+      const cart = new cartModel(data)
     await cart.save()
     await cart.populate('product')
     await cart.populate('user')

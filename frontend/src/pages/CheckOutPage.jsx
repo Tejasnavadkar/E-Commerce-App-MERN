@@ -485,7 +485,8 @@ const CheckOutPage = () => {
                                                             </h3>
                                                             <p className="ml-4">${discountedPrice(item.product)}</p>
                                                         </div>
-                                                        <p className="mt-1 text-sm text-gray-500">{item?.color}</p>
+                                                       { item?.color.length > 0 && <p className="mt-1 text-sm text-gray-500">{item?.color?.[0].name}</p>}
+                                                       { item?.size.length > 0 && <p className="mt-1 text-sm text-gray-500">{item?.size?.[0].name}</p>}
                                                     </div>
                                                     <div className="flex flex-1 items-end justify-between text-sm">
                                                         <div className="text-gray-500 flex gap-2">

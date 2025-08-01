@@ -31,7 +31,13 @@ const orderSchema = new mongoose.Schema({
         type:String,
         // enum:['processing','pending','dispatched','delivered'],
         default:'pending'
-    }
+    },
+    // color:{
+    //     type:[mongoose.Schema.Types.Mixed] // coz it already present in product
+    // },
+    //  size:{
+    //     type:[mongoose.Schema.Types.Mixed]
+    // }
 },{
     timestamps:true // creation and updation time
 })

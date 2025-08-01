@@ -52,6 +52,7 @@ const AdminProductDetails = () => {
     const dispatch = useDispatch()
     //  const state = useLocation()
      console.log('user',user)
+     console.log('product',product)
 
     useEffect(()=>{
       dispatch(fetchProductsById({id}))

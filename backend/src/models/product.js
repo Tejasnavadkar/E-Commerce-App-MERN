@@ -50,6 +50,15 @@ const productSchema = new mongoose.Schema({
     deleted: {
         type: Boolean,
         default: false
+    },
+    sizes:{
+        type:[mongoose.Schema.Types.Mixed],  // used when there is complex json object and // correction: dont make [] its an obj type:mongoose.Schema.Types.Mixed
+    },
+    colors:{
+        type:[mongoose.Schema.Types.Mixed],  // used when there is complex json object
+    },
+     highlights:{ 
+        type : [String] 
     }
 });
 
