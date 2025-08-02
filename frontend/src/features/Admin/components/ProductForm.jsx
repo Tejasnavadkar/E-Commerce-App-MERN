@@ -73,23 +73,43 @@ const ProductForm = () => {
       setValue("discountPercentage", selectedProduct?.discountPercentage);
       setValue("stock", selectedProduct?.stock);
       setValue("thumbnail", selectedProduct?.thumbnail);
+      // setValue("colors", selectedProduct?.colors[0].name);
       setValue("image1", selectedProduct?.images?.[0] || "");
-      setValue("image2", selectedProduct?.images?.[2] || "");
-      setValue("image3", selectedProduct?.images?.[3] || "");
+      setValue("image2", selectedProduct?.images?.[1] || "");
+      setValue("image3", selectedProduct?.images?.[2] || "");
+       setValue("highlight1", selectedProduct?.highlights?.[0] || "");
+      setValue("highlight2", selectedProduct?.highlights?.[1] || "");
+      setValue("highlight3", selectedProduct?.highlights?.[2] || "");
+      setValue("highlight4", selectedProduct?.highlights?.[3] || "");
+       setValue(
+        'colors',
+        selectedProduct.colors.map((color) => color.name)
+      );
+        setValue(
+        'sizes',
+        selectedProduct?.sizes?.map((size) => size?.name)
+      );
     }
-  }, [id, selectedProduct]);
+  }, [id, selectedProduct,setValue]);
 
   const handleForm = (data) => {
     console.log("data", data);
 
     const product = { ...data };
-    product.images = [product.image1, product.image2, product.image3];
+    product.images = [product.image1, product.image2, product.image3]; // same do with highlights
+    product.highlights = [product.highlight1, product.highlight2, product.highlight3,product.highlight4];
     product.ratings = 0;
     product.discountPercentage = +data.discountPercentage;
     product.price = +data.price;
+
     delete product["image1"];
     delete product["image2"];
     delete product["image3"];
+
+    delete product["highlight1"];
+    delete product["highlight2"];
+    delete product["highlight3"];
+    delete product["highlight4"];
 
     if(product.colors.length > 0){
       product.colors = product.colors.map((color)=>colors.find((item)=>item.name === color))
@@ -99,6 +119,7 @@ const ProductForm = () => {
       product.sizes = product.sizes.map((size)=>sizes.find((item)=>item.name === size))
     }
     // console.log('product',product)
+    // return
 
     if (id && selectedProduct) {
       // here reuse the form if want to edit then dispatch edit else create
@@ -483,6 +504,102 @@ const ProductForm = () => {
                   />
                 </div>
               </div>
+
+               {/* highlights */}
+
+                <div className="col-span-full">
+                <label
+                  htmlFor="cover-photo"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Highlight 1
+                </label>
+                <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    id="highlight1"
+                    {...register("highlight1", { required: "highlight-1 is required" })}
+                    type="text"
+                    placeholder="highlight"
+                    className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                </div>
+                {errors.image1 && (
+                  <span className="text-xs text-red-500">
+                    {errors?.highlight1.message}
+                  </span>
+                )}
+              </div>
+
+               <div className="col-span-full">
+                <label
+                  htmlFor="cover-photo"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Highlight 2
+                </label>
+                <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    id="highlight2"
+                    {...register("highlight2", { required: "highlight-2 is required" })}
+                    type="text"
+                    placeholder="highlight"
+                    className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                </div>
+                {errors.image1 && (
+                  <span className="text-xs text-red-500">
+                    {errors?.highlight2.message}
+                  </span>
+                )}
+              </div>
+
+               <div className="col-span-full">
+                <label
+                  htmlFor="cover-photo"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Highlight 3
+                </label>
+                <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    id="highlight1"
+                    {...register("highlight3", { required: "highlight-3 is required" })}
+                    type="text"
+                    placeholder="highlight"
+                    className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                </div>
+                {errors.image1 && (
+                  <span className="text-xs text-red-500">
+                    {errors?.highlight3.message}
+                  </span>
+                )}
+              </div>
+
+               <div className="col-span-full">
+                <label
+                  htmlFor="cover-photo"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Highlight 4
+                </label>
+                <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    id="highlight4"
+                    {...register("highlight4", { required: "highlight-4 is required" })}
+                    type="text"
+                    placeholder="highlight"
+                    className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                </div>
+                {errors.image1 && (
+                  <span className="text-xs text-red-500">
+                    {errors?.highlight4.message}
+                  </span>
+                )}
+              </div>
+
+
             </div>
           </div>
 

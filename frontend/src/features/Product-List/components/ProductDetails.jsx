@@ -221,11 +221,11 @@ const ProductDetails = () => {
                     onChange={setSelectedSize}
                     className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
                   >
-                    {product.sizes.map((size) => (
+                    {product?.sizes?.map((size) => (
                       <Radio
                         key={size.name}
                         value={size}
-                        disabled={!size.inStock}
+                        disabled={!size?.inStock}
                         className={classNames(
                           size.inStock
                             ? 'cursor-pointer bg-white text-gray-900 shadow-xs'
@@ -289,9 +289,10 @@ const ProductDetails = () => {
             <div className="mt-10">
               <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
 
+              {/* highlights */}
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {highlights.map((highlight) => (
+                  {product?.highlights && product.highlights.map((highlight) => (
                     <li key={highlight} className="text-gray-400">
                       <span className="text-gray-600">{highlight}</span>
                     </li>
@@ -300,9 +301,9 @@ const ProductDetails = () => {
               </div>
             </div>
 
+            {/* details */}
             <div className="mt-10">
               <h2 className="text-sm font-medium text-gray-900">Details</h2>
-
               <div className="mt-4 space-y-6">
                 <p className="text-sm text-gray-600">{details}</p>
               </div>

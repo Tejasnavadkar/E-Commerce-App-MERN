@@ -523,6 +523,7 @@ const ProductGrid = ({ products }) => {
                                         </div>
                                     </Link>
                                     {product?.deleted && <span className='text-xs text-red-500'>product deleted</span>}
+                                    {product?.stock === 0 && <span className='text-xs text-red-500'>out of stock</span>}
                                     <div>
                                         <Link to={`/admin/product-form/edit/${product.id}`} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                             Edit Product
