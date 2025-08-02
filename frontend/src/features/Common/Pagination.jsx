@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 
  const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProducts,pages}) => {
 
-    console.log({activePage,setActivePage,handlePagination,limit,totalProducts,pages})
+    // console.log({activePage,setActivePage,handlePagination,limit,totalProducts,pages})
 
     return (
         <>

@@ -27,12 +27,12 @@ import { toast } from 'react-toastify'
 //   { name: '2XL', inStock: true },
 //   { name: '3XL', inStock: true },
 // ]
-const highlights = [
-  'Hand cut and sewn locally',
-  'Dyed with our proprietary colors',
-  'Pre-washed & pre-shrunk',
-  'Ultra-soft 100% cotton'
-]
+// const highlights = [
+//   'Hand cut and sewn locally',
+//   'Dyed with our proprietary colors',
+//   'Pre-washed & pre-shrunk',
+//   'Ultra-soft 100% cotton'
+// ]
 const reviews = { href: '#', average: 4, totalCount: 117 }
 const details = 'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.'
 
@@ -261,13 +261,13 @@ const ProductDetails = () => {
               </div>}
 
               {/* user?.role === 'user' && render add to bag */}
-             { <button
+             { product?.stock > 0 ? (<button
                 onClick={handleCart}
                 type="submit"
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
               >
                 Add to bag
-              </button>}
+              </button>) : (<p className='text-2xl text-red-500'>Product is out of stock</p>)}
             </form>
             {/* <button onClick={notify}>Notify</button> */}
           </div>
@@ -286,20 +286,20 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            <div className="mt-10">
+            {product?.highlights?.length > 0 && <div className="mt-10">
               <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
 
               {/* highlights */}
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {product?.highlights && product.highlights.map((highlight) => (
+                  { product.highlights.map((highlight) => (
                     <li key={highlight} className="text-gray-400">
                       <span className="text-gray-600">{highlight}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
+            </div>}
 
             {/* details */}
             <div className="mt-10">

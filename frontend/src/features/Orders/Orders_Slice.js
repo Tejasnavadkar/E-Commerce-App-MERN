@@ -77,9 +77,10 @@ const orderSlice = createSlice({
             state.isLoading = true
         })
         builder.addCase(fetchAllOrdersAsync.fulfilled, (state, action) => {
+            // console.log('action.payload-order-async-',action.payload)
             state.isLoading = false
             state.allOrders = action.payload.orders
-            // state.ordersPages = action.payload.pages
+            state.ordersPages = Math.ceil(action.payload.totalOrders/10) // here 10 is limit
             state.totalOrdersCount = action.payload.totalOrders
             
         })

@@ -274,5 +274,6 @@ export const errorSelector = (state) => state.Auth?.error
 export const userCheck = (state) => state.Auth?.userCheck
 export const mailCheckSelector = (state) => state.Auth?.isMailSent
 export const resetPasswordSelector = (state) => state.Auth?.resetPassword
+export const loaderSelector = (state) => state.Auth?.isLoading
 
 export default authSlice.reducer

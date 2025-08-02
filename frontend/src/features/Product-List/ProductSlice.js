@@ -139,10 +139,9 @@ const ProductSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(fetchProductsByFilterAsync.fulfilled, (state, action) => {
-      console.log('action-payload--inproductslice--',action.payload)
       if(action.payload.products){
         state.allProducts = action.payload.products
-        state.pages = Math.ceil(action.payload.totalProducts/10)
+        state.pages = Math.ceil(action.payload.totalProducts/10) // here 10 is limit
         state.items = action.payload.totalProducts
       state.isLoading = false
       }else{

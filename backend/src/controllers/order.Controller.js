@@ -1,6 +1,8 @@
 import orderModel from "../models/order.js"
+import productModel from "../models/product.js"
 import userModel from "../models/user.js"
 import cartServices from "../services/cartServices.js"
+import { decreaseStocks } from "../services/common.js"
 import mailService from "../services/mailService.js"
 import orderServices from "../services/orderServices.js"
 import userServices from "../services/userServices.js"
@@ -13,10 +15,14 @@ const createOrderController = async (req,res) => {
             const data = req.body
             const order = await orderServices.createOrder(data)
             // await cartServices.resetCart() // after order placed reset cart
-
+            
             if(!order){
                 return res.status(400).json({msg:'cant palce order'})
             }
+
+            // service to descrease the stocks after order placed
+            decreaseStocks(order) 
+           
 
             const user = await userServices.fetchUserById(order.user)
 
