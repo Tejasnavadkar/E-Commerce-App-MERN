@@ -7,7 +7,7 @@ const createProductController = async (req, res) => {
         const data = req.body;
 
         const createdProduct = await productServices.createProducts(data)
-        // console.log('createdProduct--',createdProduct)
+        // createdProduct.discountPrice = Math.round(createdProduct.price* (1-createdProduct.discountPercentage/100)); // calculate discountedPrice and store it
         if (createdProduct) {
             res.status(201).json({
                 msg: "product created..",
@@ -28,7 +28,8 @@ const fetchAllProductController = async (req, res) => {
         // TODO: on server we will support multiple values in filter
         // pagination : _page=1&_limit=10
 
-        // console.log('admin',req.query.admin)
+        // console.log('query',req.query)
+        
         const condition = {}
         if(!req.query.admin){  // if user is not admin then no show deleted items
             condition.deleted = {$ne:true}
@@ -40,12 +41,12 @@ const fetchAllProductController = async (req, res) => {
         //filtering
         if (req.query.category) {
             // console.log(req.query.category)
-            query = query.find({ category: req.query.category })
-            totalProductsQuery = totalProductsQuery.find({ category: req.query.category })
+            query = query.find({ category:{"$in":req.query.category.split(',')} })
+            totalProductsQuery = totalProductsQuery.find({ category:{"$in":req.query.category.split(',')} })
         }
         if (req.query.brand) {
-            query = query.find({ brand: req.query.brand })
-            totalProductsQuery = totalProductsQuery.find({ brand: req.query.brand })
+            query = query.find({ brand: {"$in":req.query.brand.split(',')} })
+            totalProductsQuery = totalProductsQuery.find({ brand: {"$in":req.query.brand.split(',')} })
         }
 
         // sorting
@@ -63,9 +64,9 @@ const fetchAllProductController = async (req, res) => {
             // totalProductsQuery = totalProductsQuery.skip(pageSize * (page - 1)).limit(pageSize)
         }
 
-        const allProducts = await query.exec() // whatever we query applied above exicute it
         const totalDocs = await totalProductsQuery.countDocuments().exec()
         const totalProductCount = await totalProduct.countDocuments().exec()
+        const allProducts = await query.exec() // whatever we query applied above exicute it
         // console.log({ totalProductCount })
 
         //err
@@ -109,6 +110,7 @@ const updateProductController = async (req, res) => {
         const data = req.body
         
         const updatedProduct = await productServices.updateProduct({ id, data })
+         // updatedProduct.discountPrice = Math.round(updatedProduct.price* (1-updatedProduct.discountPercentage/100)); // calculate discountedPrice and store it
         res.status(200).json({
             msg: 'product updated',
             updatedProduct

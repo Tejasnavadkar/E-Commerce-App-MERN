@@ -4,6 +4,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 
  const Pagination = ({activePage,setActivePage,handlePagination,limit,totalProducts,pages}) => {
 
+    console.log({activePage,setActivePage,handlePagination,limit,totalProducts,pages})
+
     return (
         <>
             <div className="flex items-center justify-between border w-full border-t border-gray-200 bg-white px-4 py-3 sm:px-6">

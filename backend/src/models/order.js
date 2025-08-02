@@ -1,6 +1,13 @@
 import mongoose from 'mongoose'
 
 
+//  with custom error messages
+const PaymentMethod = {
+  values: ['cash', 'card'],
+  message: 'enum validator failed for payment methods'
+}
+
+
 const orderSchema = new mongoose.Schema({
     products:{
         type:[mongoose.Schema.Types.Mixed],
@@ -25,6 +32,7 @@ const orderSchema = new mongoose.Schema({
     },
     selectedPaymentMethod:{ // later enum
         type:String,
+        enum:PaymentMethod,
         required:true
     },
     status:{

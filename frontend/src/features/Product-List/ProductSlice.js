@@ -142,7 +142,7 @@ const ProductSlice = createSlice({
       console.log('action-payload--inproductslice--',action.payload)
       if(action.payload.products){
         state.allProducts = action.payload.products
-        // state.pages = action.payload.pages
+        state.pages = Math.ceil(action.payload.totalProducts/10)
         state.items = action.payload.totalProducts
       state.isLoading = false
       }else{

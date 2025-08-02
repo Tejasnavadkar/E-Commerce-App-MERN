@@ -92,8 +92,8 @@ export const FetchAllProductsByFilters = async ({ filter, sort, pagination,role 
     for (let key in filter) {
         if (filter[key].length > 0) {
             const categories = filter[key]
-            const lastCategory = categories[categories.length - 1]
-            queryString += `${key}=${lastCategory || ''}&`
+            // const lastCategory = categories[categories.length - 1]
+            queryString += `${key}=${categories || ''}&`
         }
         // queryString += `${key}=${filter[key]}&`
     }
