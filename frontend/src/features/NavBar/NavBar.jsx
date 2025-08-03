@@ -3,8 +3,8 @@ import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outl
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { cartSelector } from '../Cart/CartSlice'
-import { userInfoSelector } from '../User/UserSlice'
 import axios from 'axios'
+import { userSelector } from '../Auth/AuthSlice'
 
 
 const user = {
@@ -14,7 +14,7 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', user: true },
+  // { name: 'Dashboard', href: '#', user: true },
   { name: 'Team', href: '#', user: false },
   { name: 'admin', href: '/admin', admin: true },
   { name: 'orders', href: '/admin/orders', admin: true },
@@ -36,7 +36,8 @@ function classNames(...classes) {
 const NavBar = ({ children }) => {
 
   const items = useSelector(cartSelector)
-  const userInfo = useSelector(userInfoSelector)
+  const userInfo = useSelector(userSelector)
+  // const checkUserStatus = useSelector(userCheck);
   
   
 
@@ -44,7 +45,8 @@ console.log('userInfo-in-navbar-',userInfo)
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-full">
+    <>
+    {<div className="min-h-full">
 
       <Disclosure as="nav" className="bg-gray-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -221,7 +223,8 @@ console.log('userInfo-in-navbar-',userInfo)
       <main>
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
       </main>
-    </div>
+    </div>}
+    </>
   )
 }
 

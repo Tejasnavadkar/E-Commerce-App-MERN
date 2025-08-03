@@ -17,7 +17,8 @@ const initialState = {
     userCheck:false,
     isMailSent:false,
     mailInfo:null,
-    resetPassword:false
+    resetPassword:false,
+    userInfoCheck:false
 }
 
 export const createUserAsync = createAsyncThunk(
@@ -158,6 +159,7 @@ const authSlice = createSlice({
         })
         builder.addCase(loginUserAsync.fulfilled,(state,action)=>{
             state.logedInUser = action.payload.User;
+            // state. = action.payload.User;
             state.userToken = action.payload.token;
             state.isLoading = false;
             state.error = null;
@@ -181,14 +183,16 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.error = null;
             state.userCheck = true
+            state.userInfoCheck = true
          
         })
         builder.addCase(checkUserAsync.rejected,(state,action)=>{
-            console.log('user---check')
+    
             // state.error = action.payload;
             state.isLoading = false;
             state.logedInUser = null;
-            state.userCheck = true
+            state.userCheck = true;
+             state.userInfoCheck = true
             
         })
 
@@ -275,5 +279,6 @@ export const userCheck = (state) => state.Auth?.userCheck
 export const mailCheckSelector = (state) => state.Auth?.isMailSent
 export const resetPasswordSelector = (state) => state.Auth?.resetPassword
 export const loaderSelector = (state) => state.Auth?.isLoading
+export const userInfoCheckSelector = (state) => state.Auth?.userInfoCheck
 
 export default authSlice.reducer

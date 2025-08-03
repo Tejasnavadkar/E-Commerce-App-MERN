@@ -18,23 +18,17 @@ import {
 import { fetchCartsById } from "./features/Cart/CartSlice";
 import PageNotFound from "./pages/PageNotFound";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
-import UserProfile from "./features/User/components/UserProfile";
-import UserOrders from "./features/User/components/UserOrders";
 import UsersOrdersPage from "./pages/UsersOrdersPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import SignOut from "./features/Auth/components/SignOut";
-import ForgotPassword from "./features/Auth/components/ForgotPassword";
 import AdminProductDetailsPage from "./pages/AdminProductDetailsPage";
-import AdminProductListPage from "./pages/AdminHomePage";
 import AdminProtected from "./features/Auth/components/AdminProtected";
-import AdminHome from "./pages/AdminHomePage";
 import AdminHomePage from "./pages/AdminHomePage";
-import ProductForm from "./features/Admin/components/ProductForm";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
-import ResetPassword from "./features/Auth/components/ResetPassword";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+// import { userInfoSelector } from "./features/User/UserSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +37,7 @@ function App() {
   // const isLoading = useSelector(loaderSelector)
   console.log("user in app.jsx-", user);
   console.log("check-user", checkUserStatus);
+
 
   useEffect(() => {
     dispatch(checkUserAsync());
@@ -58,7 +53,7 @@ function App() {
         <div role="status">
           <svg
             aria-hidden="true"
-            class="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            className="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +67,7 @@ function App() {
               fill="currentFill"
             />
           </svg>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </div>
       </div>
     );
