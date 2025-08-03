@@ -12,7 +12,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkUserAsync,
-  loaderSelector,
   userCheck,
   userSelector,
 } from "./features/Auth/AuthSlice";
