@@ -81,8 +81,10 @@ const loginController = async (req,res) =>{
 
         res.cookie('jwt', jwtToken, {
             httpOnly: true,  // Prevents client-side scripts from accessing the cookie
-            secure: false,    // Ensures the cookie is only sent over HTTPS connections
-            sameSite: 'lax'
+            // secure: false,    // Ensures the cookie is only sent over HTTPS connections
+            // sameSite: 'lax',
+              secure: true,      // Only send cookie over HTTPS
+              sameSite: 'none'   // Allow cross-site cookies
         }); // set Cookie in headers
 
         // If FE and BE runs on different ports (e.g. 3000 & 8000) and HTTP:
@@ -124,8 +126,10 @@ const signOutController = async(req,res) => {
       res
     .cookie('jwt', '', {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+    //   secure: false,
+    //   sameSite: 'lax',
+      secure: true,      // Only send cookie over HTTPS
+      sameSite: 'none',   // Allow cross-site cookies
       expires: new Date(0) // Set expiry to past date
     })
     .sendStatus(200)
