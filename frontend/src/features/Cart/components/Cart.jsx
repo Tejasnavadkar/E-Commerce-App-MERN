@@ -60,16 +60,20 @@ const Cart = () => {
   );
 
   const handleQuantity = (e, item) => {
-    // console.log('item--',item)
+    try {
+      // console.log('item--',item)
     // delete item.id
     const newItem = { ...item, quantity: e.target.value }; // here we pass copy of updated item
 
-    const updateCartQuantity = dispatch(updateCartQuantityAsync(newItem));
+    const updateCartQuantity = dispatch(updateCartQuantityAsync(newItem)).unwrap()
     toast.promise(updateCartQuantity, {
       pending: "Loading..",
       success: " Quantity updated👌",
       error: "Unable to update quantity 🤯",
     });
+    } catch (error) {
+      throw new Error(error.message)
+    }
   };
 
 // here we pass this function to our Modal  

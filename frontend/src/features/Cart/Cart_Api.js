@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import axios from 'axios'
 
 export const addToCart = async (item) => {
@@ -66,7 +66,7 @@ export const updateCartById = async (update) => {
         //     headers: { 'content-type': 'application/json' }
         // })
 
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/cart/updateCart/${update.id}`,update,{withCredentials:true})
+        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/api/cart/updateCart/${update.id}`,{quantity:update.quantity},{withCredentials:true})
         const data = response.data.updatedCart
         return data
 

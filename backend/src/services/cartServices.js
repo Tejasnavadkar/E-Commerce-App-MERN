@@ -34,7 +34,7 @@ const fetchCartByUserId = async (id) => {
 const updateCart = async ({id,data}) => {
 
   try {
-      const cart = await cartModel.findByIdAndUpdate(id,data,{new:true})
+      const cart = await cartModel.findByIdAndUpdate(id,data,{new:true}).populate('product')
       return cart
 
   } catch (error) {
