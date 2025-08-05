@@ -147,7 +147,7 @@ const verifyMailController = async(req,res) => {
            const token = crypto.randomBytes(48).toString('hex');
            user.resetPasswordToken = token
            await user.save()
-         const resetPageLink = `${process.env.BASE_URL}/reset-password?token=${token}&email=${user.email}` // configure url
+         const resetPageLink = `${process.env.FE_URL}/reset-password?token=${token}&email=${user.email}` // configure url
          const from = process.env.EMAIL_USER // from mail create seperate mail
          const to = user?.email
          const subject = 'reset password for e-commerce account'
