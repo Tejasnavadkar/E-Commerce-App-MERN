@@ -40,8 +40,9 @@ const createUserController = async (req,res) =>{
 
         res.cookie('jwt', jwtToken, {
             httpOnly: true,  // Prevents client-side scripts from accessing the cookie
-            secure: false,    // Ensures the cookie is only sent over HTTPS connections
-            sameSite: 'lax'
+            secure: true,    // Ensures the cookie is only sent over HTTPS connections
+            sameSite: 'none' 
+            // sameSite: 'lax',
         }); // set Cookie in headers 
 
         res.status(201).json({
@@ -81,10 +82,11 @@ const loginController = async (req,res) =>{
 
         res.cookie('jwt', jwtToken, {
             httpOnly: true,  // Prevents client-side scripts from accessing the cookie
+            secure: true,      // Only send cookie over HTTPS
+            sameSite: 'none'   // Allow cross-site cookies
             // secure: false,    // Ensures the cookie is only sent over HTTPS connections
             // sameSite: 'lax',  // in local set secure:false and sameSite: 'lax' and in production set true
-              secure: true,      // Only send cookie over HTTPS
-              sameSite: 'none'   // Allow cross-site cookies
+              
         }); // set Cookie in headers
 
         // If FE and BE runs on different ports (e.g. 3000 & 8000) and HTTP:
