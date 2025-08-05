@@ -82,7 +82,7 @@ const loginController = async (req,res) =>{
         res.cookie('jwt', jwtToken, {
             httpOnly: true,  // Prevents client-side scripts from accessing the cookie
             // secure: false,    // Ensures the cookie is only sent over HTTPS connections
-            // sameSite: 'lax',
+            // sameSite: 'lax',  // in local set secure:false and sameSite: 'lax' and in production set true
               secure: true,      // Only send cookie over HTTPS
               sameSite: 'none'   // Allow cross-site cookies
         }); // set Cookie in headers
