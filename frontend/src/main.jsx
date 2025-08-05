@@ -5,6 +5,8 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import { store } from './app/store.js'
 import { ToastContainer } from 'react-toastify';
+import { ErrorBoundary} from 'react-error-boundary'
+import FallBackUi from './features/Error-Boundary/FallBackUi.jsx'
 // import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 // import AlertTemplate from "react-alert-template-basic";
 
@@ -20,12 +22,19 @@ import { ToastContainer } from 'react-toastify';
 // }
 // console.log('alertProvider-',AlertProvider)
 
+ const fallbackRenderHandler = ({ error }) => {  // here we can catch the error and return fallback ui 
+    console.log('error is:', error)
+    return <FallBackUi error={error} />
+  }
+
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
     <Provider store={store}>
       {/* <AlertProvider template={AlertTemplate} {...options} > */}
+      <ErrorBoundary fallbackRender={fallbackRenderHandler} >
         <App />
-        <ToastContainer />
+      </ErrorBoundary>
+      <ToastContainer />
       {/* </AlertProvider> */}
     </Provider>
   // </StrictMode>,

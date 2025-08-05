@@ -55,7 +55,11 @@ const AdminProductDetails = () => {
      console.log('product',product)
 
     useEffect(()=>{
-      dispatch(fetchProductsById({id}))
+      try {
+        dispatch(fetchProductsById({id})).wnwrap()
+      } catch (error) {
+        throw new Error(error.message)
+      }
     },[dispatch,id])
 
     const handleCart = (e) =>{

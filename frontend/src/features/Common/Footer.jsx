@@ -1,6 +1,9 @@
 import React from "react";
 
 const Footer = () => {
+  // useEffect(()=>{
+  //   throw new Error('err in footer')
+  // },[])
   return (
     <div>
   <div className=" bg-gray-900">

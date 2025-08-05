@@ -23,11 +23,16 @@ const AdminOrders = () => {
     console.log('editableOrderId--', editableOrderId)
 
     useEffect(() => {
-        const pagination = {
+        try {
+            const pagination = {
             _page: activePage,
             _per_page: PAGE_PER_LIMIT
         }
-        dispatch(fetchAllOrdersAsync({pagination,sort}))
+        dispatch(fetchAllOrdersAsync({pagination,sort})).unwrap()
+        } catch (error) {
+            throw new Error(error.message)
+        }
+
     }, [dispatch, activePage,sort])
 
     const handleEdit = (order) =>{

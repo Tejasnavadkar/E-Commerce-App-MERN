@@ -28,7 +28,7 @@ import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-// import { userInfoSelector } from "./features/User/UserSlice";
+
 
 function App() {
   const dispatch = useDispatch();
